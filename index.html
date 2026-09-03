@@ -1,0 +1,3037 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ZK Finance — исламская рассрочка без процентов по договору мурабаха. Демо-версия сайта и CRM.">
+<meta name="color-scheme" content="light dark">
+</head>
+<body>
+<title>ZK Finance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --ink:#000000;
+  --ink-soft:#26241E;
+  --ivory:#F6F0E4;
+  --ivory-hi:#FBF8F0;
+  --ivory-lo:#EDE5D4;
+  --rule:#E0D8C6;
+  --rule-strong:#CDC3AC;
+  --muted:#6E6759;
+  --muted-2:#918A7A;
+  --on-ink:#F6F0E4;
+  --on-ink-muted:#A49C8A;
+  --ink-rule:#26251F;
+  --ink-surface:#141310;
+  --ok:#3E6B4E; --ok-bg:#E3EBE1;
+  --warn:#8A6A1F; --warn-bg:#F0E8D1;
+  --crit:#8E3B2E; --crit-bg:#F3E1DB;
+  --crit-on-ink:#E08872;
+  --info:#3A5A7A; --info-bg:#E0E7ED;
+  --shadow:0 1px 2px rgba(0,0,0,.03), 0 10px 30px -24px rgba(0,0,0,.4);
+  --lift:0 2px 4px rgba(0,0,0,.04), 0 26px 52px -34px rgba(0,0,0,.5);
+  --r-xl:34px; --r-lg:24px; --r-md:18px; --r-sm:12px; --r-pill:999px;
+  --maxw:1320px;
+  --ease:cubic-bezier(.22,.72,.24,1);
+  --f-display:"Manrope","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Manrope","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"Manrope","Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ink:#F2ECE0; --ink-soft:#D2CBBB;
+    --ivory:#121110; --ivory-hi:#1C1A16; --ivory-lo:#0A0908;
+    --rule:#2C2A24; --rule-strong:#474235;
+    --muted:#9C9585; --muted-2:#7E7767;
+    --on-ink:#121110; --on-ink-muted:#565044;
+    --ink-rule:#DCD6C8; --ink-surface:#EEE9DC;
+    --ok:#8CBE9A; --ok-bg:#1D2A20;
+    --warn:#D9B25C; --warn-bg:#2C2413;
+    --crit:#E08872; --crit-bg:#2E1A15;
+    --crit-on-ink:#8E3B2E;
+    --info:#8FB6D6; --info-bg:#16212B;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px -24px rgba(0,0,0,.9);
+    --lift:0 2px 6px rgba(0,0,0,.4), 0 28px 56px -34px rgba(0,0,0,1);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#F2ECE0; --ink-soft:#D2CBBB;
+  --ivory:#121110; --ivory-hi:#1C1A16; --ivory-lo:#0A0908;
+  --rule:#2C2A24; --rule-strong:#474235;
+  --muted:#9C9585; --muted-2:#7E7767;
+  --on-ink:#121110; --on-ink-muted:#565044;
+  --ink-rule:#DCD6C8; --ink-surface:#EEE9DC;
+  --ok:#8CBE9A; --ok-bg:#1D2A20;
+  --warn:#D9B25C; --warn-bg:#2C2413;
+  --crit:#E08872; --crit-bg:#2E1A15;
+  --crit-on-ink:#8E3B2E;
+  --info:#8FB6D6; --info-bg:#16212B;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px -24px rgba(0,0,0,.9);
+  --lift:0 2px 6px rgba(0,0,0,.4), 0 28px 56px -34px rgba(0,0,0,1);
+  color-scheme:dark;
+}
+
+/* ============ BASE ============ */
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+img{max-width:100%}
+body{
+  margin:0;background:var(--ivory);color:var(--ink);
+  font-family:var(--f-body);font-size:16px;line-height:1.6;font-weight:400;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+h1,h2,h3,h4,h5{margin:0;font-weight:600;text-wrap:balance;letter-spacing:-.03em;line-height:1.1}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.mono,.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+.eyebrow{
+  font-size:11px;letter-spacing:.16em;font-weight:600;
+  text-transform:uppercase;color:var(--muted);display:block;
+}
+
+/* ============ MOTION ============ */
+.anim .reveal{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .8s var(--ease),transform .8s var(--ease);
+  transition-delay:var(--d,0s);
+}
+.anim .reveal.in{opacity:1;transform:none}
+#prog{
+  position:fixed;top:0;left:0;height:2px;background:var(--ink);
+  z-index:100;width:0;transition:width .1s linear;
+}
+
+/* ============ HEADER ============ */
+.hdr{
+  position:sticky;top:0;z-index:60;background:var(--ivory);
+  border-bottom:1px solid transparent;transition:border-color .3s,box-shadow .3s;
+}
+.hdr.stuck{border-bottom-color:var(--rule)}
+.hdr-in{display:flex;align-items:center;gap:26px;height:80px}
+.brand{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mark{
+  width:40px;height:40px;background:var(--ink);color:var(--on-ink);
+  display:grid;place-items:center;font-size:13px;font-weight:700;letter-spacing:.02em;
+  flex:0 0 auto;border-radius:var(--r-pill);transition:transform .45s var(--ease);
+}
+.brand:hover .mark{transform:scale(1.06)}
+.brand-txt{display:flex;flex-direction:column;line-height:1.15}
+.brand-name{font-size:17px;font-weight:600;letter-spacing:-.02em}
+.brand-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.nav{display:flex;gap:6px;margin-left:auto;align-items:center}
+.nav a{
+  font-size:14px;color:var(--muted);padding:8px 14px;border-radius:var(--r-pill);
+  white-space:nowrap;transition:color .25s,background .25s;font-weight:500;
+}
+.nav a:hover{color:var(--ink);background:rgba(0,0,0,.05)}
+.hdr-act{display:flex;gap:10px;align-items:center;flex:0 0 auto}
+.demo-tag{
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;
+  border:1px solid var(--rule-strong);color:var(--muted);padding:5px 11px;border-radius:var(--r-pill);
+}
+.btn{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px 26px;background:var(--ink);color:var(--on-ink);border:1px solid var(--ink);
+  cursor:pointer;font-size:14.5px;font-weight:600;letter-spacing:-.01em;
+  border-radius:var(--r-pill);white-space:nowrap;
+  transition:transform .3s var(--ease),opacity .3s var(--ease),background .3s var(--ease),color .3s var(--ease);
+}
+.btn:hover{transform:translateY(-2px);opacity:.9}
+.btn:active{transform:translateY(0)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--rule-strong)}
+.btn-ghost:hover{background:var(--ink);color:var(--on-ink);border-color:var(--ink);opacity:1}
+.btn-sm{padding:10px 18px;font-size:13.5px}
+.btn-lg{padding:17px 32px;font-size:15.5px}
+.btn-arr{transition:transform .35s var(--ease);display:inline-block}
+.btn:hover .btn-arr{transform:translateX(4px)}
+.burger{
+  display:none;width:44px;height:44px;background:none;border:1px solid var(--rule-strong);
+  border-radius:var(--r-pill);cursor:pointer;align-items:center;justify-content:center;
+}
+
+/* ============ PILL BADGE ============ */
+.pill{
+  display:inline-flex;align-items:center;gap:9px;padding:8px 16px 8px 12px;
+  border:1px solid var(--rule-strong);border-radius:var(--r-pill);
+  font-size:13px;color:var(--muted);font-weight:500;background:var(--ivory-hi);
+}
+.pill svg{flex:0 0 auto;opacity:.8}
+.slab .pill{border-color:var(--ink-rule);background:transparent;color:var(--on-ink-muted)}
+
+/* ============ HERO ============ */
+.hero{position:relative;overflow:hidden}
+#girih{position:absolute;inset:0;width:100%;height:100%;opacity:.34;pointer-events:none;will-change:transform}
+.hero-in{position:relative;padding-top:76px}
+.hero-grid{display:grid;grid-template-columns:1.16fr .84fr;gap:64px;align-items:end}
+.hero h1{
+  font-size:clamp(42px,5.9vw,80px);line-height:.96;letter-spacing:-.045em;
+  margin:22px 0 0;font-weight:700;
+}
+.hero h1 em{font-style:normal;display:block;color:var(--muted-2)}
+.hero-lead{margin-top:26px;font-size:18.5px;line-height:1.62;color:var(--ink-soft);max-width:47ch}
+.hero-cta{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap;align-items:center}
+.hero-trust{display:flex;align-items:center;gap:11px;font-size:13.5px;color:var(--muted);margin-top:26px}
+.hero-trust b{font-weight:600;color:var(--ink)}
+.hero-side{
+  padding:8px 26px;background:var(--ivory-hi);border:1px solid var(--rule);
+  border-radius:var(--r-lg);
+}
+.spec{
+  border-top:1px solid var(--rule);padding:17px 0;display:flex;
+  justify-content:space-between;align-items:baseline;gap:16px;
+}
+.spec:first-child{border-top:0}
+.spec-k{font-size:14px;color:var(--muted)}
+.spec-v{font-size:20px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.hero-strip{
+  margin-top:76px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+}
+.hs{
+  padding:24px 24px 26px;background:var(--ivory-hi);border:1px solid var(--rule);
+  border-radius:var(--r-lg);transition:transform .4s var(--ease),box-shadow .4s var(--ease);
+}
+.hs:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.hs-n{font-size:32px;font-weight:700;letter-spacing:-.04em;display:block;font-variant-numeric:tabular-nums}
+.hs-l{font-size:13.5px;color:var(--muted);margin-top:8px;display:block;max-width:24ch;line-height:1.5}
+
+/* ============ MARQUEE ============ */
+.mq{overflow:hidden;padding:22px 0;margin-top:56px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.mq-in{display:flex;width:max-content;animation:mq 46s linear infinite}
+.mq:hover .mq-in{animation-play-state:paused}
+.mq-i{
+  display:flex;align-items:center;gap:12px;padding:0 30px;
+  font-size:13px;letter-spacing:.02em;color:var(--muted);white-space:nowrap;font-weight:500;
+}
+.mq-i::before{content:"";width:6px;height:6px;background:var(--rule-strong);border-radius:50%}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ============ SECTIONS ============ */
+.sec{padding:104px 0;position:relative}
+.sec-head{display:grid;grid-template-columns:220px 1fr;gap:48px;margin-bottom:52px;align-items:start}
+.sec-title{font-size:clamp(30px,3.6vw,50px);line-height:1.02;letter-spacing:-.042em;font-weight:700}
+.sec-desc{margin-top:20px;color:var(--muted);max-width:60ch;font-size:16.5px;line-height:1.64}
+.slab{
+  background:var(--ink);color:var(--on-ink);
+  margin:0 14px;border-radius:var(--r-xl);
+}
+.slab .eyebrow{color:var(--on-ink-muted)}
+.slab .sec-title{color:var(--on-ink)}
+.slab .sec-desc{color:var(--on-ink-muted)}
+
+/* ============ PROBLEM / SOLUTION ============ */
+.ps{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ps-col{
+  background:var(--ivory-hi);border:1px solid var(--rule);
+  border-radius:var(--r-xl);padding:34px 32px 36px;
+}
+.ps-col.acc{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.ps-h{display:flex;align-items:center;gap:12px;padding-bottom:20px;border-bottom:1px solid var(--rule);margin-bottom:6px}
+.ps-col.acc .ps-h{border-bottom-color:var(--ink-rule)}
+.ps-h h3{font-size:23px;font-weight:600}
+.ps-badge{
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  padding:6px 12px;margin-left:auto;border-radius:var(--r-pill);
+}
+.ps-badge.bad{background:var(--crit-bg);color:var(--crit)}
+.ps-badge.good{background:var(--on-ink);color:var(--ink)}
+.ps-i{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid var(--rule);font-size:15px;line-height:1.55}
+.ps-col.acc .ps-i{border-bottom-color:var(--ink-rule)}
+.ps-i:last-child{border-bottom:0}
+.ps-m{
+  font-size:12px;font-weight:600;flex:0 0 22px;height:22px;border-radius:var(--r-pill);
+  display:grid;place-items:center;color:var(--muted);background:var(--ivory-lo);margin-top:1px;
+}
+.ps-col.acc .ps-m{color:var(--ink);background:var(--on-ink)}
+.ps-i b{font-weight:600;display:block;margin-bottom:3px}
+.ps-i span{color:var(--muted)}
+.ps-col.acc .ps-i span{color:var(--on-ink-muted)}
+
+/* ============ CARD GRIDS ============ */
+.cols-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cell{
+  background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-xl);
+  padding:32px 28px 34px;position:relative;overflow:hidden;
+  transition:transform .45s var(--ease),box-shadow .45s var(--ease);
+}
+.cell:hover{transform:translateY(-4px);box-shadow:var(--lift)}
+.cell h3{font-size:23px;margin:14px 0 12px;font-weight:600}
+.cell p{color:var(--muted);font-size:15px;line-height:1.62}
+.cell-ar{
+  font-size:30px;color:var(--rule-strong);position:absolute;right:26px;top:26px;line-height:1;
+  transition:color .45s var(--ease);
+}
+.cell:hover .cell-ar{color:var(--muted-2)}
+.cell-note{
+  margin-top:20px;padding-top:16px;border-top:1px solid var(--rule);
+  font-size:13px;color:var(--muted);line-height:1.6;
+}
+
+/* ============ FLOW DIAGRAM ============ */
+.flow{
+  border:1px solid var(--rule);background:var(--ivory-hi);border-radius:var(--r-xl);
+  padding:38px 32px;margin-bottom:14px;
+}
+.flow-row{display:grid;grid-template-columns:1fr 58px 1fr 58px 1fr;align-items:center}
+.fnode{
+  border:1px solid var(--rule-strong);background:var(--ivory);padding:22px;text-align:center;
+  border-radius:var(--r-lg);transition:border-color .4s var(--ease),transform .4s var(--ease);
+}
+.fnode.on{border-color:var(--ink);transform:translateY(-3px)}
+.fnode.mid{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.fnode-t{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.fnode.mid .fnode-t{color:var(--on-ink-muted)}
+.fnode-n{font-size:20px;margin-top:8px;display:block;font-weight:600;letter-spacing:-.02em}
+.farr{position:relative;height:1px;background:var(--rule-strong)}
+.farr::after{
+  content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;
+  border-top:1px solid var(--rule-strong);border-right:1px solid var(--rule-strong);transform:rotate(45deg);
+}
+.farr i{
+  position:absolute;left:0;top:0;height:1px;background:var(--ink);width:100%;
+  transition:width .8s var(--ease);transition-delay:var(--d,0s);
+}
+.anim .farr i{width:0}
+.anim .farr.in i{width:100%}
+.flow-lbl{
+  display:grid;grid-template-columns:1fr 58px 1fr 58px 1fr;margin-top:16px;
+  font-size:12.5px;color:var(--muted);text-align:center;
+}
+.flow-lbl span:nth-child(even){font-size:11px;color:var(--muted-2)}
+
+/* ============ STEPS ============ */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.step{
+  background:var(--ink);color:var(--on-ink);border-radius:var(--r-xl);
+  padding:30px 26px 32px;display:flex;flex-direction:column;gap:13px;
+  transition:transform .45s var(--ease);
+}
+.step:hover{transform:translateY(-4px)}
+.step-n{
+  font-size:11.5px;letter-spacing:.14em;color:var(--on-ink-muted);font-weight:600;
+  display:flex;align-items:center;gap:10px;
+}
+.step-n::after{content:"";flex:1;height:1px;background:var(--ink-rule)}
+.step h4{font-size:19px;font-weight:600;color:var(--on-ink)}
+.step p{font-size:14.5px;color:var(--on-ink-muted);line-height:1.6}
+.step-tag{
+  margin-top:auto;padding-top:16px;font-size:11.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--on-ink);opacity:.55;font-weight:600;
+}
+
+/* ============ CALCULATOR ============ */
+.calc{display:grid;grid-template-columns:.92fr 1.08fr;gap:14px}
+.calc-in{
+  background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-xl);
+  padding:34px 32px;display:flex;flex-direction:column;
+}
+.calc-out{
+  background:var(--ink);color:var(--on-ink);border-radius:var(--r-xl);
+  padding:34px 32px;display:flex;flex-direction:column;
+}
+.calc-out .eyebrow{color:var(--on-ink-muted)}
+.fld{margin-bottom:28px}
+.fld:last-child{margin-bottom:0}
+.fld-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;gap:12px}
+.fld-l{font-size:14px;color:var(--muted)}
+.fld-v{font-size:18px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent;cursor:pointer;display:block}
+input[type="range"]::-webkit-slider-runnable-track{height:4px;background:var(--ivory-lo);border-radius:var(--r-pill)}
+input[type="range"]::-moz-range-track{height:4px;background:var(--ivory-lo);border-radius:var(--r-pill)}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:20px;height:20px;background:var(--ink);margin-top:-8px;
+  border:3px solid var(--ivory-hi);border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.25);
+  transition:transform .2s var(--ease);
+}
+input[type="range"]:hover::-webkit-slider-thumb{transform:scale(1.12)}
+input[type="range"]::-moz-range-thumb{
+  width:20px;height:20px;background:var(--ink);border:3px solid var(--ivory-hi);border-radius:50%;
+}
+.fld-scale{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted-2);margin-top:4px}
+.seg{display:flex;gap:6px;background:var(--ivory-lo);padding:5px;border-radius:var(--r-pill)}
+.seg button{
+  flex:1;padding:11px 6px;background:transparent;border:0;cursor:pointer;
+  font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--muted);
+  border-radius:var(--r-pill);transition:color .3s var(--ease),background .3s var(--ease);
+}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink)}
+.seg-2 button{font-size:13.5px}
+
+/* — stages of the calculation — */
+.stages{display:flex;flex-direction:column;position:relative;padding-left:36px}
+.stages::before{content:"";position:absolute;left:11px;top:16px;bottom:46px;width:1px;background:var(--ink-rule)}
+.stg{position:relative;padding:13px 0;display:flex;align-items:baseline;gap:14px}
+.stg[data-n]::before{
+  content:attr(data-n);position:absolute;left:-36px;top:12px;
+  width:23px;height:23px;border:1px solid var(--ink-rule);background:var(--ink);
+  font-size:10.5px;font-weight:600;display:grid;place-items:center;color:var(--on-ink-muted);
+  border-radius:var(--r-pill);
+  transition:background .4s var(--ease),color .4s var(--ease),border-color .4s var(--ease);
+}
+.stg.hot::before{background:var(--on-ink);color:var(--ink);border-color:var(--on-ink)}
+.stg-l{font-size:14.5px;color:var(--on-ink);flex:1;opacity:.92}
+.stg-l small{display:block;color:var(--on-ink-muted);font-size:12.5px;margin-top:3px;opacity:1}
+.stg-v{font-size:16.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.02em}
+.stg-op{
+  font-size:15px;color:var(--on-ink-muted);position:absolute;left:-36px;top:14px;
+  width:23px;text-align:center;
+}
+.stg.sum{border-top:1px solid var(--ink-rule);margin-top:8px;padding-top:18px}
+.stg.sum .stg-l{opacity:1;font-weight:600}
+.stg.sum .stg-v{font-size:20px}
+.res-main{
+  background:var(--on-ink);color:var(--ink);border-radius:var(--r-lg);
+  padding:24px 26px;margin-top:26px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+}
+.res-lab{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.res-big{font-size:clamp(34px,4.2vw,48px);line-height:1;margin-top:10px;font-weight:700;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.res-side{text-align:right;flex:0 0 auto}
+.res-side b{font-size:17px;display:block;font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:-.02em}
+.res-side span{font-size:12.5px;color:var(--muted)}
+.prop{margin-top:24px}
+.prop-bar{display:flex;height:36px;border-radius:var(--r-pill);overflow:hidden;background:var(--ivory-lo);gap:2px}
+.prop-bar i{display:block;height:100%;transition:width .55s var(--ease)}
+.prop-down{background:var(--rule-strong)}
+.prop-fin{background:var(--ink)}
+.prop-mark{background:repeating-linear-gradient(45deg,var(--ink) 0 2px,transparent 2px 7px);border:1px solid var(--ink)}
+.prop-leg{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap}
+.pl{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.pl i{width:12px;height:12px;flex:0 0 auto;border-radius:4px}
+.bankcmp{
+  margin-top:22px;border:1px solid var(--ink-rule);border-radius:var(--r-lg);padding:18px 22px;
+  display:flex;align-items:center;gap:16px;
+}
+.bankcmp-t{font-size:13.5px;color:var(--on-ink-muted);line-height:1.55;flex:1}
+.bankcmp-t b{color:var(--on-ink);font-weight:600}
+.bankcmp-v{font-size:21px;color:var(--crit-on-ink);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600;letter-spacing:-.02em}
+.res-note{margin-top:auto;padding-top:22px;font-size:12.5px;color:var(--on-ink-muted);line-height:1.6}
+.mini-sched{margin-top:24px}
+.mini-sched-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.msc{display:flex;align-items:flex-end;gap:4px;height:56px}
+.msc i{flex:1;background:var(--ink-rule);display:block;border-radius:3px;transition:height .5s var(--ease),background .3s}
+.msc i:hover{background:var(--on-ink)}
+.calc-help{margin-top:auto;padding-top:28px}
+.calc-help .eyebrow{margin-bottom:14px}
+.ch-i{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--rule);font-size:13.5px;color:var(--muted);line-height:1.5}
+.ch-i:last-child{border-bottom:0}
+.ch-i b{
+  font-size:10.5px;color:var(--muted);flex:0 0 20px;height:20px;border-radius:var(--r-pill);
+  background:var(--ivory-lo);display:grid;place-items:center;font-weight:600;margin-top:1px;
+}
+
+/* ============ COMPARISON ============ */
+.cmp{border:1px solid var(--ink-rule);border-radius:var(--r-lg);overflow:hidden}
+.cmp-row{display:grid;grid-template-columns:1.05fr 1fr 1fr;border-bottom:1px solid var(--ink-rule)}
+.cmp-row:last-child{border-bottom:0}
+.cmp-row>div{padding:20px 24px;font-size:15px;line-height:1.5}
+.cmp-head>div{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--on-ink-muted);font-weight:600}
+.cmp-head .cmp-us{color:var(--on-ink)}
+.cmp-k{color:var(--on-ink-muted)}
+.cmp-bad{color:var(--on-ink-muted)}
+.cmp-us{background:rgba(246,240,228,.06);position:relative;font-weight:500}
+.cmp-us::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--on-ink);
+  transform-origin:top;transition:transform .6s var(--ease);transition-delay:var(--d,0s);
+}
+.anim .cmp-us::before{transform:scaleY(0)}
+.anim .cmp-row.in .cmp-us::before{transform:scaleY(1)}
+
+/* ============ PRODUCTS ============ */
+.prods{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.prod{
+  background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-xl);
+  padding:32px 30px;display:flex;flex-direction:column;gap:16px;position:relative;overflow:hidden;
+  transition:transform .45s var(--ease),box-shadow .45s var(--ease);
+}
+.prod:hover{transform:translateY(-4px);box-shadow:var(--lift)}
+.prod-ill{
+  position:absolute;right:-10px;top:-6px;width:148px;height:148px;opacity:.12;pointer-events:none;
+  transition:opacity .5s var(--ease),transform .6s var(--ease);
+}
+.prod:hover .prod-ill{opacity:.2;transform:translate(-6px,4px) rotate(-3deg)}
+.prod-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;position:relative}
+.prod h3{font-size:27px;font-weight:600;letter-spacing:-.035em}
+.prod-sub{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:7px;font-weight:600}
+.prod p{color:var(--muted);font-size:15px;line-height:1.62;position:relative;max-width:42ch}
+.prod-meta{display:flex;gap:26px;border-top:1px solid var(--rule);padding-top:18px;margin-top:auto;position:relative}
+.pm-k{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;font-weight:600}
+.pm-v{font-size:17px;font-variant-numeric:tabular-nums;margin-top:5px;display:block;font-weight:600;letter-spacing:-.02em}
+.prod-go{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink);position:relative;font-weight:600}
+.prod-go svg{transition:transform .35s var(--ease)}
+.prod:hover .prod-go svg{transform:translateX(5px)}
+.tag{
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  border:1px solid var(--rule-strong);padding:6px 12px;color:var(--muted);
+  white-space:nowrap;border-radius:var(--r-pill);
+}
+
+/* ============ CASES ============ */
+.cases{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.case{
+  background:rgba(246,240,228,.055);border:1px solid var(--ink-rule);border-radius:var(--r-xl);
+  padding:30px 28px;display:flex;flex-direction:column;gap:18px;transition:transform .4s var(--ease);
+}
+.case:hover{transform:translateY(-4px)}
+.case-q{font-size:19px;line-height:1.42;color:var(--on-ink);font-weight:500;letter-spacing:-.02em}
+.case-m{display:flex;gap:24px;padding:16px 0;border-top:1px solid var(--ink-rule);border-bottom:1px solid var(--ink-rule)}
+.case-k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--on-ink-muted);display:block;font-weight:600}
+.case-v{font-size:16px;color:var(--on-ink);margin-top:5px;display:block;font-variant-numeric:tabular-nums;font-weight:600}
+.case-who{display:flex;align-items:center;gap:12px;margin-top:auto}
+.case-av{
+  width:40px;height:40px;border:1px solid var(--ink-rule);border-radius:var(--r-pill);
+  display:grid;place-items:center;font-size:12.5px;color:var(--on-ink-muted);flex:0 0 auto;font-weight:600;
+}
+.case-n{font-size:14.5px;color:var(--on-ink);display:block;font-weight:500}
+.case-c{font-size:12.5px;color:var(--on-ink-muted);display:block}
+
+/* ============ DOCUMENTS ============ */
+.docs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.doc{
+  background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg);
+  padding:26px 28px;display:flex;align-items:flex-start;gap:16px;
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease);
+}
+.doc:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.doc-ic{
+  width:38px;height:38px;background:var(--ink);color:var(--on-ink);flex:0 0 auto;
+  display:grid;place-items:center;font-size:12px;border-radius:var(--r-pill);font-weight:600;
+}
+.doc h4{font-size:16px;font-weight:600}
+.doc p{font-size:13.5px;color:var(--muted);margin-top:6px;line-height:1.55}
+
+/* ============ COUNCIL ============ */
+.council{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cm{
+  background:rgba(246,240,228,.055);border:1px solid var(--ink-rule);border-radius:var(--r-xl);
+  padding:30px 28px;transition:transform .4s var(--ease);
+}
+.cm:hover{transform:translateY(-4px)}
+.cm-av{
+  width:48px;height:48px;border:1px solid var(--ink-rule);border-radius:var(--r-pill);
+  display:grid;place-items:center;font-size:13px;color:var(--on-ink-muted);margin-bottom:18px;font-weight:600;
+}
+.cm h4{font-size:18px;font-weight:600;color:var(--on-ink)}
+.cm-role{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--on-ink-muted);margin-top:8px;font-weight:600}
+.cm p{font-size:14.5px;color:var(--on-ink-muted);margin-top:16px;line-height:1.6}
+
+/* ============ WIZARD ============ */
+.wizard{border:1px solid var(--rule);background:var(--ivory-hi);border-radius:var(--r-xl);overflow:hidden}
+.wz-head{display:flex;border-bottom:1px solid var(--rule);padding:10px;gap:8px}
+.wz-t{flex:1;padding:14px 20px;display:flex;align-items:center;gap:12px;border-radius:var(--r-pill);transition:background .35s var(--ease)}
+.wz-t.on{background:var(--ivory-lo)}
+.wz-n{
+  width:26px;height:26px;border:1px solid var(--rule-strong);border-radius:var(--r-pill);
+  display:grid;place-items:center;font-size:11.5px;color:var(--muted);flex:0 0 auto;font-weight:600;
+  transition:background .4s var(--ease),color .4s var(--ease),border-color .4s var(--ease);
+}
+.wz-t.on .wz-n{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.wz-t.done .wz-n{background:var(--ok);color:var(--ivory);border-color:var(--ok)}
+.wz-l{font-size:14px;color:var(--muted)}
+.wz-t.on .wz-l{color:var(--ink);font-weight:600}
+.wz-body{padding:34px;position:relative;overflow:hidden}
+.wz-pane{display:none}
+.wz-pane.on{display:block;animation:paneIn .45s var(--ease)}
+@keyframes paneIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.f-full{grid-column:1/-1}
+label.lbl{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;font-weight:600}
+.inp{
+  width:100%;padding:14px 17px;background:var(--ivory);border:1px solid var(--rule-strong);
+  border-radius:var(--r-md);font-size:15px;transition:border-color .25s,background .25s;
+}
+.inp:focus{outline:none;border-color:var(--ink);background:var(--ivory-hi)}
+.inp.err{border-color:var(--crit);background:var(--crit-bg)}
+select.inp{
+  appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);
+  background-position:calc(100% - 20px) 22px,calc(100% - 15px) 22px;
+  background-size:5px 5px;background-repeat:no-repeat;
+}
+.pick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.pick button{
+  background:var(--ivory);border:1px solid var(--rule);border-radius:var(--r-lg);
+  padding:20px 18px;cursor:pointer;text-align:left;transition:all .3s var(--ease);
+}
+.pick button:hover{border-color:var(--rule-strong);transform:translateY(-2px)}
+.pick button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.pick-t{font-size:15px;font-weight:600;display:block}
+.pick-s{font-size:12.5px;color:var(--muted);display:block;margin-top:5px}
+.pick button[aria-pressed="true"] .pick-s{color:var(--on-ink-muted)}
+.wz-foot{display:flex;align-items:center;gap:14px;margin-top:30px;padding-top:24px;border-top:1px solid var(--rule);flex-wrap:wrap}
+.wz-foot p{font-size:12.5px;color:var(--muted);max-width:46ch;line-height:1.55}
+.wz-sum{
+  display:flex;gap:26px;padding:18px 22px;background:var(--ivory);border:1px solid var(--rule);
+  border-radius:var(--r-lg);margin-bottom:26px;flex-wrap:wrap;
+}
+.wz-sum span{display:block}
+.wz-sum .pm-v{font-size:16px}
+.done-box{text-align:center;padding:30px 20px}
+.done-ic{
+  width:66px;height:66px;background:var(--ok);color:var(--ivory);border-radius:var(--r-pill);margin:0 auto 22px;
+  display:grid;place-items:center;font-size:28px;animation:pop .5s var(--ease);
+}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.done-box h3{font-size:29px;margin-bottom:12px;font-weight:600}
+.done-box p{color:var(--muted);max-width:48ch;margin:0 auto;font-size:15px}
+.done-id{
+  font-size:15px;border:1px solid var(--rule-strong);border-radius:var(--r-pill);
+  padding:11px 22px;display:inline-block;margin-top:22px;font-weight:600;font-variant-numeric:tabular-nums;
+}
+
+/* ============ FAQ ============ */
+.faq{display:flex;flex-direction:column;gap:10px}
+.q{border:1px solid var(--rule);background:var(--ivory-hi);border-radius:var(--r-lg);transition:border-color .3s}
+.q[open-state="1"]{border-color:var(--rule-strong)}
+.q-btn{
+  width:100%;background:none;border:0;padding:24px 26px;text-align:left;cursor:pointer;
+  display:flex;justify-content:space-between;gap:26px;align-items:center;font-size:17px;
+  font-weight:600;letter-spacing:-.02em;transition:color .25s;
+}
+.q-btn:hover{color:var(--muted)}
+.q-mark{
+  font-size:18px;color:var(--muted);flex:0 0 30px;height:30px;border-radius:var(--r-pill);
+  background:var(--ivory-lo);display:grid;place-items:center;transition:transform .35s var(--ease);
+}
+.q[open-state="1"] .q-mark{transform:rotate(135deg)}
+.q-body{max-height:0;overflow:hidden;transition:max-height .45s var(--ease)}
+.q-body p{padding:0 26px 26px;color:var(--muted);max-width:74ch;font-size:15px;line-height:1.68}
+
+/* ============ CTA ============ */
+.cta{background:var(--ink);color:var(--on-ink);padding:80px 0;margin:0 14px;border-radius:var(--r-xl)}
+.cta-in{display:flex;align-items:center;gap:48px;flex-wrap:wrap}
+.cta h2{font-size:clamp(30px,3.9vw,50px);line-height:1.03;color:var(--on-ink);flex:1;min-width:280px;letter-spacing:-.042em;font-weight:700}
+.cta-side{display:flex;flex-direction:column;gap:14px}
+.cta .btn{background:var(--on-ink);color:var(--ink);border-color:var(--on-ink)}
+.cta-phone{font-size:24px;color:var(--on-ink);font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.cta-hours{font-size:13px;color:var(--on-ink-muted)}
+
+/* ============ FOOTER ============ */
+.ftr{padding:70px 0 34px}
+.ftr-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:44px}
+.ftr h5{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 16px;font-weight:600}
+.ftr ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+.ftr a{font-size:14.5px;color:var(--ink);opacity:.7;transition:opacity .25s}
+.ftr a:hover{opacity:1}
+.ftr-bot{margin-top:56px;padding-top:26px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.ftr-note{margin-top:18px;font-size:14px;color:var(--muted);max-width:38ch;line-height:1.62}
+.ftr-office{font-size:14px;color:var(--muted);line-height:1.7}
+.ftr-office b{color:var(--ink);font-weight:600;display:block;margin-top:12px}
+
+/* ============ GATE ============ */
+.gate{min-height:100vh;display:grid;place-items:center;background:var(--ink);padding:24px}
+.gate-card{
+  width:100%;max-width:440px;background:var(--ivory);padding:40px 36px;
+  border-radius:var(--r-xl);border:1px solid var(--rule);
+}
+.gate .mark{width:46px;height:46px;font-size:15px}
+.gate h2{font-size:29px;margin:24px 0 10px;font-weight:600;letter-spacing:-.035em}
+.gate p{color:var(--muted);font-size:14.5px;line-height:1.6}
+.gate-users{display:flex;flex-direction:column;gap:8px;margin:26px 0 22px}
+.gu{
+  background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg);
+  padding:14px 16px;display:flex;align-items:center;gap:13px;cursor:pointer;text-align:left;
+  width:100%;transition:border-color .25s,background .25s;
+}
+.gu:hover{border-color:var(--rule-strong)}
+.gu[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
+.gu-av{
+  width:36px;height:36px;background:var(--ink);color:var(--on-ink);border-radius:var(--r-pill);
+  display:grid;place-items:center;font-size:12px;flex:0 0 auto;font-weight:600;
+}
+.gu[aria-pressed="true"] .gu-av{background:var(--on-ink);color:var(--ink)}
+.gu-n{font-size:14.5px;font-weight:600;display:block}
+.gu-r{font-size:12.5px;color:var(--muted);display:block}
+.gu[aria-pressed="true"] .gu-r{color:var(--on-ink-muted)}
+.gu-chk{margin-left:auto;font-size:14px;opacity:0}
+.gu[aria-pressed="true"] .gu-chk{opacity:1}
+
+/* ============ HUB SHELL ============ */
+.hub{display:grid;grid-template-columns:250px 1fr;min-height:100vh;background:var(--ivory)}
+.rail{
+  background:var(--ink);color:var(--on-ink);display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;margin:10px 0 10px 10px;
+  border-radius:var(--r-lg);height:calc(100vh - 20px);
+}
+.rail-top{padding:20px 18px;border-bottom:1px solid var(--ink-rule);display:flex;align-items:center;gap:11px}
+.rail .mark{background:var(--on-ink);color:var(--ink);width:34px;height:34px;font-size:12px}
+.rail-name{font-size:16px;line-height:1.15;font-weight:600;letter-spacing:-.02em}
+.rail-sub{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--on-ink-muted);font-weight:600}
+.rail-nav{padding:14px 12px;display:flex;flex-direction:column;gap:2px;flex:1}
+.rail-sec{font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--on-ink-muted);padding:16px 12px 7px;font-weight:600}
+.rl{
+  display:flex;align-items:center;gap:12px;padding:11px 12px;background:none;border:0;
+  cursor:pointer;color:var(--on-ink);opacity:.66;font-size:14px;text-align:left;width:100%;
+  border-radius:var(--r-md);transition:opacity .2s,background .2s;font-weight:500;
+}
+.rl:hover{opacity:1;background:rgba(246,240,228,.07)}
+.rl.on{opacity:1;background:rgba(246,240,228,.13)}
+.rl-ic{width:16px;height:16px;flex:0 0 auto}
+.rl-badge{
+  margin-left:auto;font-size:11px;background:var(--on-ink);color:var(--ink);
+  padding:2px 8px;border-radius:var(--r-pill);font-variant-numeric:tabular-nums;font-weight:600;
+}
+.rail-bot{padding:14px 18px;border-top:1px solid var(--ink-rule);display:flex;align-items:center;gap:11px}
+.rail-bot .gu-av{background:var(--on-ink);color:var(--ink);width:32px;height:32px;font-size:11px}
+.rail-bot .gu-n{color:var(--on-ink);font-size:13.5px}
+.rail-bot .gu-r{color:var(--on-ink-muted);font-size:11.5px}
+.rail-exit{
+  margin-left:auto;background:none;border:1px solid var(--ink-rule);color:var(--on-ink);
+  cursor:pointer;padding:6px 10px;font-size:12px;border-radius:var(--r-pill);
+}
+.rail-exit:hover{background:var(--on-ink);color:var(--ink)}
+
+.hub-main{display:flex;flex-direction:column;min-width:0}
+.topbar{
+  background:var(--ivory);padding:0 26px;height:74px;display:flex;align-items:center;gap:18px;
+  position:sticky;top:0;z-index:40;
+}
+.tb-title{font-size:22px;font-weight:600;letter-spacing:-.03em}
+.tb-crumb{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tb-search{margin-left:auto;position:relative;width:270px}
+.tb-search .inp{padding:10px 14px 10px 36px;font-size:14px;background:var(--ivory-hi);border-radius:var(--r-pill)}
+.tb-search svg{position:absolute;left:14px;top:12px;opacity:.45}
+.tb-date{
+  font-size:12.5px;color:var(--muted);border:1px solid var(--rule-strong);
+  padding:8px 14px;white-space:nowrap;border-radius:var(--r-pill);font-weight:500;
+}
+.hub-body{padding:8px 26px 26px;display:flex;flex-direction:column;gap:14px;flex:1}
+
+/* ============ HUB PRIMITIVES ============ */
+.card{background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg);overflow:hidden}
+.card-h{padding:17px 20px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:12px}
+.card-h h3{font-size:15.5px;font-weight:600;letter-spacing:-.01em}
+.card-h .eyebrow{margin-left:auto}
+.card-b{padding:20px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kpi{
+  background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg);
+  padding:18px 20px 20px;display:flex;flex-direction:column;gap:10px;min-width:0;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease);
+}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.kpi-l{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kpi-v{font-size:27px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.04em;font-weight:700}
+.kpi-v small{font-size:15px;margin-left:2px;font-weight:600}
+.kpi-f{display:flex;align-items:center;gap:8px;margin-top:auto}
+.delta{font-size:11px;padding:3px 9px;border-radius:var(--r-pill);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.delta.up{background:var(--ok-bg);color:var(--ok)}
+.delta.down{background:var(--crit-bg);color:var(--crit)}
+.delta.flat{background:var(--ivory-lo);color:var(--muted)}
+.kpi-sub{font-size:11.5px;color:var(--muted)}
+.grid-2{display:grid;grid-template-columns:1.55fr 1fr;gap:14px;align-items:start}
+.grid-2b{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.chart-wrap{position:relative;width:100%}
+canvas.chart{display:block;width:100%}
+
+.chip{
+  display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.04em;
+  text-transform:uppercase;padding:4px 11px;white-space:nowrap;border-radius:var(--r-pill);font-weight:600;
+}
+.chip::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}
+.chip.warn{background:var(--warn-bg);color:var(--warn)}
+.chip.crit{background:var(--crit-bg);color:var(--crit)}
+.chip.info{background:var(--info-bg);color:var(--info)}
+.chip.neut{background:var(--ivory-lo);color:var(--muted)}
+
+.tbl-scroll{overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
+.tbl th{
+  font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);
+  text-align:left;padding:13px 16px;border-bottom:1px solid var(--rule);font-weight:600;white-space:nowrap;
+}
+.tbl td{padding:13px 16px;border-bottom:1px solid var(--rule);vertical-align:middle}
+.tbl tbody tr{cursor:pointer;transition:background .15s}
+.tbl tbody tr:hover{background:var(--ivory-lo)}
+.tbl tbody tr:last-child td{border-bottom:0}
+.tbl .r{text-align:right}
+.tbl .n{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:500}
+.tbl .id{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.who{display:flex;align-items:center;gap:11px;min-width:0}
+.av{
+  width:32px;height:32px;background:var(--ivory-lo);border-radius:var(--r-pill);
+  display:grid;place-items:center;font-size:11px;flex:0 0 auto;color:var(--muted);font-weight:600;
+}
+.who-n{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who-s{font-size:12px;color:var(--muted)}
+.bar{height:6px;background:var(--ivory-lo);position:relative;min-width:60px;overflow:hidden;border-radius:var(--r-pill)}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--ink);display:block;border-radius:var(--r-pill)}
+
+/* ============ KANBAN ============ */
+.kanban{display:grid;grid-template-columns:repeat(6,minmax(215px,1fr));gap:12px;overflow-x:auto;padding-bottom:8px;align-items:start}
+.col{background:var(--ivory-lo);border-radius:var(--r-lg);min-height:200px;display:flex;flex-direction:column}
+.col-h{padding:14px 16px 8px;display:flex;align-items:center;gap:8px}
+.col-t{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.col-c{margin-left:auto;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;font-weight:600}
+.col-sum{padding:0 16px 12px;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.col-b{padding:0 10px 10px;display:flex;flex-direction:column;gap:9px;flex:1}
+.col.drop{outline:2px dashed var(--rule-strong);outline-offset:-4px}
+.kc{
+  background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-md);padding:14px;
+  cursor:grab;display:flex;flex-direction:column;gap:10px;
+  transition:box-shadow .2s,border-color .2s,transform .2s;
+}
+.kc:hover{box-shadow:var(--shadow);border-color:var(--rule-strong);transform:translateY(-2px)}
+.kc:active{cursor:grabbing}
+.kc.drag{opacity:.4}
+.kc-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.kc-id{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.kc .chip{font-size:9.5px;padding:3px 8px;letter-spacing:.02em}
+.kc-n{font-size:14.5px;font-weight:600;line-height:1.3}
+.kc-p{font-size:12.5px;color:var(--muted)}
+.kc-sum{font-size:16px;font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:-.02em}
+.kc-foot{display:flex;align-items:center;gap:8px;border-top:1px solid var(--rule);padding-top:10px}
+.kc-days{margin-left:auto;font-size:11px;color:var(--muted)}
+
+/* ============ DRAWER ============ */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:90;opacity:0;transition:opacity .22s}
+.scrim.on{opacity:1}
+.drawer{
+  position:fixed;top:10px;right:10px;bottom:10px;width:min(580px,calc(100% - 20px));
+  background:var(--ivory);z-index:91;border-radius:var(--r-xl);display:flex;flex-direction:column;
+  transform:translateX(calc(100% + 20px));transition:transform .3s var(--ease);overflow:hidden;
+}
+.drawer.on{transform:none}
+.dr-h{padding:24px 26px;border-bottom:1px solid var(--rule);display:flex;align-items:flex-start;gap:14px}
+.dr-h h3{font-size:25px;line-height:1.15;font-weight:600;letter-spacing:-.035em}
+.dr-x{
+  background:var(--ivory-lo);border:0;cursor:pointer;width:36px;height:36px;flex:0 0 auto;
+  margin-left:auto;font-size:15px;border-radius:var(--r-pill);transition:background .25s;
+}
+.dr-x:hover{background:var(--ink);color:var(--on-ink)}
+.dr-b{padding:24px 26px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:24px}
+.dr-sec-t{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:600}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kv>div{background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-md);padding:12px 14px}
+.kv-k{font-size:11.5px;color:var(--muted);display:block}
+.kv-v{font-size:14.5px;font-variant-numeric:tabular-nums;margin-top:4px;display:block;font-weight:600}
+.chk{display:flex;flex-direction:column;gap:8px}
+.chk-i{
+  background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-md);
+  padding:12px 14px;display:flex;align-items:center;gap:12px;font-size:14px;
+}
+.chk-b{
+  width:20px;height:20px;border:1px solid var(--rule-strong);border-radius:var(--r-pill);
+  display:grid;place-items:center;font-size:11px;flex:0 0 auto;
+}
+.chk-i.yes .chk-b{background:var(--ok);border-color:var(--ok);color:var(--ivory)}
+.chk-i.no .chk-b{border-color:var(--crit);color:var(--crit)}
+.chk-note{margin-left:auto;font-size:12px;color:var(--muted)}
+.dr-f{padding:18px 26px;border-top:1px solid var(--rule);display:flex;gap:10px;background:var(--ivory-hi)}
+.dr-f .btn{flex:1}
+.btn-out{background:transparent;color:var(--ink);border-color:var(--rule-strong)}
+.btn-out:hover{background:var(--crit);border-color:var(--crit);color:var(--ivory)}
+.sched{width:100%;border-collapse:collapse;font-size:13px}
+.sched th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);font-weight:600}
+.sched td{padding:10px 12px;border-bottom:1px solid var(--rule)}
+.sched .n{font-variant-numeric:tabular-nums;text-align:right}
+.sched tr.paid td{color:var(--muted)}
+
+/* ============ MISC HUB ============ */
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.filt{
+  background:var(--ivory-hi);border:1px solid var(--rule);padding:8px 15px;cursor:pointer;
+  font-size:12.5px;color:var(--muted);border-radius:var(--r-pill);font-weight:500;
+  transition:all .25s var(--ease);
+}
+.filt:hover{color:var(--ink);border-color:var(--rule-strong)}
+.filt.on{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.feed{display:flex;flex-direction:column}
+.fi{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--rule)}
+.fi:last-child{border-bottom:0}
+.fi-t{font-size:11px;color:var(--muted);flex:0 0 44px;padding-top:2px;font-variant-numeric:tabular-nums}
+.fi-txt{font-size:14px;line-height:1.5}
+.fi-txt b{font-weight:600}
+.fi-txt span{color:var(--muted)}
+.funnel{display:flex;flex-direction:column;gap:10px}
+.fn{display:grid;grid-template-columns:132px 1fr 54px;gap:12px;align-items:center;font-size:13.5px}
+.fn-bar{height:24px;background:var(--ivory-lo);position:relative;border-radius:var(--r-pill);overflow:hidden}
+.fn-bar i{position:absolute;inset:0 auto 0 0;background:var(--ink);border-radius:var(--r-pill)}
+.fn-n{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.split{display:flex;flex-direction:column;gap:12px}
+.sp{display:grid;grid-template-columns:1fr 60px;gap:12px;align-items:center;font-size:14px}
+.sp-bar{grid-column:1/-1;height:6px;background:var(--ivory-lo);position:relative;margin-top:-4px;border-radius:var(--r-pill)}
+.sp-bar i{position:absolute;inset:0 auto 0 0;background:var(--ink);border-radius:var(--r-pill)}
+.sp-v{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.empty{padding:44px 20px;text-align:center;color:var(--muted);font-size:14px}
+.setrow{display:flex;align-items:center;gap:16px;padding:15px 0;border-bottom:1px solid var(--rule)}
+.setrow:last-child{border-bottom:0}
+.setrow-t{font-size:14.5px;font-weight:600}
+.setrow-d{font-size:12.5px;color:var(--muted);margin-top:3px}
+.setrow-c{margin-left:auto;display:flex;align-items:center;gap:10px}
+.stepper{display:flex;align-items:center;background:var(--ivory-lo);border-radius:var(--r-pill);padding:4px}
+.stepper button{
+  background:none;border:0;width:30px;height:30px;cursor:pointer;font-size:16px;
+  border-radius:var(--r-pill);transition:background .2s;
+}
+.stepper button:hover{background:var(--ink);color:var(--on-ink)}
+.stepper span{padding:0 12px;font-size:13.5px;font-variant-numeric:tabular-nums;min-width:66px;text-align:center;font-weight:600}
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,80px);z-index:120;
+  background:var(--ink);color:var(--on-ink);padding:14px 24px;font-size:14.5px;
+  border-radius:var(--r-pill);display:flex;align-items:center;gap:11px;opacity:0;
+  transition:transform .26s var(--ease),opacity .26s;font-weight:500;
+}
+.toast.on{transform:translate(-50%,0);opacity:1}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1340px){
+  .demo-tag{display:none}
+  .nav{gap:2px}
+  .nav a{font-size:13.5px;padding:8px 11px}
+}
+@media (max-width:1140px){
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .grid-2,.grid-2b{grid-template-columns:1fr}
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .sec-head{grid-template-columns:1fr;gap:14px}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .ftr-grid{grid-template-columns:1fr 1fr}
+  .calc{grid-template-columns:1fr}
+  .cases{grid-template-columns:1fr}
+  .council{grid-template-columns:1fr}
+  .hero-strip{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:900px){
+  .hub{grid-template-columns:1fr}
+  .rail{position:fixed;left:0;top:0;z-index:80;width:250px;margin:0;height:100vh;border-radius:0;transform:translateX(-100%);transition:transform .3s var(--ease)}
+  .rail.open{transform:none}
+  .hub-menu{display:inline-flex !important}
+  .flow-row,.flow-lbl{grid-template-columns:1fr}
+  .farr{height:26px;width:1px;justify-self:center;background:var(--rule-strong)}
+  .farr::after{right:-3px;top:auto;bottom:0;transform:rotate(135deg)}
+  .farr i{width:1px;height:100%;transition:height .8s var(--ease)}
+  .anim .farr i{width:1px;height:0}
+  .anim .farr.in i{height:100%}
+  .flow-lbl{display:none}
+  .ps{grid-template-columns:1fr}
+  .prods{grid-template-columns:1fr}
+  .docs{grid-template-columns:1fr}
+  .pick{grid-template-columns:1fr 1fr}
+}
+@media (max-width:780px){
+  .wrap{padding:0 18px}
+  .nav{display:none}
+  .burger{display:inline-flex;margin-left:auto}
+  .hdr-act .btn{display:none}
+  .hdr-in{gap:12px;height:70px}
+  .nav.open{
+    display:flex;position:absolute;top:70px;left:12px;right:12px;background:var(--ivory-hi);
+    flex-direction:column;gap:2px;padding:12px;border:1px solid var(--rule);
+    border-radius:var(--r-lg);animation:paneIn .3s var(--ease);box-shadow:var(--lift);
+  }
+  .nav.open a{padding:14px 16px;font-size:16px;color:var(--ink)}
+  #girih{opacity:.28}
+  .hero-in{padding-top:44px}
+  .hero-strip{grid-template-columns:1fr;margin-top:48px}
+  .hs-n{font-size:27px}
+  .sec{padding:62px 0}
+  .slab,.cta{margin:0 10px;border-radius:var(--r-lg)}
+  .cols-3,.steps,.pick{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .cmp-row{grid-template-columns:1fr}
+  .cmp-row>div{padding:14px 20px}
+  .cmp-head{display:none}
+  .cmp-k{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding-bottom:0 !important}
+  .kpis{grid-template-columns:1fr 1fr}
+  .ftr-grid{grid-template-columns:1fr;gap:32px}
+  .tb-search{display:none}
+  .hub-body{padding:8px 14px 16px}
+  .topbar{padding:0 14px;height:64px}
+  .calc-in,.calc-out{padding:26px 22px}
+  .wz-body{padding:24px 18px}
+  .wz-l{display:none}
+  .wz-t{flex:0 0 auto;padding:12px 16px}
+  .res-main{flex-direction:column;align-items:flex-start;gap:14px}
+  .res-side{text-align:left}
+  .cta-in{gap:26px}
+  .ps-col{padding:26px 22px 30px}
+  .drawer{top:0;right:0;bottom:0;width:100%;border-radius:0}
+  .q-btn{padding:20px 20px;font-size:16px}
+  .q-body p{padding:0 20px 22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important;animation-iteration-count:1 !important}
+  .anim .reveal{opacity:1;transform:none}
+  .mq-in{animation:none}
+}
+</style>
+
+<div id="prog"></div>
+<script>
+(function(){try{
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches
+     && 'IntersectionObserver' in window && !document.hidden){
+    document.documentElement.className+=' anim';
+  }
+}catch(e){}})();
+</script>
+
+<!-- ==================== SITE ==================== -->
+<div id="site">
+<header class="hdr" id="hdr">
+  <div class="wrap hdr-in">
+    <a class="brand" href="#/">
+      <span class="mark">ZK</span>
+      <span class="brand-txt">
+        <span class="brand-name">ZK Finance</span>
+        <span class="brand-sub">Исламская рассрочка</span>
+      </span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#kak">Как это работает</a>
+      <a href="#produkty">Продукты</a>
+      <a href="#kalkulyator">Калькулятор</a>
+      <a href="#klienty">Клиенты</a>
+      <a href="#sovet">Шариатский совет</a>
+      <a href="#voprosy">Вопросы</a>
+    </nav>
+    <div class="hdr-act">
+      <span class="demo-tag">Демо</span>
+      <a class="btn btn-ghost btn-sm" href="#/hub"><span>Кабинет</span></a>
+      <a class="btn btn-sm" href="#zayavka"><span>Оставить заявку</span></a>
+      <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 1h16M0 6h16M0 11h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <canvas id="girih" aria-hidden="true"></canvas>
+  <div class="wrap hero-in">
+    <div class="hero-grid">
+      <div>
+        <span class="pill reveal"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1.5l5.5 2.2v4.6C13.5 11.6 8 14.5 8 14.5S2.5 11.6 2.5 8.3V3.7L8 1.5z"/><path d="M5.8 8l1.6 1.6L10.4 6"/></svg>Наценка фиксируется в договоре и не растёт</span>
+        <h1 class="reveal" style="--d:.08s">Рассрочка без процентов.<em>Договор мурабаха.</em></h1>
+        <p class="hero-lead reveal" style="--d:.16s">Мы покупаем товар, который вы выбрали, и продаём его вам в рассрочку с наценкой, известной заранее. Наценка фиксируется в договоре и не меняется никогда — ни при просрочке, ни при досрочном погашении.</p>
+        <div class="hero-cta reveal" style="--d:.24s">
+          <a class="btn btn-lg" href="#kalkulyator"><span>Рассчитать платёж</span><span class="btn-arr">→</span></a>
+          <a class="btn btn-ghost btn-lg" href="#kak"><span>Как это работает</span></a>
+        </div>
+        <div class="hero-trust reveal" style="--d:.32s">
+          <span class="mono">✓</span>
+          <span>Каждая сделка проходит <b>шариатский аудит</b> — заключения публикуются в открытом реестре</span>
+        </div>
+      </div>
+      <div class="hero-side reveal" style="--d:.4s">
+        <div class="spec"><span class="spec-k">Наценка</span><span class="spec-v">от 8%</span></div>
+        <div class="spec"><span class="spec-k">Срок рассрочки</span><span class="spec-v">до 24 мес</span></div>
+        <div class="spec"><span class="spec-k">Первый взнос</span><span class="spec-v">от 20%</span></div>
+        <div class="spec"><span class="spec-k">Решение по заявке</span><span class="spec-v">30 мин</span></div>
+        <div class="spec"><span class="spec-k">Штраф за просрочку</span><span class="spec-v">на садаку</span></div>
+      </div>
+    </div>
+    <div class="hero-strip">
+      <div class="hs reveal"><span class="hs-n" data-count="0" data-suffix="%">0%</span><span class="hs-l">годовых — процентов нет вообще</span></div>
+      <div class="hs reveal" style="--d:.09s"><span class="hs-n" data-count="1480">1 480</span><span class="hs-l">договоров заключено с 2021 года</span></div>
+      <div class="hs reveal" style="--d:.18s"><span class="hs-n" data-count="2.4" data-prefix="₽" data-suffix=" млрд" data-dec="1">₽2,4 млрд</span><span class="hs-l">профинансировано клиентам</span></div>
+      <div class="hs reveal" style="--d:.27s"><span class="hs-n" data-count="97" data-suffix="%">97%</span><span class="hs-l">клиентов закрывают договор без просрочек</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="mq" aria-label="Партнёры">
+  <div class="mq-in" id="mqIn"></div>
+</div>
+
+<section class="sec" id="pochemu">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Зачем это нужно</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Вы не обязаны выбирать между нуждой и убеждениями</h2>
+        <p class="sec-desc">Машина для работы, квартира для семьи, оборудование для дела — всё это нужно сейчас. Банк предлагает единственный путь: процент. Мы предлагаем другой договор, в котором процента нет по своей конструкции, а не по названию.</p>
+      </div>
+    </div>
+    <div class="ps reveal">
+      <div class="ps-col">
+        <div class="ps-h">
+          <h3>Что останавливает</h3>
+          <span class="ps-badge bad">Кредит</span>
+        </div>
+        <div class="ps-i"><span class="ps-m">01</span><span><b>Риба в договоре</b><span>Процент — прямой запрет. Подписывая кредит, вы принимаете условие, которое не можете принять.</span></span></div>
+        <div class="ps-i"><span class="ps-m">02</span><span><b>Долг растёт сам по себе</b><span>Задержали платёж на месяц — сумма увеличилась. Дальше она растёт быстрее, чем вы успеваете гасить.</span></span></div>
+        <div class="ps-i"><span class="ps-m">03</span><span><b>Непонятно, сколько отдадите</b><span>Эффективная ставка, страховка, комиссии за обслуживание. Итоговая цифра всплывает в конце.</span></span></div>
+        <div class="ps-i"><span class="ps-m">04</span><span><b>Копить придётся годы</b><span>Отказ от кредита часто означает отказ от покупки вообще — и цена за это время уходит вверх.</span></span></div>
+      </div>
+      <div class="ps-col acc">
+        <div class="ps-h">
+          <h3>Как решаем</h3>
+          <span class="ps-badge good">ZK Finance</span>
+        </div>
+        <div class="ps-i"><span class="ps-m">✓</span><span><b>Купля-продажа вместо займа</b><span>Мы приобретаем товар в собственность и перепродаём вам дороже. Это торговля, а торговля дозволена.</span></span></div>
+        <div class="ps-i"><span class="ps-m">✓</span><span><b>Сумма зафиксирована навсегда</b><span>В договоре одна конечная цифра. Она не вырастет ни при просрочке, ни при изменении ставок в стране.</span></span></div>
+        <div class="ps-i"><span class="ps-m">✓</span><span><b>Всё видно до подписания</b><span>Наценка, график, штраф — на одной странице. Скрытых комиссий и страховок в договоре нет.</span></span></div>
+        <div class="ps-i"><span class="ps-m">✓</span><span><b>Покупка сегодня</b><span>Решение за 30 минут, оплата продавцу в тот же день. Товар вы получаете сразу, платите частями.</span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="principy">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Основания</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Три запрета, на которых держится договор</h2>
+        <p class="sec-desc">Исламское финансирование отличается от кредита не вывеской, а структурой сделки. Каждая заявка проверяется по трём основаниям — и любая из них может быть отклонена шариатским советом, даже если клиент платёжеспособен.</p>
+      </div>
+    </div>
+    <div class="cols-3">
+      <div class="cell reveal">
+        <span class="cell-ar">ربا</span>
+        <span class="eyebrow">Запрет 01</span>
+        <h3>Риба — процент</h3>
+        <p>Деньги не могут порождать деньги. Наш доход — торговая наценка при перепродаже реального товара, а не плата за время пользования суммой.</p>
+        <div class="cell-note">Следствие: наличными мы не выдаём. В сделке всегда есть товар и продавец.</div>
+      </div>
+      <div class="cell reveal" style="--d:.1s">
+        <span class="cell-ar">غرر</span>
+        <span class="eyebrow">Запрет 02</span>
+        <h3>Гарар — неизвестность</h3>
+        <p>Товар, цена, наценка, срок и график определены в момент подписания. Ни одна цифра не может измениться позже — плавающих ставок не существует.</p>
+        <div class="cell-note">Следствие: досрочная скидка — наше право, а не пункт договора. Иначе цена стала бы неопределённой.</div>
+      </div>
+      <div class="cell reveal" style="--d:.2s">
+        <span class="cell-ar">حرام</span>
+        <span class="eyebrow">Запрет 03</span>
+        <h3>Харам — запретный товар</h3>
+        <p>Мы не финансируем алкоголь, табак, азартные игры, свинину и ростовщические услуги. Категория товара проверяется до одобрения заявки.</p>
+        <div class="cell-note">Следствие: спорные категории уходят на совет. Ответ — в течение двух рабочих дней.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="kak">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Мурабаха</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Как проходит сделка</h2>
+        <p class="sec-desc">Порядок шагов принципиален: мы обязаны стать собственником товара до того, как продадим его вам. Продажа того, чем не владеешь, недействительна — именно этим мурабаха отличается от кредита с целевым назначением.</p>
+      </div>
+    </div>
+    <div class="flow reveal">
+      <div class="flow-row">
+        <div class="fnode" data-node="1"><span class="fnode-t">Сторона 1</span><span class="fnode-n">Продавец</span></div>
+        <div class="farr" data-arrow style="--d:.2s"><i></i></div>
+        <div class="fnode mid" data-node="2"><span class="fnode-t">Сторона 2</span><span class="fnode-n">ZK Finance</span></div>
+        <div class="farr" data-arrow style="--d:.5s"><i></i></div>
+        <div class="fnode" data-node="3"><span class="fnode-t">Сторона 3</span><span class="fnode-n">Вы</span></div>
+      </div>
+      <div class="flow-lbl">
+        <span>Дилер, застройщик, поставщик</span>
+        <span>оплата 100%</span>
+        <span>становится собственником товара</span>
+        <span>рассрочка</span>
+        <span>получаете товар сразу</span>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <span class="step-n">Шаг 01</span>
+        <h4>Вы выбираете товар</h4>
+        <p>Автомобиль у дилера, квартиру у застройщика, оборудование у поставщика. Присылаете счёт или ссылку на объявление — продавца выбираете сами, мы не навязываем партнёров.</p>
+        <span class="step-tag">30 минут на решение</span>
+      </div>
+      <div class="step reveal" style="--d:.08s">
+        <span class="step-n">Шаг 02</span>
+        <h4>ZK Finance покупает его</h4>
+        <p>Мы оплачиваем товар продавцу напрямую и оформляем его в свою собственность. Деньги вам на руки не выдаются — их в этой сделке попросту нет.</p>
+        <span class="step-tag">Оплата в день одобрения</span>
+      </div>
+      <div class="step reveal" style="--d:.16s">
+        <span class="step-n">Шаг 03</span>
+        <h4>Продаём вам с наценкой</h4>
+        <p>Подписываем договор купли-продажи в рассрочку. Итоговая цена — стоимость товара плюс наценка — зафиксирована одной суммой и разбита на равные платежи.</p>
+        <span class="step-tag">Один документ, без приложений</span>
+      </div>
+      <div class="step reveal" style="--d:.24s">
+        <span class="step-n">Шаг 04</span>
+        <h4>Вы платите равными долями</h4>
+        <p>График составлен при подписании и не пересматривается. Долг не растёт. Погасите досрочно — заплатите остаток, а часть наценки за неиспользованный срок вернём скидкой.</p>
+        <span class="step-tag">Досрочно — без штрафов</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="kalkulyator">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Калькулятор</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Посчитайте платёж по этапам</h2>
+        <p class="sec-desc">Расчёт показан так же, как он выглядит в договоре: от цены товара до последнего платежа, без «эффективных ставок». Наценка зависит только от срока и известна до подписания.</p>
+      </div>
+    </div>
+    <div class="calc reveal">
+      <div class="calc-in">
+        <div class="fld">
+          <div class="fld-top"><span class="fld-l">Что финансируем</span></div>
+          <div class="seg seg-2" id="cProd">
+            <button type="button" data-p="0" aria-pressed="true"><span>Авто</span></button>
+            <button type="button" data-p="1" aria-pressed="false"><span>Жильё</span></button>
+            <button type="button" data-p="2" aria-pressed="false"><span>Техника</span></button>
+            <button type="button" data-p="3" aria-pressed="false"><span>Бизнес</span></button>
+          </div>
+        </div>
+        <div class="fld">
+          <div class="fld-top"><span class="fld-l">Стоимость товара</span><span class="fld-v" id="cPriceV">2 400 000 ₽</span></div>
+          <input type="range" id="cPrice" min="100000" max="6000000" step="50000" value="2400000" aria-label="Стоимость товара">
+          <div class="fld-scale"><span id="cPriceMin">100 тыс</span><span id="cPriceMax">6 млн</span></div>
+        </div>
+        <div class="fld">
+          <div class="fld-top"><span class="fld-l">Первоначальный взнос</span><span class="fld-v" id="cDownV">30% · 720 000 ₽</span></div>
+          <input type="range" id="cDown" min="0" max="70" step="5" value="30" aria-label="Первоначальный взнос">
+          <div class="fld-scale"><span id="cDownMin">минимум 20%</span><span>70%</span></div>
+        </div>
+        <div class="fld">
+          <div class="fld-top"><span class="fld-l">Срок рассрочки</span><span class="fld-v" id="cTermV">12 месяцев</span></div>
+          <div class="seg" id="cTerm">
+            <button type="button" data-t="6" aria-pressed="false"><span>6</span></button>
+            <button type="button" data-t="12" aria-pressed="true"><span>12</span></button>
+            <button type="button" data-t="18" aria-pressed="false"><span>18</span></button>
+            <button type="button" data-t="24" aria-pressed="false"><span>24</span></button>
+          </div>
+        </div>
+        <div class="prop">
+          <div class="prop-bar">
+            <i class="prop-down" id="pbDown" style="width:30%"></i>
+            <i class="prop-fin" id="pbFin" style="width:52%"></i>
+            <i class="prop-mark" id="pbMark" style="width:18%"></i>
+          </div>
+          <div class="prop-leg">
+            <span class="pl"><i class="prop-down"></i>Ваш взнос</span>
+            <span class="pl"><i class="prop-fin"></i>Финансируем</span>
+            <span class="pl"><i class="prop-mark"></i>Наценка</span>
+          </div>
+        </div>
+        <div class="calc-help">
+          <span class="eyebrow">Что происходит дальше</span>
+          <div class="ch-i"><b>01</b>Присылаете счёт от продавца или ссылку на объявление</div>
+          <div class="ch-i"><b>02</b>Проверяем товар и категорию — решение за 30 минут</div>
+          <div class="ch-i"><b>03</b>Оплачиваем продавцу и подписываем договор с этой суммой</div>
+        </div>
+      </div>
+      <div class="calc-out">
+        <span class="eyebrow" style="margin-bottom:22px">Этапы расчёта</span>
+        <div class="stages">
+          <div class="stg" data-n="1">
+            <span class="stg-l">Стоимость товара<small>цена у продавца, которого выбрали вы</small></span>
+            <span class="stg-v" id="s1">2 400 000 ₽</span>
+          </div>
+          <div class="stg">
+            <span class="stg-op">−</span>
+            <span class="stg-l">Ваш первоначальный взнос<small>оплачиваете продавцу напрямую</small></span>
+            <span class="stg-v" id="s2">720 000 ₽</span>
+          </div>
+          <div class="stg" data-n="2">
+            <span class="stg-l">Финансируем — выкупаем товар<small>ZK Finance становится собственником</small></span>
+            <span class="stg-v" id="s3">1 680 000 ₽</span>
+          </div>
+          <div class="stg">
+            <span class="stg-op">+</span>
+            <span class="stg-l">Наценка <b id="sRate" class="mono">15%</b> за весь срок<small>фиксируется в договоре и больше не меняется</small></span>
+            <span class="stg-v" id="s4">252 000 ₽</span>
+          </div>
+          <div class="stg sum" data-n="3">
+            <span class="stg-l">Итого по договору<small>вся сумма, которую вы отдадите нам</small></span>
+            <span class="stg-v" id="s5">1 932 000 ₽</span>
+          </div>
+        </div>
+        <div class="res-main">
+          <div>
+            <span class="res-lab">Ежемесячный платёж</span>
+            <div class="res-big" id="rMonth">161 000 ₽</div>
+          </div>
+          <div class="res-side">
+            <b id="rTermN">× 12 мес</b><span>равными долями</span>
+            <b id="rAll" style="margin-top:12px">2 652 000 ₽</b><span>полная стоимость покупки</span>
+          </div>
+        </div>
+        <div class="bankcmp">
+          <span class="bankcmp-t">В банке под 28% годовых переплата за тот же срок составила бы <b>и продолжала бы расти при просрочке</b></span>
+          <span class="bankcmp-v" id="rBank">— ₽</span>
+        </div>
+        <div class="mini-sched">
+          <div class="mini-sched-h">
+            <span class="eyebrow">Остаток долга по месяцам</span>
+            <span class="mono" style="font-size:11px;color:var(--muted)">снижается ровно</span>
+          </div>
+          <div class="msc" id="msc"></div>
+        </div>
+        <p class="res-note">Расчёт предварительный и не является публичной офертой. Итоговые условия фиксируются в договоре купли-продажи после проверки товара и одобрения шариатским советом.</p>
+        <a class="btn btn-lg" href="#zayavka" style="margin-top:20px"><span>Отправить заявку на эти условия</span><span class="btn-arr">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec slab" id="otlichiya">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Сравнение</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Чем это отличается от кредита</h2>
+        <p class="sec-desc">Разница не в маркетинге. Меняется предмет договора: вместо денег под процент — товар по фиксированной цене. Отсюда следует всё остальное.</p>
+      </div>
+    </div>
+    <div class="cmp">
+      <div class="cmp-row cmp-head"><div>Параметр</div><div>Банковский кредит</div><div class="cmp-us">ZK Finance</div></div>
+      <div class="cmp-row" data-cmp><div class="cmp-k">Предмет договора</div><div class="cmp-bad">Заём денежных средств</div><div class="cmp-us">Купля-продажа товара</div></div>
+      <div class="cmp-row" data-cmp><div class="cmp-k">Плата</div><div class="cmp-bad">Процент, начисляется на остаток</div><div class="cmp-us">Наценка, зафиксирована суммой</div></div>
+      <div class="cmp-row" data-cmp><div class="cmp-k">Рост долга при просрочке</div><div class="cmp-bad">Проценты продолжают начисляться</div><div class="cmp-us">Долг не растёт ни на рубль</div></div>
+      <div class="cmp-row" data-cmp><div class="cmp-k">Досрочное погашение</div><div class="cmp-bad">Пересчёт по условиям банка</div><div class="cmp-us">Платите остаток, часть наценки вернём</div></div>
+      <div class="cmp-row" data-cmp><div class="cmp-k">Штраф за просрочку</div><div class="cmp-bad">Пени в доход банка</div><div class="cmp-us">Фиксированный, идёт на садаку</div></div>
+      <div class="cmp-row" data-cmp><div class="cmp-k">Страховка</div><div class="cmp-bad">Навязывается, входит в платёж</div><div class="cmp-us">Такафул по желанию, отдельно</div></div>
+      <div class="cmp-row" data-cmp><div class="cmp-k">Контроль сделки</div><div class="cmp-bad">Внутренний регламент</div><div class="cmp-us">Шариатский совет, аудит выборки</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="produkty">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Продукты</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Что можно взять в рассрочку</h2>
+        <p class="sec-desc">Условия по каждому направлению утверждены шариатским советом и не меняются в течение срока договора. Для недвижимости и партнёрских проектов применяются другие исламские контракты — мушарака и мудараба.</p>
+      </div>
+    </div>
+    <div class="prods">
+      <div class="prod reveal">
+        <svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path d="M12 62h76M18 62l8-20a6 6 0 016-4h36a6 6 0 016 4l8 20"/>
+          <rect x="12" y="62" width="76" height="14"/>
+          <circle cx="30" cy="76" r="7"/><circle cx="70" cy="76" r="7"/>
+          <path d="M36 38h28M50 38v20"/>
+        </svg>
+        <div class="prod-top">
+          <div><h3>Автомобиль</h3><div class="prod-sub">Мурабаха · новые и с пробегом</div></div>
+          <span class="tag">Хит</span>
+        </div>
+        <p>Покупаем машину у дилера или частного продавца после проверки юридической чистоты. ПТС оформляется на вас при выдаче, залог — на срок рассрочки.</p>
+        <div class="prod-meta">
+          <span><span class="pm-k">Сумма</span><span class="pm-v">до ₽6 млн</span></span>
+          <span><span class="pm-k">Срок</span><span class="pm-v">до 24 мес</span></span>
+          <span><span class="pm-k">Взнос</span><span class="pm-v">от 20%</span></span>
+        </div>
+        <a class="prod-go" href="#kalkulyator">Рассчитать платёж <svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg></a>
+      </div>
+      <div class="prod reveal" style="--d:.08s">
+        <svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path d="M14 46L50 18l36 28"/>
+          <path d="M22 42v38h56V42"/>
+          <rect x="42" y="56" width="16" height="24"/>
+          <rect x="28" y="52" width="10" height="10"/><rect x="62" y="52" width="10" height="10"/>
+        </svg>
+        <div class="prod-top">
+          <div><h3>Недвижимость</h3><div class="prod-sub">Мушарака мутанакиса</div></div>
+          <span class="tag">Убывающее партнёрство</span>
+        </div>
+        <p>Мы покупаем долю в квартире вместе с вами и постепенно продаём её вам. Плата за пользование нашей долей уменьшается с каждым выкупленным процентом.</p>
+        <div class="prod-meta">
+          <span><span class="pm-k">Сумма</span><span class="pm-v">до ₽15 млн</span></span>
+          <span><span class="pm-k">Срок</span><span class="pm-v">до 120 мес</span></span>
+          <span><span class="pm-k">Взнос</span><span class="pm-v">от 30%</span></span>
+        </div>
+        <a class="prod-go" href="#zayavka">Обсудить объект <svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg></a>
+      </div>
+      <div class="prod reveal" style="--d:.16s">
+        <svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">
+          <rect x="20" y="18" width="60" height="64"/>
+          <circle cx="50" cy="54" r="16"/><circle cx="50" cy="54" r="7"/>
+          <path d="M28 28h10M62 28h10"/>
+        </svg>
+        <div class="prod-top">
+          <div><h3>Техника и ремонт</h3><div class="prod-sub">Мурабаха · решение за 30 минут</div></div>
+          <span class="tag">Без залога</span>
+        </div>
+        <p>Бытовая техника, электроника, мебель, стройматериалы. Решение по паспорту, выдача — прямой оплатой счёта магазина в день обращения.</p>
+        <div class="prod-meta">
+          <span><span class="pm-k">Сумма</span><span class="pm-v">до ₽900 тыс</span></span>
+          <span><span class="pm-k">Срок</span><span class="pm-v">до 18 мес</span></span>
+          <span><span class="pm-k">Взнос</span><span class="pm-v">от 0%</span></span>
+        </div>
+        <a class="prod-go" href="#kalkulyator">Рассчитать платёж <svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg></a>
+      </div>
+      <div class="prod reveal" style="--d:.24s">
+        <svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">
+          <circle cx="50" cy="50" r="18"/><circle cx="50" cy="50" r="7"/>
+          <path d="M50 18v-8M50 90v-8M18 50h-8M90 50h-8M27 27l-6-6M79 79l-6-6M73 27l6-6M21 79l6-6"/>
+        </svg>
+        <div class="prod-top">
+          <div><h3>Бизнес-оборудование</h3><div class="prod-sub">Мурабаха и мудараба · для ИП и ООО</div></div>
+          <span class="tag">Для дела</span>
+        </div>
+        <p>Станки, автопарк, торговое и пищевое оборудование. Для проектов с распределением прибыли доступна мудараба — партнёрство, где мы делим и доход, и риск.</p>
+        <div class="prod-meta">
+          <span><span class="pm-k">Сумма</span><span class="pm-v">до ₽20 млн</span></span>
+          <span><span class="pm-k">Срок</span><span class="pm-v">до 36 мес</span></span>
+          <span><span class="pm-k">Взнос</span><span class="pm-v">от 25%</span></span>
+        </div>
+        <a class="prod-go" href="#zayavka">Оставить заявку <svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec slab" id="klienty">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Клиенты</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Как это выглядит на практике</h2>
+        <p class="sec-desc">Три закрытых договора с реальными цифрами. Истории приведены для демонстрации, суммы соответствуют действующим условиям.</p>
+      </div>
+    </div>
+    <div class="cases">
+      <div class="case reveal">
+        <p class="case-q">«Пять лет откладывал покупку машины, потому что кредит брать не хотел. Здесь подписал один договор и сразу знал конечную сумму».</p>
+        <div class="case-m">
+          <span><span class="case-k">Товар</span><span class="case-v">₽2,2 млн</span></span>
+          <span><span class="case-k">Срок</span><span class="case-v">12 мес</span></span>
+          <span><span class="case-k">Наценка</span><span class="case-v">15%</span></span>
+        </div>
+        <div class="case-who">
+          <span class="case-av">РД</span>
+          <span><span class="case-n">Рамзан Д.</span><span class="case-c">Гудермес · автомобиль</span></span>
+        </div>
+      </div>
+      <div class="case reveal" style="--d:.1s">
+        <p class="case-q">«Открывали швейный цех. Оборудование выкупили за месяц до сезона — без него мы бы просто не успели к заказам».</p>
+        <div class="case-m">
+          <span><span class="case-k">Товар</span><span class="case-v">₽890 тыс</span></span>
+          <span><span class="case-k">Срок</span><span class="case-v">12 мес</span></span>
+          <span><span class="case-k">Наценка</span><span class="case-v">15%</span></span>
+        </div>
+        <div class="case-who">
+          <span class="case-av">ЗХ</span>
+          <span><span class="case-n">Зулай Х.</span><span class="case-c">Хасавюрт · оборудование</span></span>
+        </div>
+      </div>
+      <div class="case reveal" style="--d:.2s">
+        <p class="case-q">«Закрыла договор на четыре месяца раньше. Пересчитали и вернули часть наценки — в банке за досрочное только штрафуют».</p>
+        <div class="case-m">
+          <span><span class="case-k">Товар</span><span class="case-v">₽480 тыс</span></span>
+          <span><span class="case-k">Срок</span><span class="case-v">18 → 14 мес</span></span>
+          <span><span class="case-k">Скидка</span><span class="case-v">₽23 тыс</span></span>
+        </div>
+        <div class="case-who">
+          <span class="case-av">СГ</span>
+          <span><span class="case-n">Седа Г.</span><span class="case-c">Гудермес · техника</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="dokumenty">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Прозрачность</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Что именно вы подписываете</h2>
+        <p class="sec-desc">Полный комплект — четыре документа. Ни один из них не содержит условий, которые вступают в силу позже или меняются в одностороннем порядке.</p>
+      </div>
+    </div>
+    <div class="docs">
+      <div class="doc reveal"><span class="doc-ic">01</span><div><h4>Договор купли-продажи в рассрочку</h4><p>Товар, конечная цена, наценка одной суммой, срок. Основной и единственный обязывающий документ сделки.</p></div></div>
+      <div class="doc reveal" style="--d:.06s"><span class="doc-ic">02</span><div><h4>График платежей</h4><p>Даты и равные суммы на весь срок. Составляется при подписании и не пересматривается в одностороннем порядке.</p></div></div>
+      <div class="doc reveal" style="--d:.12s"><span class="doc-ic">03</span><div><h4>Акт приёма-передачи товара</h4><p>Подтверждает, что ZK Finance владела товаром и передала его вам. Без него сделка не соответствует мурабахе.</p></div></div>
+      <div class="doc reveal" style="--d:.18s"><span class="doc-ic">04</span><div><h4>Заключение шариатского совета</h4><p>Подтверждение допустимости категории товара и структуры сделки. Хранится в открытом реестре под номером.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec slab" id="sovet">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Надзор</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Шариатский совет</h2>
+        <p class="sec-desc">Совет утверждает шаблоны договоров, ведёт список допустимых категорий товара и рассматривает спорные сделки. Заключения публикуются в реестре фетв. Состав приведён для демонстрации.</p>
+      </div>
+    </div>
+    <div class="council">
+      <div class="cm reveal">
+        <div class="cm-av">01</div>
+        <h4>Председатель совета</h4>
+        <div class="cm-role">Фикх аль-муамалят</div>
+        <p>Утверждает шаблоны мурабахи и мушараки, подписывает итоговые заключения по продуктовой линейке и выносит решения по спорным категориям.</p>
+      </div>
+      <div class="cm reveal" style="--d:.1s">
+        <div class="cm-av">02</div>
+        <h4>Член совета</h4>
+        <div class="cm-role">Шариатский аудит</div>
+        <p>Выборочно проверяет закрытые сделки: последовательность перехода собственности, корректность наценки, отсутствие скрытых платежей. Охват выборки — 18%.</p>
+      </div>
+      <div class="cm reveal" style="--d:.2s">
+        <div class="cm-av">03</div>
+        <h4>Член совета</h4>
+        <div class="cm-role">Комплаенс и категории</div>
+        <p>Ведёт реестр запрещённых категорий товара и рассматривает пограничные заявки — от торгового оборудования до долей в действующем бизнесе.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="zayavka">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Заявка</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Два шага до решения</h2>
+        <p class="sec-desc">Заполнение занимает минуту. Заявка попадает в CRM компании и распределяется на менеджера — в демо-версии вы можете открыть кабинет и увидеть её в воронке.</p>
+      </div>
+    </div>
+    <div class="wizard reveal">
+      <div class="wz-head">
+        <div class="wz-t on" data-tab="1"><span class="wz-n">1</span><span class="wz-l">Что финансируем</span></div>
+        <div class="wz-t" data-tab="2"><span class="wz-n">2</span><span class="wz-l">Контакты</span></div>
+        <div class="wz-t" data-tab="3"><span class="wz-n">3</span><span class="wz-l">Готово</span></div>
+      </div>
+      <div class="wz-body">
+        <div class="wz-pane on" data-pane="1">
+          <label class="lbl">Направление</label>
+          <div class="pick" id="wPick">
+            <button type="button" data-p="Автомобиль" aria-pressed="true"><span class="pick-t">Автомобиль</span><span class="pick-s">до ₽6 млн · 24 мес</span></button>
+            <button type="button" data-p="Недвижимость" aria-pressed="false"><span class="pick-t">Недвижимость</span><span class="pick-s">до ₽15 млн · 120 мес</span></button>
+            <button type="button" data-p="Техника и ремонт" aria-pressed="false"><span class="pick-t">Техника и ремонт</span><span class="pick-s">до ₽900 тыс · 18 мес</span></button>
+            <button type="button" data-p="Бизнес-оборудование" aria-pressed="false"><span class="pick-t">Бизнес</span><span class="pick-s">до ₽20 млн · 36 мес</span></button>
+          </div>
+          <div class="form-grid" style="margin-top:24px">
+            <div>
+              <label class="lbl" for="fSum">Стоимость товара, ₽</label>
+              <input class="inp" id="fSum" inputmode="numeric" value="2 400 000">
+            </div>
+            <div>
+              <label class="lbl" for="fTerm">Срок рассрочки</label>
+              <select class="inp" id="fTerm">
+                <option value="6">6 месяцев</option>
+                <option value="12" selected>12 месяцев</option>
+                <option value="18">18 месяцев</option>
+                <option value="24">24 месяца</option>
+              </select>
+            </div>
+          </div>
+          <div class="wz-foot">
+            <button class="btn btn-lg" type="button" id="wNext1"><span>Далее</span><span class="btn-arr">→</span></button>
+            <p>Предварительный платёж: <b class="mono" id="wPrev">161 000 ₽ × 12</b>. Точные условия зафиксируем в договоре.</p>
+          </div>
+        </div>
+        <div class="wz-pane" data-pane="2">
+          <div class="wz-sum" id="wSum"></div>
+          <div class="form-grid">
+            <div>
+              <label class="lbl" for="fName">Имя и фамилия</label>
+              <input class="inp" id="fName" placeholder="Ислам Хамзатов" autocomplete="name">
+            </div>
+            <div>
+              <label class="lbl" for="fPhone">Телефон</label>
+              <input class="inp" id="fPhone" placeholder="+7 (___) ___-__-__" inputmode="tel" autocomplete="tel">
+            </div>
+            <div>
+              <label class="lbl" for="fCity">Город</label>
+              <select class="inp" id="fCity">
+                <option>Грозный</option><option>Гудермес</option><option>Аргун</option>
+                <option>Назрань</option><option>Хасавюрт</option><option>Махачкала</option><option>Москва</option>
+              </select>
+            </div>
+            <div>
+              <label class="lbl" for="fWhen">Когда удобно звонить</label>
+              <select class="inp" id="fWhen">
+                <option>В любое время</option><option>С 9:00 до 13:00</option>
+                <option>С 13:00 до 18:00</option><option>После 18:00</option>
+              </select>
+            </div>
+            <div class="f-full">
+              <label class="lbl" for="fNote">Комментарий</label>
+              <input class="inp" id="fNote" placeholder="Марка и модель, ссылка на объявление, пожелания по графику">
+            </div>
+          </div>
+          <div class="wz-foot">
+            <button class="btn btn-lg" type="button" id="wSend"><span>Отправить заявку</span><span class="btn-arr">→</span></button>
+            <button class="btn btn-ghost" type="button" id="wBack"><span>Назад</span></button>
+            <p>Нажимая кнопку, вы соглашаетесь на обработку персональных данных. Это демо-форма — данные остаются в вашем браузере.</p>
+          </div>
+        </div>
+        <div class="wz-pane" data-pane="3">
+          <div class="done-box">
+            <div class="done-ic">✓</div>
+            <h3>Заявка принята</h3>
+            <p>Менеджер перезвонит в течение 30 минут в рабочее время. Если товар уже выбран — держите под рукой счёт или ссылку на объявление.</p>
+            <div class="done-id" id="wId">—</div>
+            <div class="wz-foot" style="justify-content:center;border-top:0;margin-top:26px">
+              <a class="btn" href="#/hub/deals"><span>Открыть заявку в CRM</span><span class="btn-arr">→</span></a>
+              <button class="btn btn-ghost" type="button" id="wAgain"><span>Отправить ещё одну</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="voprosy">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Вопросы</span>
+      <div class="reveal" style="--d:.08s">
+        <h2 class="sec-title">Частые вопросы</h2>
+        <p class="sec-desc">Здесь собраны те, которые задают на первом звонке. Если ответа нет — напишите в WhatsApp, отвечаем в рабочие часы.</p>
+      </div>
+    </div>
+    <div class="faq reveal" id="faq">
+      <div class="q">
+        <button class="q-btn" type="button">Наценка — это ведь тот же процент?<span class="q-mark">+</span></button>
+        <div class="q-body"><p>Нет. Процент начисляется на сумму долга и зависит от времени: чем дольше вы пользуетесь деньгами, тем больше платите. Наценка — это разница между закупочной и продажной ценой конкретного товара. Она названа один раз при подписании и после этого не может измениться: ни через год, ни при просрочке. Именно поэтому в сделке обязательно должен быть реальный товар, которым мы владели.</p></div>
+      </div>
+      <div class="q">
+        <button class="q-btn" type="button">Что будет, если я просрочу платёж?<span class="q-mark">+</span></button>
+        <div class="q-body"><p>Долг не увеличится — начислять на него нечего. Договором предусмотрен фиксированный штраф за недобросовестную просрочку, и он не является нашим доходом: сумма направляется на благотворительность, отчёт публикуется. Если просрочка вызвана реальными трудностями, мы пересматриваем график без штрафа — обратитесь к менеджеру до даты платежа, а не после.</p></div>
+      </div>
+      <div class="q">
+        <button class="q-btn" type="button">Можно ли погасить досрочно?<span class="q-mark">+</span></button>
+        <div class="q-body"><p>Да, в любой момент и без ограничений. Вы платите остаток по договору, а часть наценки за неиспользованный срок мы возвращаем в виде скидки. Скидка не прописана как обязанность в договоре — это право продавца, иначе конечная цена стала бы неопределённой, а это уже гарар.</p></div>
+      </div>
+      <div class="q">
+        <button class="q-btn" type="button">Почему нельзя просто получить деньги наличными?<span class="q-mark">+</span></button>
+        <div class="q-body"><p>Потому что тогда это был бы заём, а плата за заём — риба. Вся конструкция мурабахи держится на том, что предметом договора выступает товар: мы его покупаем, владеем им и продаём вам дороже. Если убрать товар, останется выдача денег под надбавку — ровно то, от чего мы уходим.</p></div>
+      </div>
+      <div class="q">
+        <button class="q-btn" type="button">Нужен ли залог и поручитель?<span class="q-mark">+</span></button>
+        <div class="q-body"><p>По автомобилям и недвижимости — да, залог оформляется на срок рассрочки; это обеспечение, а не дополнительная плата. По технике и ремонту до 900 тысяч рублей залог не требуется. Поручитель нужен, если у клиента нет подтверждённого дохода или выбран максимальный срок.</p></div>
+      </div>
+      <div class="q">
+        <button class="q-btn" type="button">Какие товары вы не финансируете?<span class="q-mark">+</span></button>
+        <div class="q-body"><p>Алкоголь и табак, свинину, азартные игры и лотереи, ночные заведения, ростовщические финансовые услуги, торговлю долгами и производными инструментами. Спорные категории выносятся на шариатский совет, решение принимается в течение двух рабочих дней и попадает в открытый реестр.</p></div>
+      </div>
+      <div class="q">
+        <button class="q-btn" type="button">Какие документы нужны?<span class="q-mark">+</span></button>
+        <div class="q-body"><p>Паспорт и счёт от продавца — этого достаточно для рассрочки на технику. Для автомобиля добавляется подтверждение дохода за 6 месяцев, для недвижимости — документы по объекту и справка о составе семьи. Для ИП и ООО: выписка из реестра, оборот за год, договор с поставщиком оборудования.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap cta-in">
+    <h2 class="reveal">Посчитаем вашу покупку<br>и ответим на вопросы по договору</h2>
+    <div class="cta-side reveal" style="--d:.1s">
+      <span class="cta-phone">+7 938 000-11-22</span>
+      <span class="cta-hours">Пн–Сб, 9:00–19:00 · WhatsApp и Telegram</span>
+      <a class="btn btn-lg" href="#zayavka"><span>Оставить заявку</span><span class="btn-arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr-grid">
+      <div>
+        <div class="brand">
+          <span class="mark">ZK</span>
+          <span class="brand-txt">
+            <span class="brand-name">ZK Finance</span>
+            <span class="brand-sub" style="color:var(--on-ink-muted)">Исламская рассрочка</span>
+          </span>
+        </div>
+        <p class="ftr-note">Финансирование по нормам шариата: мурабаха, мушарака мутанакиса, мудараба. Работаем с 2021 года, каждая сделка проходит шариатский аудит.</p>
+      </div>
+      <div>
+        <h5>Продукты</h5>
+        <ul>
+          <li><a href="#produkty">Автомобиль</a></li>
+          <li><a href="#produkty">Недвижимость</a></li>
+          <li><a href="#produkty">Техника и ремонт</a></li>
+          <li><a href="#produkty">Бизнес-оборудование</a></li>
+          <li><a href="#kalkulyator">Калькулятор</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Компания</h5>
+        <ul>
+          <li><a href="#kak">Как это работает</a></li>
+          <li><a href="#otlichiya">Отличия от кредита</a></li>
+          <li><a href="#dokumenty">Документы</a></li>
+          <li><a href="#sovet">Шариатский совет</a></li>
+          <li><a href="#voprosy">Вопросы</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Контакты</h5>
+        <div class="ftr-office">
+          +7 938 000-11-22<br>
+          Пн–Сб, 9:00–19:00
+          <b>Грозный</b>пр. им. В. Путина, 1 — головной офис
+          <b>Хасавюрт</b>ул. Тотурбиева, 42
+        </div>
+        <ul style="margin-top:18px">
+          <li><a href="#zayavka">Оставить заявку</a></li>
+          <li><a href="#/hub">Кабинет сотрудника</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ftr-bot">
+      <span>Демонстрационная версия. Компания, договоры, клиенты и цифры вымышлены.</span>
+      <span>ZK Finance · 2026</span>
+    </div>
+  </div>
+</footer>
+</div>
+<!-- ==================== GATE ==================== -->
+<div id="gate" hidden>
+  <div class="gate">
+    <div class="gate-card">
+      <span class="mark">ZK</span>
+      <h2>Вход в кабинет</h2>
+      <p>Демо-режим: пароль не требуется. Выберите роль — интерфейс и права изменятся.</p>
+      <div class="gate-users" id="gateUsers"></div>
+      <button class="btn" id="gateGo" style="width:100%">Войти в CRM</button>
+      <p style="margin-top:16px"><a href="#/" style="color:var(--muted);text-decoration:underline">Вернуться на сайт</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== HUB ==================== -->
+<div id="hub" hidden>
+  <div class="hub">
+    <aside class="rail" id="rail">
+      <div class="rail-top">
+        <span class="mark">ZK</span>
+        <span>
+          <span class="rail-name" style="display:block">ZK Finance</span>
+          <span class="rail-sub">CRM · демо</span>
+        </span>
+      </div>
+      <nav class="rail-nav" id="railNav"></nav>
+      <div class="rail-bot">
+        <span class="gu-av" id="meAv">АМ</span>
+        <span>
+          <span class="gu-n" id="meName">—</span>
+          <span class="gu-r" id="meRole">—</span>
+        </span>
+        <a class="rail-exit" href="#/" title="Выйти на сайт">↩</a>
+      </div>
+    </aside>
+    <div class="hub-main">
+      <div class="topbar">
+        <button class="btn btn-ghost btn-sm hub-menu" id="hubMenu" style="display:none" aria-label="Меню">☰</button>
+        <div>
+          <div class="tb-crumb" id="tbCrumb">Обзор</div>
+          <div class="tb-title" id="tbTitle">Дашборд</div>
+        </div>
+        <div class="tb-search">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="4.5"/><path d="M9.5 9.5L13 13"/></svg>
+          <input class="inp" id="hubSearch" placeholder="Клиент, договор, заявка">
+        </div>
+        <span class="tb-date" id="tbDate">—</span>
+      </div>
+      <div class="hub-body" id="hubBody"></div>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-label="Карточка"></aside>
+<div class="toast" id="toast" hidden></div>
+<script>
+(function(){
+"use strict";
+
+/* ============ UTILS ============ */
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function nf(n){return Math.round(n).toLocaleString('ru-RU')}
+function money(n){return nf(n)+' ₽'}
+function short(n){
+  if(n>=1e9)return '₽'+(n/1e9).toFixed(n>=1e10?0:1).replace('.',',')+' млрд';
+  if(n>=1e6)return '₽'+(n/1e6).toFixed(n>=1e7?0:1).replace('.',',')+' млн';
+  if(n>=1e3)return '₽'+Math.round(n/1e3)+' тыс';
+  return '₽'+nf(n);
+}
+function ini(name){var p=name.split(' ');return ((p[0]||'')[0]||'')+((p[1]||'')[0]||'')}
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+var MONTHS=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+function dstr(d){return d.getDate()+' '+MONTHS[d.getMonth()]}
+function dfull(d){return ('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear()}
+function addM(d,m){var x=new Date(d.getTime());x.setMonth(x.getMonth()+m);return x}
+var TODAY=new Date(2026,8,4);
+
+/* ============ PRODUCT CONFIG ============ */
+var CFG={markup:{6:8,12:15,18:22,24:30},minDown:20,maxSum:6000000,penalty:3000};
+var PRODUCTS=['Автомобиль','Недвижимость','Техника и ремонт','Бизнес-оборудование'];
+var CITIES=['Грозный','Гудермес','Аргун','Назрань','Хасавюрт','Махачкала','Москва'];
+
+var STAGES=[
+  {id:'new',t:'Новая'},{id:'scoring',t:'Скоринг'},{id:'shariah',t:'Шариат-контроль'},
+  {id:'approve',t:'Решение'},{id:'contract',t:'Договор'},{id:'issued',t:'Выдана'}
+];
+
+var USERS=[
+  {id:'u1',name:'Амина Мовсарова',role:'Руководитель отдела'},
+  {id:'u2',name:'Руслан Батаев',role:'Менеджер по рассрочке'},
+  {id:'u3',name:'Хава Дадаева',role:'Шариатский комплаенс'}
+];
+
+/* ============ SEED: DEALS ============ */
+function D(id,name,prod,city,sum,term,down,mgr,stage,days,score,note){
+  return {id:id,name:name,prod:prod,city:city,sum:sum,term:term,down:down,mgr:mgr,
+          stage:stage,days:days,score:score,note:note||'',src:'seed'};
+}
+var DEALS=[
+  D('ZK-2609-041','Ислам Хамзатов','Автомобиль','Грозный',2400000,12,30,'Руслан Батаев','new',1,74,'Toyota Camry 2021, счёт от дилера приложен'),
+  D('ZK-2609-040','Марьям Асхабова','Техника и ремонт','Гудермес',380000,12,0,'Руслан Батаев','new',1,68,'Кухонная техника, магазин «Дом»'),
+  D('ZK-2609-039','Ахмед Дудаев','Бизнес-оборудование','Хасавюрт',4600000,24,25,'Амина Мовсарова','new',2,71,'Пекарное оборудование, поставщик из Казани'),
+  D('ZK-2609-038','Лиза Тамаева','Техника и ремонт','Грозный',210000,6,0,'Руслан Батаев','new',2,80,'Стройматериалы для ремонта'),
+  D('ZK-2609-036','Заур Магомедов','Автомобиль','Махачкала',1850000,18,20,'Руслан Батаев','scoring',3,66,'Kia K5, продавец частное лицо'),
+  D('ZK-2609-034','Аминат Юсупова','Недвижимость','Грозный',7200000,60,30,'Амина Мовсарова','scoring',4,82,'Квартира в новостройке, мушарака'),
+  D('ZK-2609-033','Магомед Салаев','Бизнес-оборудование','Назрань',1200000,18,25,'Амина Мовсарова','scoring',5,59,'Автомойка, два поста'),
+  D('ZK-2609-031','Хеда Изнаурова','Автомобиль','Аргун',1450000,12,35,'Руслан Батаев','shariah',2,77,'Требуется проверка страховки — такафул'),
+  D('ZK-2609-030','Салман Эдилов','Бизнес-оборудование','Грозный',3100000,24,25,'Хава Дадаева','shariah',3,64,'Оборудование для кафе, уточняется меню'),
+  D('ZK-2609-028','Петимат Бакаева','Техника и ремонт','Грозный',540000,18,10,'Руслан Батаев','approve',1,86,'Мебель и техника, всё проверено'),
+  D('ZK-2609-027','Умар Кадиев','Автомобиль','Гудермес',3300000,24,30,'Амина Мовсарова','approve',2,73,'Hyundai Palisade, залог оформляется'),
+  D('ZK-2609-026','Раиса Мусаева','Техника и ремонт','Москва',290000,12,0,'Руслан Батаев','approve',2,91,'Повторный клиент, история чистая'),
+  D('ZK-2609-024','Иса Тепсуркаев','Автомобиль','Грозный',2050000,18,25,'Руслан Батаев','contract',1,79,'Договор на подписи у клиента'),
+  D('ZK-2609-022','Зулай Хасиева','Бизнес-оборудование','Хасавюрт',890000,12,25,'Амина Мовсарова','contract',2,75,'Швейный цех, договор готов'),
+  D('ZK-2609-019','Апти Гериханов','Автомобиль','Назрань',1700000,12,30,'Руслан Батаев','issued',1,84,'Выдано, товар передан'),
+  D('ZK-2609-017','Милана Ахмадова','Техника и ремонт','Аргун',430000,18,0,'Руслан Батаев','issued',3,88,'Выдано, первый платёж 20.09')
+];
+var REJECTED=[
+  {id:'ZK-2609-037',name:'Ваха Идрисов',prod:'Бизнес-оборудование',sum:2200000,reason:'Категория товара — торговля табаком',by:'Хава Дадаева'},
+  {id:'ZK-2609-032',name:'Тамара Сулейманова',prod:'Автомобиль',sum:1900000,reason:'Скоринг 41 — долговая нагрузка выше лимита',by:'Руслан Батаев'},
+  {id:'ZK-2609-029',name:'Бекхан Алиев',prod:'Техника и ремонт',sum:670000,reason:'Клиент отозвал заявку',by:'Руслан Батаев'}
+];
+
+/* ============ SEED: CLIENTS & CONTRACTS ============ */
+function C(id,name,city,prod,price,down,term,paid,late){
+  var fin=Math.round(price*(1-down/100));
+  var mk=Math.round(fin*CFG.markup[term===60?24:term]/100);
+  if(term===60)mk=Math.round(fin*0.62);
+  var total=fin+mk, mo=Math.round(total/term);
+  return {id:id,name:name,city:city,prod:prod,price:price,down:down,term:term,
+          fin:fin,mk:mk,total:total,mo:mo,paid:paid,late:late||0,
+          start:addM(TODAY,-paid)};
+}
+var CONTRACTS=[
+  C('ДГ-2412-118','Хамид Дакаев','Грозный','Автомобиль',2650000,30,24,9,0),
+  C('ДГ-2501-127','Седа Гайтукаева','Гудермес','Техника и ремонт',480000,10,18,8,0),
+  C('ДГ-2502-131','Руслан Чапаев','Махачкала','Бизнес-оборудование',3900000,25,24,7,0),
+  C('ДГ-2503-140','Айшат Дениева','Грозный','Автомобиль',1980000,20,18,6,12),
+  C('ДГ-2504-146','Шамиль Абдулаев','Хасавюрт','Бизнес-оборудование',1450000,25,12,5,0),
+  C('ДГ-2505-152','Луиза Мержоева','Назрань','Техника и ремонт',360000,0,12,4,0),
+  C('ДГ-2506-158','Адам Байсаров','Грозный','Автомобиль',3450000,35,24,3,41),
+  C('ДГ-2506-161','Мадина Эльмурзаева','Аргун','Техника и ремонт',290000,0,6,3,0),
+  C('ДГ-2507-166','Юсуп Хаджиев','Москва','Недвижимость',9800000,30,60,2,0),
+  C('ДГ-2507-170','Зара Идигова','Грозный','Техника и ремонт',620000,15,18,2,5),
+  C('ДГ-2508-175','Рамзан Дадаев','Гудермес','Автомобиль',2200000,25,12,1,0),
+  C('ДГ-2508-179','Хава Умарова','Махачкала','Бизнес-оборудование',5200000,25,24,1,0)
+];
+
+function schedule(c){
+  var rows=[],i,d;
+  for(i=1;i<=c.term;i++){
+    d=addM(c.start,i);
+    var st=i<=c.paid?'paid':(i===c.paid+1?'next':'plan');
+    if(c.late>0&&i===c.paid+1)st='late';
+    rows.push({n:i,date:d,sum:i===c.term?c.total-c.mo*(c.term-1):c.mo,st:st});
+  }
+  return rows;
+}
+function clientsFromContracts(){
+  var m={};
+  CONTRACTS.forEach(function(c){
+    if(!m[c.name])m[c.name]={name:c.name,city:c.city,n:0,total:0,rest:0,late:0,prods:{}};
+    var o=m[c.name];o.n++;o.total+=c.total;o.rest+=c.total-c.mo*c.paid;
+    o.late=Math.max(o.late,c.late);o.prods[c.prod]=1;
+  });
+  return Object.keys(m).map(function(k){
+    var o=m[k];o.prod=Object.keys(o.prods).join(', ');
+    o.st=o.late>30?'crit':(o.late>0?'warn':'ok');
+    return o;
+  });
+}
+
+/* ============ STATE ============ */
+var LS='zkf.demo.v1';
+var state={user:null,deals:DEALS.slice(),page:'dash',q:'',filt:'all',paidExtra:{}};
+try{
+  var saved=JSON.parse(localStorage.getItem(LS)||'null');
+  if(saved&&saved.leads&&saved.leads.length){
+    saved.leads.forEach(function(l){state.deals.unshift(l)});
+  }
+  if(saved&&saved.paidExtra)state.paidExtra=saved.paidExtra;
+}catch(e){}
+function persist(){
+  try{
+    localStorage.setItem(LS,JSON.stringify({
+      leads:state.deals.filter(function(d){return d.src==='lead'}),
+      paidExtra:state.paidExtra
+    }));
+  }catch(e){}
+}
+
+
+var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============ TOAST ============ */
+var toastT;
+function toast(msg){
+  var t=$('#toast');t.innerHTML='<span class="mono" style="opacity:.5">●</span> '+esc(msg);
+  t.hidden=false;requestAnimationFrame(function(){t.classList.add('on')});
+  clearTimeout(toastT);
+  toastT=setTimeout(function(){
+    t.classList.remove('on');setTimeout(function(){t.hidden=true},300);
+  },2900);
+}
+
+/* ============ REVEAL ON SCROLL ============ */
+function revealInit(){
+  var els=$$('.reveal,[data-arrow],[data-cmp]');
+  var showAll=function(){els.forEach(function(e){e.classList.add('in')})};
+  if(RM||!('IntersectionObserver' in window)||!document.documentElement.classList.contains('anim')){
+    showAll();return;
+  }
+  setTimeout(function(){if(!$('.reveal.in'))showAll()},2600);
+  document.addEventListener('visibilitychange',function(){
+    if(!document.hidden)setTimeout(function(){if(!$('.reveal.in'))showAll()},400);
+  });
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(en){
+      if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}
+    });
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  els.forEach(function(e){io.observe(e)});
+  $$('[data-cmp]').forEach(function(r,i){r.style.setProperty('--d',(i*0.06)+'s')});
+}
+
+/* ============ COUNTERS ============ */
+function countersInit(){
+  var els=$$('[data-count]');
+  if(RM||!('IntersectionObserver' in window))return;
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(en){
+      if(!en.isIntersecting)return;
+      io.unobserve(en.target);runCount(en.target);
+    });
+  },{threshold:.5});
+  els.forEach(function(e){io.observe(e)});
+}
+function runCount(e){
+  var to=parseFloat(e.dataset.count),dec=+(e.dataset.dec||0);
+  var pre=e.dataset.prefix||'',suf=e.dataset.suffix||'';
+  var t0=performance.now(),dur=1100;
+  function step(t){
+    var k=Math.min(1,(t-t0)/dur);
+    var v=to*(1-Math.pow(1-k,3));
+    e.textContent=pre+(dec?v.toFixed(dec).replace('.',','):nf(v))+suf;
+    if(k<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ============ SCROLL CHROME ============ */
+function scrollInit(){
+  var hdr=$('#hdr'),prog=$('#prog'),g=$('#girih');
+  function on(){
+    var y=window.scrollY||0;
+    hdr.classList.toggle('stuck',y>12);
+    var h=document.body.scrollHeight-window.innerHeight;
+    prog.style.width=(h>0?Math.min(100,y/h*100):0)+'%';
+    if(g&&!RM&&y<1400)g.style.transform='translateY('+(y*0.14)+'px)';
+  }
+  window.addEventListener('scroll',on,{passive:true});on();
+}
+
+/* ============ MARQUEE ============ */
+function marqueeInit(){
+  var items=['Автосалон «Кавказ»','ТЦ «Беркат»','М.Видео','Дом Техники','Автодом Грозный',
+    'СтройМаркет 95','Мебельный дом «Даймохк»','Технопарк Хасавюрт','Автополис Махачкала','Гранд Кавказ'];
+  var box=$('#mqIn');if(!box)return;
+  var html=items.map(function(i){return '<span class="mq-i">'+esc(i)+'</span>'}).join('');
+  box.innerHTML=html+html;
+}
+
+/* ============ GIRIH PATTERN ============ */
+function poly(x,cx,cy,r,rot,n){
+  x.beginPath();
+  for(var i=0;i<n;i++){
+    var a=rot+i*2*Math.PI/n,px=cx+Math.cos(a)*r,py=cy+Math.sin(a)*r;
+    if(i)x.lineTo(px,py);else x.moveTo(px,py);
+  }
+  x.closePath();x.stroke();
+}
+function girih(){
+  var c=$('#girih');if(!c||!c.parentElement)return;
+  var p=c.parentElement,w=p.offsetWidth,h=p.offsetHeight;
+  if(!w||!h)return;
+  var dpr=Math.min(2,window.devicePixelRatio||1);
+  c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);
+  var x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);
+  x.clearRect(0,0,w,h);
+  x.strokeStyle=cssv('--rule-strong')||'#C6BDA6';x.lineWidth=1;
+  var S=104,r=S*0.47,gx,gy,cx,cy;
+  for(gy=-1;gy*S<h+S;gy++){
+    for(gx=-1;gx*S<w+S;gx++){
+      cx=gx*S+S/2;cy=gy*S+S/2;
+      poly(x,cx,cy,r,0,4);
+      poly(x,cx,cy,r,Math.PI/4,4);
+      poly(x,cx,cy,r*0.4,Math.PI/8,8);
+    }
+  }
+  x.globalCompositeOperation='destination-out';
+  var g=x.createLinearGradient(0,0,w,0);
+  g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.48,'rgba(0,0,0,.94)');
+  g.addColorStop(.76,'rgba(0,0,0,.32)');g.addColorStop(1,'rgba(0,0,0,0)');
+  x.fillStyle=g;x.fillRect(0,0,w,h);
+  var g2=x.createLinearGradient(0,h,0,h-190);
+  g2.addColorStop(0,'rgba(0,0,0,1)');g2.addColorStop(1,'rgba(0,0,0,0)');
+  x.fillStyle=g2;x.fillRect(0,h-190,w,190);
+  x.globalCompositeOperation='source-over';
+}
+
+/* ============ NUMBER TWEEN ============ */
+var tweens={};
+function setNum(id,val,suffix){
+  var e=$(id);if(!e)return;
+  suffix=suffix===undefined?' ₽':suffix;
+  if(RM||document.hidden){e.textContent=nf(val)+suffix;tweens[id]=val;return}
+  var from=tweens[id]===undefined?val:tweens[id];
+  tweens[id]=val;
+  if(from===val){e.textContent=nf(val)+suffix;return}
+  var t0=performance.now(),dur=420;
+  function step(t){
+    var k=Math.min(1,(t-t0)/dur);
+    var v=from+(val-from)*(1-Math.pow(1-k,3));
+    e.textContent=nf(v)+suffix;
+    if(k<1&&tweens[id]===val)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+  setTimeout(function(){if(tweens[id]===val)e.textContent=nf(val)+suffix},dur+90);
+}
+
+/* ============ CALCULATOR ============ */
+var CPROD=[
+  {n:'Автомобиль',min:100000,max:6000000,step:50000,def:2400000,down:20,note:''},
+  {n:'Недвижимость',min:1000000,max:15000000,step:100000,def:7000000,down:30,
+   note:'Для недвижимости расчёт предварительный: сделка оформляется по мушараке мутанакисе на срок до 120 месяцев, условия обсуждаются индивидуально.'},
+  {n:'Техника и ремонт',min:30000,max:900000,step:10000,def:380000,down:0,note:''},
+  {n:'Бизнес-оборудование',min:200000,max:20000000,step:100000,def:3000000,down:25,note:''}
+];
+var calc={p:0,price:2400000,down:30,term:12};
+var BASE_NOTE='Расчёт предварительный и не является публичной офертой. Итоговые условия фиксируются в договоре купли-продажи после проверки товара и одобрения шариатским советом.';
+
+function calcRun(){
+  var P=CPROD[calc.p];
+  var dp=Math.round(calc.price*calc.down/100);
+  var fin=calc.price-dp;
+  var rate=CFG.markup[calc.term];
+  var mk=Math.round(fin*rate/100);
+  var total=fin+mk;
+  var mo=Math.round(total/calc.term);
+
+  $('#cPriceV').textContent=money(calc.price);
+  $('#cDownV').textContent=calc.down+'% · '+money(dp);
+  $('#cTermV').textContent=calc.term+' месяцев';
+  $('#cPriceMin').textContent=short(P.min).replace('₽','');
+  $('#cPriceMax').textContent=short(P.max).replace('₽','');
+  $('#cDownMin').textContent=P.down?'минимум '+P.down+'%':'без взноса';
+  $('#sRate').textContent=rate+'%';
+
+  setNum('#s1',calc.price);setNum('#s2',dp);setNum('#s3',fin);
+  setNum('#s4',mk);setNum('#s5',total);setNum('#rMonth',mo);
+  setNum('#rAll',dp+total);
+  $('#rTermN').textContent='× '+calc.term+' мес';
+
+  var whole=calc.price+mk;
+  $('#pbDown').style.width=(dp/whole*100)+'%';
+  $('#pbFin').style.width=(fin/whole*100)+'%';
+  $('#pbMark').style.width=(mk/whole*100)+'%';
+
+  var i=0.28/12,bankPay=fin*i/(1-Math.pow(1+i,-calc.term));
+  var bankOver=Math.round(bankPay*calc.term-fin);
+  $('#rBank').textContent=money(bankOver);
+
+  var msc=$('#msc'),h='';
+  for(var k=0;k<calc.term;k++){
+    var rest=total-mo*k;
+    h+='<i style="height:'+Math.max(4,rest/total*100)+'%" title="После '+k+' платежей: '+money(Math.max(0,rest))+'"></i>';
+  }
+  msc.innerHTML=h;
+  $('.res-note').textContent=P.note?P.note+' '+BASE_NOTE:BASE_NOTE;
+
+  return {dp:dp,fin:fin,mk:mk,total:total,mo:mo,rate:rate};
+}
+function setProd(i){
+  var P=CPROD[i];calc.p=i;
+  var pr=$('#cPrice');
+  pr.min=P.min;pr.max=P.max;pr.step=P.step;
+  calc.price=Math.min(P.max,Math.max(P.min,P.def));
+  pr.value=calc.price;
+  var d=$('#cDown');
+  d.min=P.down;
+  if(calc.down<P.down){calc.down=P.down;d.value=P.down}
+  $$('#cProd button').forEach(function(b){
+    b.setAttribute('aria-pressed',String(+b.dataset.p===i));
+  });
+  calcRun();
+}
+function calcInit(){
+  if(!$('#cPrice'))return;
+  $('#cPrice').addEventListener('input',function(){calc.price=+this.value;calcRun()});
+  $('#cDown').addEventListener('input',function(){
+    var P=CPROD[calc.p];
+    if(+this.value<P.down){this.value=P.down}
+    calc.down=+this.value;calcRun();
+  });
+  $$('#cTerm button').forEach(function(b){
+    b.addEventListener('click',function(){
+      $$('#cTerm button').forEach(function(o){o.setAttribute('aria-pressed','false')});
+      b.setAttribute('aria-pressed','true');calc.term=+b.dataset.t;calcRun();
+    });
+  });
+  $$('#cProd button').forEach(function(b){
+    b.addEventListener('click',function(){setProd(+b.dataset.p)});
+  });
+  calcRun();
+}
+
+/* ============ FAQ ============ */
+function faqInit(){
+  $$('#faq .q').forEach(function(q){
+    var btn=$('.q-btn',q),body=$('.q-body',q);
+    btn.addEventListener('click',function(){
+      var open=q.getAttribute('open-state')==='1';
+      $$('#faq .q').forEach(function(o){
+        o.setAttribute('open-state','0');$('.q-body',o).style.maxHeight='0px';
+      });
+      if(!open){q.setAttribute('open-state','1');body.style.maxHeight=body.scrollHeight+'px'}
+    });
+  });
+}
+
+/* ============ WIZARD ============ */
+var wz={prod:'Автомобиль',sum:2400000,term:12,step:1};
+function wzPane(n){
+  wz.step=n;
+  $$('.wz-pane').forEach(function(p){p.classList.toggle('on',+p.dataset.pane===n)});
+  $$('.wz-t').forEach(function(t){
+    var i=+t.dataset.tab;
+    t.classList.toggle('on',i===n);
+    t.classList.toggle('done',i<n);
+  });
+}
+function wzPreview(){
+  var rate=CFG.markup[wz.term]||15;
+  var fin=Math.round(wz.sum*0.7);
+  var mo=Math.round(fin*(1+rate/100)/wz.term);
+  $('#wPrev').textContent=money(mo)+' × '+wz.term;
+}
+function wzInit(){
+  var f=$('#fSum');if(!f)return;
+  f.addEventListener('input',function(){
+    var v=f.value.replace(/\D/g,'');
+    f.value=v?nf(+v):'';
+    wz.sum=+v||0;wzPreview();
+  });
+  $('#fTerm').addEventListener('change',function(){wz.term=+this.value;wzPreview()});
+  $$('#wPick button').forEach(function(b){
+    b.addEventListener('click',function(){
+      $$('#wPick button').forEach(function(o){o.setAttribute('aria-pressed','false')});
+      b.setAttribute('aria-pressed','true');wz.prod=b.dataset.p;
+    });
+  });
+  $('#wNext1').addEventListener('click',function(){
+    if(!wz.sum||wz.sum<30000){f.classList.add('err');f.focus();toast('Укажите стоимость товара — от 30 000 ₽');return}
+    f.classList.remove('err');
+    $('#wSum').innerHTML=
+      '<span><span class="pm-k">Направление</span><span class="pm-v" style="font-family:var(--f-body);font-size:15px">'+esc(wz.prod)+'</span></span>'+
+      '<span><span class="pm-k">Стоимость</span><span class="pm-v">'+money(wz.sum)+'</span></span>'+
+      '<span><span class="pm-k">Срок</span><span class="pm-v">'+wz.term+' мес</span></span>'+
+      '<span><span class="pm-k">Платёж ≈</span><span class="pm-v">'+$('#wPrev').textContent.split(' × ')[0]+'</span></span>';
+    wzPane(2);
+  });
+  $('#wBack').addEventListener('click',function(){wzPane(1)});
+  $('#wSend').addEventListener('click',function(){
+    var name=$('#fName'),phone=$('#fPhone');
+    var bad=0;
+    [name,phone].forEach(function(el){
+      if(!el.value.trim()){el.classList.add('err');bad++}else el.classList.remove('err');
+    });
+    if(bad){(!name.value.trim()?name:phone).focus();toast('Заполните имя и телефон — без них заявку не принять');return}
+    var n=state.deals.filter(function(d){return d.src==='lead'}).length+1;
+    var lead={
+      id:'ZK-2609-1'+('0'+n).slice(-2),
+      name:name.value.trim(),prod:wz.prod,city:$('#fCity').value,
+      sum:wz.sum,term:wz.term,down:30,mgr:'Не назначен',
+      stage:'new',days:0,score:0,
+      note:($('#fNote').value.trim()||'Заявка с сайта')+' · '+phone.value.trim()+' · звонить: '+$('#fWhen').value,
+      src:'lead'
+    };
+    state.deals.unshift(lead);persist();
+    $('#wId').textContent=lead.id;
+    wzPane(3);
+  });
+  $('#wAgain').addEventListener('click',function(){
+    $('#fName').value='';$('#fPhone').value='';$('#fNote').value='';
+    wzPane(1);
+  });
+  wzPreview();
+}
+
+/* ============ FLOW NODES ============ */
+function flowInit(){
+  var f=$('.flow');if(!f||RM||!('IntersectionObserver' in window))return;
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(en){
+      if(!en.isIntersecting)return;io.unobserve(en.target);
+      $$('.fnode',f).forEach(function(n,i){
+        setTimeout(function(){n.classList.add('on')},i*320);
+      });
+    });
+  },{threshold:.4});
+  io.observe(f);
+}
+
+/* ============ NAV ============ */
+function navInit(){
+  var b=$('#burger'),n=$('#nav');
+  if(b)b.addEventListener('click',function(){
+    var o=n.classList.toggle('open');b.setAttribute('aria-expanded',String(o));
+  });
+  $$('#nav a').forEach(function(a){
+    a.addEventListener('click',function(){n.classList.remove('open')});
+  });
+}
+
+/* ============ GATE ============ */
+var pickUser=USERS[0];
+function gateInit(){
+  var box=$('#gateUsers');box.innerHTML='';
+  USERS.forEach(function(u){
+    var b=el('button','gu');
+    b.type='button';
+    b.setAttribute('aria-pressed',String(u===pickUser));
+    b.innerHTML='<span class="gu-av">'+esc(ini(u.name))+'</span><span><span class="gu-n">'+
+      esc(u.name)+'</span><span class="gu-r">'+esc(u.role)+'</span></span><span class="gu-chk">✓</span>';
+    b.addEventListener('click',function(){
+      pickUser=u;
+      $$('.gu',box).forEach(function(o){o.setAttribute('aria-pressed','false')});
+      b.setAttribute('aria-pressed','true');
+    });
+    box.appendChild(b);
+  });
+  $('#gateGo').addEventListener('click',function(){
+    state.user=pickUser;location.hash='#/hub/dash';
+  });
+}
+/* ============ ICONS ============ */
+var ICO={
+  dash:'<rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/>',
+  deals:'<rect x="1" y="1" width="4" height="14"/><rect x="6" y="1" width="4" height="10"/><rect x="11" y="1" width="4" height="6"/>',
+  clients:'<circle cx="8" cy="5" r="3"/><path d="M2 15c0-3.3 2.7-6 6-6s6 2.7 6 6"/>',
+  contracts:'<rect x="2.5" y="1" width="11" height="14"/><path d="M5 5h6M5 8h6M5 11h4"/>',
+  payments:'<rect x="1" y="3" width="14" height="11"/><path d="M1 7h14M4.5 1v3M11.5 1v3"/>',
+  shariah:'<path d="M8 1l6 2.5v5C14 12 8 15 8 15S2 12 2 8.5v-5L8 1z"/><path d="M5.5 8l1.8 1.8L10.8 6"/>',
+  analytics:'<path d="M1 15V1"/><path d="M1 15h14"/><path d="M4 12V8M7.5 12V4M11 12V6M14 12V9"/>',
+  settings:'<path d="M1 4h14M1 12h14"/><circle cx="5.5" cy="4" r="2"/><circle cx="10.5" cy="12" r="2"/>'
+};
+function ico(n){
+  return '<svg class="rl-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="square">'+ICO[n]+'</svg>';
+}
+
+var PAGES=[
+  {g:'Работа'},
+  {id:'dash',t:'Дашборд',ic:'dash',crumb:'Обзор'},
+  {id:'deals',t:'Заявки',ic:'deals',crumb:'Воронка продаж'},
+  {id:'clients',t:'Клиенты',ic:'clients',crumb:'База клиентов'},
+  {id:'contracts',t:'Договоры',ic:'contracts',crumb:'Портфель'},
+  {id:'payments',t:'Платежи',ic:'payments',crumb:'Реестр'},
+  {g:'Контроль'},
+  {id:'shariah',t:'Шариат-контроль',ic:'shariah',crumb:'Комплаенс'},
+  {id:'analytics',t:'Аналитика',ic:'analytics',crumb:'Отчёты'},
+  {g:'Система'},
+  {id:'settings',t:'Параметры продукта',ic:'settings',crumb:'Настройки'}
+];
+
+/* ============ DERIVED ============ */
+function paidOf(c){return Math.min(c.term,c.paid+(state.paidExtra[c.id]||0))}
+function restOf(c){return Math.max(0,c.total-c.mo*paidOf(c))}
+function portfolio(){var s=0;CONTRACTS.forEach(function(c){s+=restOf(c)});return s}
+function activeCount(){return CONTRACTS.filter(function(c){return paidOf(c)<c.term}).length}
+function inWork(){return state.deals.filter(function(d){return d.stage!=='issued'}).length}
+function overdueSum(){
+  var s=0;CONTRACTS.forEach(function(c){if(c.late>0&&(state.paidExtra[c.id]||0)===0)s+=c.mo});
+  return s;
+}
+function overdueCount(){
+  return CONTRACTS.filter(function(c){return c.late>0&&(state.paidExtra[c.id]||0)===0}).length;
+}
+var ISSUE=[
+  {m:'окт',v:96},{m:'ноя',v:108},{m:'дек',v:141},{m:'янв',v:87},{m:'фев',v:102},{m:'мар',v:124},
+  {m:'апр',v:138},{m:'май',v:129},{m:'июн',v:151},{m:'июл',v:163},{m:'авг',v:158},{m:'сен',v:62,part:1}
+];
+
+/* ============ CHARTS ============ */
+var CHARTS=[];
+function setupCanvas(cv,h){
+  var w=cv.parentElement.offsetWidth;
+  if(!w)return null;
+  var dpr=Math.min(2,window.devicePixelRatio||1);
+  cv.style.height=h+'px';cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+  var x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);
+  return {x:x,w:w,h:h};
+}
+function barChart(cv,data,unit){
+  var c=setupCanvas(cv,190);if(!c)return;
+  var x=c.x,w=c.w,h=c.h,pad={t:16,r:4,b:24,l:38};
+  var iw=w-pad.l-pad.r,ih=h-pad.t-pad.b;
+  var max=Math.max.apply(null,data.map(function(d){return d.v}));
+  max=Math.ceil(max/40)*40;
+  var ink=cssv('--ink'),rule=cssv('--rule'),mut=cssv('--muted'),lo=cssv('--ivory-lo');
+  x.font='500 10px Manrope,Arial,sans-serif';x.textBaseline='middle';
+  for(var g=0;g<=4;g++){
+    var gy=pad.t+ih-ih*g/4;
+    x.strokeStyle=rule;x.lineWidth=1;x.beginPath();
+    x.moveTo(pad.l,gy+.5);x.lineTo(w-pad.r,gy+.5);x.stroke();
+    x.fillStyle=mut;x.textAlign='right';x.fillText(String(max*g/4),pad.l-8,gy);
+  }
+  var bw=iw/data.length,bar=Math.min(26,bw*0.56);
+  data.forEach(function(d,i){
+    var bh=ih*d.v/max,bx=pad.l+bw*i+(bw-bar)/2,by=pad.t+ih-bh;
+    x.fillStyle=d.part?lo:ink;x.fillRect(bx,by,bar,bh);
+    if(d.part){x.strokeStyle=ink;x.lineWidth=1;x.strokeRect(bx+.5,by+.5,bar-1,bh-1)}
+    x.fillStyle=mut;x.textAlign='center';
+    x.fillText(d.m,pad.l+bw*i+bw/2,h-10);
+  });
+  x.fillStyle=mut;x.textAlign='left';x.fillText(unit||'',pad.l,7);
+}
+function areaChart(cv,data,unit){
+  var c=setupCanvas(cv,190);if(!c)return;
+  var x=c.x,w=c.w,h=c.h,pad={t:16,r:8,b:24,l:44};
+  var iw=w-pad.l-pad.r,ih=h-pad.t-pad.b;
+  var vals=data.map(function(d){return d.v});
+  var max=Math.ceil(Math.max.apply(null,vals)/100)*100,min=0;
+  var ink=cssv('--ink'),rule=cssv('--rule'),mut=cssv('--muted'),iv=cssv('--ivory');
+  var px=function(i){return pad.l+iw*i/(data.length-1)};
+  var py=function(v){return pad.t+ih-ih*(v-min)/(max-min)};
+  x.font='500 10px Manrope,Arial,sans-serif';x.textBaseline='middle';
+  for(var g=0;g<=4;g++){
+    var gy=pad.t+ih-ih*g/4;
+    x.strokeStyle=rule;x.lineWidth=1;x.beginPath();
+    x.moveTo(pad.l,gy+.5);x.lineTo(w-pad.r,gy+.5);x.stroke();
+    x.fillStyle=mut;x.textAlign='right';x.fillText(String(Math.round(max*g/4)),pad.l-8,gy);
+  }
+  x.beginPath();x.moveTo(px(0),py(vals[0]));
+  vals.forEach(function(v,i){if(i)x.lineTo(px(i),py(v))});
+  x.lineTo(px(vals.length-1),pad.t+ih);x.lineTo(px(0),pad.t+ih);x.closePath();
+  var gr=x.createLinearGradient(0,pad.t,0,pad.t+ih);
+  gr.addColorStop(0,hexA(ink,.16));gr.addColorStop(1,hexA(ink,0));
+  x.fillStyle=gr;x.fill();
+  x.beginPath();x.moveTo(px(0),py(vals[0]));
+  vals.forEach(function(v,i){if(i)x.lineTo(px(i),py(v))});
+  x.strokeStyle=ink;x.lineWidth=1.6;x.stroke();
+  var lx=px(vals.length-1),ly=py(vals[vals.length-1]);
+  x.fillStyle=iv;x.beginPath();x.arc(lx,ly,4.5,0,7);x.fill();
+  x.strokeStyle=ink;x.lineWidth=2;x.beginPath();x.arc(lx,ly,4.5,0,7);x.stroke();
+  x.fillStyle=mut;x.textAlign='center';
+  data.forEach(function(d,i){if(i%2===0)x.fillText(d.m,px(i),h-10)});
+  x.textAlign='left';x.fillText(unit||'',pad.l,7);
+}
+function hexA(hex,a){
+  hex=(hex||'#000').replace('#','');
+  if(hex.length===3)hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  var n=parseInt(hex,16);
+  return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
+}
+function chart(kind,data,unit,h){
+  var id='ch'+CHARTS.length;
+  CHARTS.push({id:id,kind:kind,data:data,unit:unit});
+  return '<div class="chart-wrap"><canvas class="chart" id="'+id+'"></canvas></div>';
+}
+function drawCharts(){
+  CHARTS.forEach(function(c){
+    var cv=document.getElementById(c.id);if(!cv)return;
+    (c.kind==='area'?areaChart:barChart)(cv,c.data,c.unit);
+  });
+}
+
+/* ============ SHARED BITS ============ */
+function kpi(l,v,sub,d,dir){
+  return '<div class="kpi"><span class="kpi-l">'+esc(l)+'</span><span class="kpi-v">'+v+'</span>'+
+    '<span class="kpi-f">'+(d?'<span class="delta '+dir+'">'+esc(d)+'</span>':'')+
+    '<span class="kpi-sub">'+esc(sub||'')+'</span></span></div>';
+}
+function card(title,body,right,pad){
+  return '<div class="card"><div class="card-h"><h3>'+esc(title)+'</h3>'+
+    (right?'<span class="eyebrow">'+esc(right)+'</span>':'')+'</div>'+
+    (pad===false?body:'<div class="card-b">'+body+'</div>')+'</div>';
+}
+function nextPay(c){return addM(c.start,paidOf(c)+1)}
+function payStatus(c){
+  if(paidOf(c)>=c.term)return{cls:'ok',t:'закрыт'};
+  if(c.late>0&&!(state.paidExtra[c.id]||0))return{cls:c.late>30?'crit':'warn',t:'просрочка '+c.late+' дн'};
+  var d=Math.round((nextPay(c)-TODAY)/86400000);
+  if(d<=7)return{cls:'info',t:'через '+d+' дн'};
+  return{cls:'neut',t:'в графике'};
+}
+
+/* ============ PAGE: DASHBOARD ============ */
+function pgDash(){
+  var por=portfolio(),avg=0;
+  CONTRACTS.forEach(function(c){avg+=c.total});avg=Math.round(avg/CONTRACTS.length);
+  var odc=overdueCount(),odSum=overdueSum();
+  var odPct=(odSum/por*100).toFixed(1).replace('.',',');
+  var h='';
+  h+='<div class="kpis">'+
+    kpi('Портфель','<span class="num">'+short(por)+'</span>','остаток к получению','+12,4%','up')+
+    kpi('Активных договоров','<span class="num">'+activeCount()+'</span>','из '+CONTRACTS.length+' всего','+2','up')+
+    kpi('Заявок в работе','<span class="num">'+inWork()+'</span>','воронка продаж','+5','up')+
+    kpi('Просрочка 30+','<span class="num">'+odPct+'<small>%</small></span>',odc+' договора · '+short(odSum),'−0,4 п.п.','up')+
+    kpi('Средний чек','<span class="num">'+short(avg)+'</span>','по договору','+8,1%','up')+
+    '</div>';
+
+  var funnel=STAGES.map(function(s){
+    var arr=state.deals.filter(function(d){return d.stage===s.id});
+    var sum=0;arr.forEach(function(d){sum+=d.sum});
+    return{t:s.t,n:arr.length,sum:sum};
+  });
+  var fmax=Math.max.apply(null,funnel.map(function(f){return f.n}))||1;
+  var fh='<div class="funnel">'+funnel.map(function(f){
+    return '<div class="fn"><span>'+esc(f.t)+'</span>'+
+      '<span class="fn-bar"><i style="width:'+(f.n/fmax*100)+'%"></i></span>'+
+      '<span class="fn-n">'+f.n+'</span></div>';
+  }).join('')+'</div>'+
+  '<div class="fn" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);color:var(--muted)">'+
+    '<span class="mono" style="font-size:11px">СУММА В ВОРОНКЕ</span><span></span>'+
+    '<span class="fn-n">'+short(funnel.reduce(function(s,f){return s+f.sum},0))+'</span></div>';
+
+  var pays=CONTRACTS.filter(function(c){return paidOf(c)<c.term}).map(function(c){
+    return{c:c,d:nextPay(c),s:payStatus(c)};
+  }).sort(function(a,b){return a.d-b.d}).slice(0,6);
+  var pt='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
+    '<th>Клиент</th><th>Договор</th><th class="r">Платёж</th><th>Дата</th><th>Статус</th>'+
+    '</tr></thead><tbody>'+pays.map(function(p){
+      return '<tr data-ct="'+esc(p.c.id)+'"><td><div class="who"><span class="av">'+esc(ini(p.c.name))+
+        '</span><span><span class="who-n">'+esc(p.c.name)+'</span><span class="who-s">'+esc(p.c.city)+
+        '</span></span></div></td><td class="id">'+esc(p.c.id)+'</td>'+
+        '<td class="r n">'+money(p.c.mo)+'</td><td class="n">'+dstr(p.d)+'</td>'+
+        '<td><span class="chip '+p.s.cls+'">'+esc(p.s.t)+'</span></td></tr>';
+    }).join('')+'</tbody></table></div>';
+
+  var feed=[
+    ['09:41','<b>Руслан Батаев</b> перевёл <b>ZK-2609-024</b> в стадию «Договор»'],
+    ['09:12','Поступил платёж <b>'+money(146000)+'</b> по договору <b>ДГ-2505-152</b>'],
+    ['08:55','<b>Хава Дадаева</b> одобрила товар по <b>ZK-2609-031</b> <span>— такафул принят</span>'],
+    ['вчера','Отказ по <b>ZK-2609-037</b> <span>— категория товара не соответствует</span>'],
+    ['вчера','<b>Амина Мовсарова</b> выдала <b>ZK-2609-019</b> <span>— товар передан клиенту</span>'],
+    ['вчера','Шариатский совет утвердил шаблон мушараки <span>— редакция 4</span>']
+  ];
+  var fd='<div class="feed">'+feed.map(function(f){
+    return '<div class="fi"><span class="fi-t">'+esc(f[0])+'</span><span class="fi-txt">'+f[1]+'</span></div>';
+  }).join('')+'</div>';
+
+  h+='<div class="grid-2">'+
+    card('Выдачи по месяцам',chart('bar',ISSUE,'₽ млн'),'сен — неполный месяц')+
+    card('Воронка заявок',fh,'сейчас')+
+    '</div>';
+  h+='<div class="grid-2">'+
+    card('Ближайшие платежи',pt,'6 из '+activeCount(),false)+
+    card('Активность',fd,'сегодня')+
+    '</div>';
+  return h;
+}
+
+/* ============ PAGE: DEALS (KANBAN) ============ */
+function pgDeals(){
+  var q=state.q.toLowerCase();
+  var list=state.deals.filter(function(d){
+    if(state.filt!=='all'&&d.prod!==state.filt)return false;
+    if(!q)return true;
+    return (d.name+' '+d.id+' '+d.city+' '+d.prod).toLowerCase().indexOf(q)>=0;
+  });
+  var h='<div class="toolbar"><span class="eyebrow" style="margin-right:6px">Продукт</span>'+
+    ['all'].concat(PRODUCTS).map(function(p){
+      return '<button class="filt'+(state.filt===p?' on':'')+'" data-f="'+esc(p)+'">'+
+        (p==='all'?'Все':esc(p))+'</button>';
+    }).join('')+
+    '<span style="margin-left:auto" class="eyebrow">'+list.length+' заявок · '+
+    short(list.reduce(function(s,d){return s+d.sum},0))+'</span></div>';
+
+  h+='<div class="kanban">'+STAGES.map(function(s){
+    var arr=list.filter(function(d){return d.stage===s.id});
+    var sum=arr.reduce(function(a,d){return a+d.sum},0);
+    return '<div class="col" data-stage="'+s.id+'">'+
+      '<div class="col-h"><span class="col-t">'+esc(s.t)+'</span><span class="col-c">'+arr.length+'</span></div>'+
+      '<div class="col-sum">'+short(sum)+'</div>'+
+      '<div class="col-b">'+arr.map(function(d){
+        var sc=d.score>=75?'ok':(d.score>=60?'warn':(d.score?'crit':'neut'));
+        return '<div class="kc" draggable="true" data-id="'+esc(d.id)+'">'+
+          '<div class="kc-top"><span class="kc-id">'+esc(d.id)+'</span>'+
+          '<span class="chip '+sc+'">'+(d.score?'скоринг '+d.score:'новый')+'</span></div>'+
+          '<div><div class="kc-n">'+esc(d.name)+'</div>'+
+          '<div class="kc-p">'+esc(d.prod)+' · '+esc(d.city)+'</div></div>'+
+          '<div class="kc-sum">'+money(d.sum)+'</div>'+
+          '<div class="kc-foot"><span class="av" style="width:22px;height:22px;font-size:9px">'+
+          esc(ini(d.mgr))+'</span><span class="kc-p">'+d.term+' мес</span>'+
+          '<span class="kc-days">'+d.days+'д</span></div></div>';
+      }).join('')+'</div></div>';
+  }).join('')+'</div>';
+
+  h+=card('Отказы за период','<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
+    '<th>Заявка</th><th>Клиент</th><th>Продукт</th><th class="r">Сумма</th><th>Причина</th><th>Кто</th>'+
+    '</tr></thead><tbody>'+REJECTED.map(function(r){
+      return '<tr><td class="id">'+esc(r.id)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.prod)+
+      '</td><td class="r n">'+money(r.sum)+'</td><td><span class="chip crit">'+esc(r.reason)+
+      '</span></td><td class="who-s">'+esc(r.by)+'</td></tr>';
+    }).join('')+'</tbody></table></div>',REJECTED.length+' за 30 дней',false);
+  return h;
+}
+function bindDeals(){
+  $$('.filt').forEach(function(b){
+    b.addEventListener('click',function(){state.filt=b.dataset.f;render()});
+  });
+  var dragId=null;
+  $$('.kc').forEach(function(c){
+    c.addEventListener('dragstart',function(e){
+      dragId=c.dataset.id;c.classList.add('drag');
+      try{e.dataTransfer.setData('text/plain',dragId);e.dataTransfer.effectAllowed='move'}catch(x){}
+    });
+    c.addEventListener('dragend',function(){c.classList.remove('drag');dragId=null});
+    c.addEventListener('click',function(){openDeal(c.dataset.id)});
+  });
+  $$('.col').forEach(function(col){
+    col.addEventListener('dragover',function(e){e.preventDefault();col.classList.add('drop')});
+    col.addEventListener('dragleave',function(){col.classList.remove('drop')});
+    col.addEventListener('drop',function(e){
+      e.preventDefault();col.classList.remove('drop');
+      var id=dragId;try{id=e.dataTransfer.getData('text/plain')||dragId}catch(x){}
+      var d=state.deals.filter(function(o){return o.id===id})[0];
+      if(!d)return;
+      var to=col.dataset.stage;
+      if(d.stage===to)return;
+      d.stage=to;d.days=0;
+      var st=STAGES.filter(function(s){return s.id===to})[0];
+      render();toast(d.id+' → «'+st.t+'»');
+    });
+  });
+}
+
+/* ============ PAGE: CLIENTS ============ */
+function pgClients(){
+  var q=state.q.toLowerCase();
+  var cl=clientsFromContracts().filter(function(c){
+    return !q||(c.name+' '+c.city+' '+c.prod).toLowerCase().indexOf(q)>=0;
+  });
+  var body='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
+    '<th>Клиент</th><th>Город</th><th>Продукты</th><th class="r">Договоров</th>'+
+    '<th class="r">Профинансировано</th><th class="r">Остаток</th><th>Дисциплина</th>'+
+    '</tr></thead><tbody>'+cl.map(function(c){
+      return '<tr data-cl="'+esc(c.name)+'">'+
+        '<td><div class="who"><span class="av">'+esc(ini(c.name))+'</span>'+
+        '<span class="who-n">'+esc(c.name)+'</span></div></td>'+
+        '<td class="who-s">'+esc(c.city)+'</td><td class="who-s">'+esc(c.prod)+'</td>'+
+        '<td class="r n">'+c.n+'</td><td class="r n">'+money(c.total)+'</td>'+
+        '<td class="r n">'+money(c.rest)+'</td>'+
+        '<td><span class="chip '+c.st+'">'+(c.st==='ok'?'без просрочек':'просрочка '+c.late+' дн')+
+        '</span></td></tr>';
+    }).join('')+'</tbody></table></div>';
+  return '<div class="toolbar"><span class="eyebrow">Всего клиентов: '+cl.length+
+    ' · портфель '+short(portfolio())+'</span></div>'+card('База клиентов',body,'обновлено сегодня',false);
+}
+
+/* ============ PAGE: CONTRACTS ============ */
+function pgContracts(){
+  var q=state.q.toLowerCase();
+  var list=CONTRACTS.filter(function(c){
+    return !q||(c.name+' '+c.id+' '+c.prod+' '+c.city).toLowerCase().indexOf(q)>=0;
+  });
+  var body='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
+    '<th>Договор</th><th>Клиент</th><th>Продукт</th><th class="r">Сумма договора</th>'+
+    '<th class="r">Платёж</th><th>Прогресс</th><th class="r">Остаток</th><th>Статус</th>'+
+    '</tr></thead><tbody>'+list.map(function(c){
+      var p=paidOf(c),s=payStatus(c);
+      return '<tr data-ct="'+esc(c.id)+'">'+
+        '<td class="id">'+esc(c.id)+'</td>'+
+        '<td><div class="who"><span class="av">'+esc(ini(c.name))+'</span>'+
+        '<span class="who-n">'+esc(c.name)+'</span></div></td>'+
+        '<td class="who-s">'+esc(c.prod)+'</td>'+
+        '<td class="r n">'+money(c.total)+'</td>'+
+        '<td class="r n">'+money(c.mo)+'</td>'+
+        '<td><div class="bar" title="'+p+' из '+c.term+'"><i style="width:'+(p/c.term*100)+'%"></i></div>'+
+        '<span class="who-s n">'+p+'/'+c.term+'</span></td>'+
+        '<td class="r n">'+money(restOf(c))+'</td>'+
+        '<td><span class="chip '+s.cls+'">'+esc(s.t)+'</span></td></tr>';
+    }).join('')+'</tbody></table></div>';
+  var mk=0,fin=0;CONTRACTS.forEach(function(c){mk+=c.mk;fin+=c.fin});
+  return '<div class="kpis" style="grid-template-columns:repeat(4,1fr)">'+
+    kpi('Портфель','<span class="num">'+short(portfolio())+'</span>','остаток к получению')+
+    kpi('Профинансировано','<span class="num">'+short(fin)+'</span>','себестоимость товара')+
+    kpi('Наценка','<span class="num">'+short(mk)+'</span>','доход по договорам')+
+    kpi('Средний срок','<span class="num">19<small> мес</small></span>','по действующим')+
+    '</div>'+card('Договоры',body,list.length+' записей',false);
+}
+
+/* ============ PAGE: PAYMENTS ============ */
+function pgPayments(){
+  var rows=[];
+  CONTRACTS.forEach(function(c){
+    if(paidOf(c)>=c.term)return;
+    rows.push({c:c,d:nextPay(c),s:payStatus(c)});
+  });
+  rows.sort(function(a,b){
+    var r={crit:0,warn:1,info:2,neut:3};
+    return (r[a.s.cls]-r[b.s.cls])||(a.d-b.d);
+  });
+  var due=0,late=0;
+  rows.forEach(function(r){due+=r.c.mo;if(r.s.cls==='crit'||r.s.cls==='warn')late+=r.c.mo});
+  var body='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
+    '<th>Дата</th><th>Клиент</th><th>Договор</th><th class="r">Сумма</th>'+
+    '<th class="r">Платёж</th><th>Статус</th><th></th></tr></thead><tbody>'+
+    rows.map(function(r){
+      return '<tr data-ct="'+esc(r.c.id)+'">'+
+        '<td class="n">'+dfull(r.d)+'</td>'+
+        '<td><div class="who"><span class="av">'+esc(ini(r.c.name))+'</span>'+
+        '<span><span class="who-n">'+esc(r.c.name)+'</span>'+
+        '<span class="who-s">'+esc(r.c.city)+'</span></span></div></td>'+
+        '<td class="id">'+esc(r.c.id)+'</td>'+
+        '<td class="r n">'+money(r.c.mo)+'</td>'+
+        '<td class="r n who-s">'+(paidOf(r.c)+1)+' из '+r.c.term+'</td>'+
+        '<td><span class="chip '+r.s.cls+'">'+esc(r.s.t)+'</span></td>'+
+        '<td class="r"><button class="filt pay-btn" data-pay="'+esc(r.c.id)+'">Отметить оплату</button></td>'+
+        '</tr>';
+    }).join('')+'</tbody></table></div>';
+  return '<div class="kpis" style="grid-template-columns:repeat(4,1fr)">'+
+    kpi('К поступлению','<span class="num">'+short(due)+'</span>','ближайший платёж по каждому')+
+    kpi('Просрочено','<span class="num">'+short(late)+'</span>',overdueCount()+' договора','−12%','up')+
+    kpi('Собрано в сентябре','<span class="num">'+short(4180000)+'</span>','план '+short(9600000))+
+    kpi('Штрафы на садаку','<span class="num">'+short(21000)+'</span>','перечислено в фонд')+
+    '</div>'+card('Реестр платежей',body,rows.length+' ожидают',false);
+}
+
+/* ============ PAGE: SHARIAH ============ */
+function pgShariah(){
+  var q=state.deals.filter(function(d){return d.stage==='shariah'});
+  var queue=q.length?'<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
+    '<th>Заявка</th><th>Клиент</th><th>Товар</th><th class="r">Сумма</th><th>На проверке</th>'+
+    '</tr></thead><tbody>'+q.map(function(d){
+      return '<tr data-id="'+esc(d.id)+'"><td class="id">'+esc(d.id)+'</td><td>'+esc(d.name)+
+      '</td><td class="who-s">'+esc(d.prod)+' — '+esc(d.note)+'</td><td class="r n">'+money(d.sum)+
+      '</td><td><span class="chip warn">'+d.days+' дн</span></td></tr>';
+    }).join('')+'</tbody></table></div>':'<div class="empty">Очередь пуста — все заявки проверены</div>';
+
+  var fatwas=[
+    ['ФТ-014','04.08.2026','Такафул вместо классического КАСКО','Допустимо при взаимном страховании','ok'],
+    ['ФТ-013','21.07.2026','Наценка при досрочном погашении','Скидка — право продавца, не обязательство','ok'],
+    ['ФТ-012','30.06.2026','Финансирование торгового оборудования кафе','Требуется подтверждение меню без харама','warn'],
+    ['ФТ-011','12.06.2026','Штраф за просрочку','Только на садаку, не доход компании','ok'],
+    ['ФТ-010','28.05.2026','Перепродажа долга третьему лицу','Запрещено во всех формах','crit']
+  ];
+  var fr='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
+    '<th>№</th><th>Дата</th><th>Вопрос</th><th>Заключение</th></tr></thead><tbody>'+
+    fatwas.map(function(f){
+      return '<tr><td class="id">'+f[0]+'</td><td class="n who-s">'+f[1]+'</td><td>'+esc(f[2])+
+      '</td><td><span class="chip '+f[4]+'">'+esc(f[3])+'</span></td></tr>';
+    }).join('')+'</tbody></table></div>';
+
+  var bans=['Алкоголь и табак','Свинина и продукты из неё','Азартные игры, лотереи, букмекеры',
+    'Ночные клубы и развлечения с харамом','Процентные финансовые услуги','Торговля долгами и деривативы',
+    'Оружие для незаконного оборота','Развлекательный контент с запретным'];
+  var bl='<div class="chk">'+bans.map(function(b){
+    return '<div class="chk-i no"><span class="chk-b">✕</span>'+esc(b)+
+    '<span class="chk-note">не финансируем</span></div>';
+  }).join('')+'</div>';
+
+  return '<div class="kpis" style="grid-template-columns:repeat(4,1fr)">'+
+    kpi('На проверке','<span class="num">'+q.length+'</span>','заявок в очереди')+
+    kpi('Проверено за месяц','<span class="num">64</span>','из них отказано 3')+
+    kpi('Аудит сделок','<span class="num">18<small>%</small></span>','выборка закрытых договоров')+
+    kpi('Заключений совета','<span class="num">14</span>','реестр фетв с 2021 года')+
+    '</div>'+
+    '<div class="grid-2">'+card('Очередь на шариат-контроль',queue,'приоритет по сроку',false)+
+    card('Запрещённые категории',bl,'редакция 4')+'</div>'+
+    card('Реестр заключений',fr,'публикуется на сайте',false);
+}
+
+/* ============ PAGE: ANALYTICS ============ */
+function pgAnalytics(){
+  var byProd={},byCity={},tot=0;
+  CONTRACTS.forEach(function(c){
+    var r=restOf(c);tot+=r;
+    byProd[c.prod]=(byProd[c.prod]||0)+r;
+    byCity[c.city]=(byCity[c.city]||0)+r;
+  });
+  function split(o){
+    var ks=Object.keys(o).sort(function(a,b){return o[b]-o[a]});
+    var mx=o[ks[0]]||1;
+    return '<div class="split">'+ks.map(function(k){
+      return '<div class="sp"><span>'+esc(k)+'</span>'+
+        '<span class="sp-v">'+(o[k]/tot*100).toFixed(1).replace('.',',')+'%</span>'+
+        '<span class="sp-bar"><i style="width:'+(o[k]/mx*100)+'%"></i></span></div>';
+    }).join('')+'</div>';
+  }
+  var port=[
+    {m:'окт',v:612},{m:'ноя',v:658},{m:'дек',v:731},{m:'янв',v:704},{m:'фев',v:742},{m:'мар',v:798},
+    {m:'апр',v:846},{m:'май',v:871},{m:'июн',v:928},{m:'июл',v:994},{m:'авг',v:1043},{m:'сен',v:1061}
+  ];
+  var buckets=[
+    ['Без просрочки',9,'ok'],['1–30 дней',2,'warn'],['31–60 дней',1,'crit'],['60+ дней',0,'neut']
+  ];
+  var bk='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
+    '<th>Бакет</th><th class="r">Договоров</th><th class="r">Доля портфеля</th><th>Качество</th>'+
+    '</tr></thead><tbody>'+buckets.map(function(b){
+      return '<tr><td>'+esc(b[0])+'</td><td class="r n">'+b[1]+'</td>'+
+      '<td class="r n">'+(b[1]/CONTRACTS.length*100).toFixed(1).replace('.',',')+'%</td>'+
+      '<td><span class="chip '+b[2]+'">'+(b[2]==='ok'?'норма':b[2]==='warn'?'внимание':b[2]==='crit'?'работа с долгом':'нет')+
+      '</span></td></tr>';
+    }).join('')+'</tbody></table></div>';
+  return '<div class="kpis">'+
+    kpi('Портфель','<span class="num">'+short(tot)+'</span>','остаток к получению','+12,4%','up')+
+    kpi('Одобрение','<span class="num">78<small>%</small></span>','заявок за 30 дней','+3 п.п.','up')+
+    kpi('Срок решения','<span class="num">31<small> мин</small></span>','медиана','−6 мин','up')+
+    kpi('Доход от наценки','<span class="num">'+short(9840000)+'</span>','накопленным итогом','+9,2%','up')+
+    kpi('Повторные клиенты','<span class="num">34<small>%</small></span>','второй договор и далее','+5 п.п.','up')+
+    '</div>'+
+    '<div class="grid-2">'+
+      card('Динамика портфеля',chart('area',port,'₽ млн'),'12 месяцев')+
+      card('Выдачи по месяцам',chart('bar',ISSUE,'₽ млн'),'сен — неполный')+
+    '</div>'+
+    '<div class="grid-2b">'+
+      card('Портфель по продуктам',split(byProd),'доля остатка')+
+      card('Портфель по городам',split(byCity),'доля остатка')+
+    '</div>'+
+    card('Качество портфеля',bk,'на 04.09.2026',false);
+}
+
+/* ============ PAGE: SETTINGS ============ */
+function pgSettings(){
+  var rows=[6,12,18,24].map(function(t){
+    return '<div class="setrow"><div><div class="setrow-t">Рассрочка на '+t+' месяцев</div>'+
+      '<div class="setrow-d">Наценка к себестоимости товара, фиксируется в договоре</div></div>'+
+      '<div class="setrow-c"><span class="who-s">итого за срок</span>'+
+      '<div class="stepper"><button data-mk="'+t+'" data-dir="-1" aria-label="Меньше">−</button>'+
+      '<span>'+CFG.markup[t]+' %</span>'+
+      '<button data-mk="'+t+'" data-dir="1" aria-label="Больше">+</button></div></div></div>';
+  }).join('');
+  var lim='<div class="setrow"><div><div class="setrow-t">Минимальный первый взнос</div>'+
+    '<div class="setrow-d">Для автомобилей и бизнес-оборудования</div></div>'+
+    '<div class="setrow-c"><div class="stepper"><button data-set="down" data-dir="-1">−</button>'+
+    '<span>'+CFG.minDown+' %</span><button data-set="down" data-dir="1">+</button></div></div></div>'+
+    '<div class="setrow"><div><div class="setrow-t">Фиксированный штраф за просрочку</div>'+
+    '<div class="setrow-d">Не является доходом компании — направляется на садаку</div></div>'+
+    '<div class="setrow-c"><div class="stepper"><button data-set="pen" data-dir="-1">−</button>'+
+    '<span>'+nf(CFG.penalty)+' ₽</span><button data-set="pen" data-dir="1">+</button></div></div></div>'+
+    '<div class="setrow"><div><div class="setrow-t">Максимальная сумма без залога</div>'+
+    '<div class="setrow-d">Техника и ремонт, решение по паспорту</div></div>'+
+    '<div class="setrow-c"><span class="kpi-v" style="font-size:18px">900 000 ₽</span></div></div>';
+  var roles='<div class="chk">'+USERS.map(function(u){
+    return '<div class="chk-i yes"><span class="chk-b">✓</span><b style="font-weight:600">'+esc(u.name)+
+    '</b><span class="who-s">'+esc(u.role)+'</span>'+
+    '<span class="chk-note">'+(u.id==='u3'?'право вето по шариату':u.id==='u1'?'полный доступ':'без права одобрения')+
+    '</span></div>';
+  }).join('')+'</div>';
+  return '<div class="grid-2">'+
+    card('Наценка по срокам',rows,'применяется к новым заявкам')+
+    card('Команда и права',roles,'3 сотрудника')+
+    '</div>'+card('Лимиты и условия',lim,'редакция от 01.09.2026');
+}
+
+/* ============ DRAWER ============ */
+function kvBox(pairs){
+  return '<div class="kv">'+pairs.map(function(p){
+    return '<div><span class="kv-k">'+esc(p[0])+'</span><span class="kv-v">'+p[1]+'</span></div>';
+  }).join('')+'</div>';
+}
+function drawerOpen(title,sub,body,foot){
+  var d=$('#drawer'),s=$('#scrim');
+  d.innerHTML='<div class="dr-h"><div><div class="tb-crumb">'+esc(sub)+'</div>'+
+    '<h3>'+esc(title)+'</h3></div><button class="dr-x" id="drX" aria-label="Закрыть">✕</button></div>'+
+    '<div class="dr-b">'+body+'</div>'+(foot?'<div class="dr-f">'+foot+'</div>':'');
+  d.hidden=false;s.hidden=false;
+  requestAnimationFrame(function(){d.classList.add('on');s.classList.add('on')});
+  $('#drX').addEventListener('click',drawerClose);
+  var f=$('.dr-b',d);if(f)f.scrollTop=0;
+}
+function drawerClose(){
+  var d=$('#drawer'),s=$('#scrim');
+  d.classList.remove('on');s.classList.remove('on');
+  setTimeout(function(){d.hidden=true;s.hidden=true},280);
+}
+function openDeal(id){
+  var d=state.deals.filter(function(o){return o.id===id})[0];if(!d)return;
+  var fin=Math.round(d.sum*(1-d.down/100));
+  var rate=CFG.markup[d.term]||CFG.markup[24];
+  var mk=Math.round(fin*rate/100),total=fin+mk,mo=Math.round(total/d.term);
+  var pending=d.stage==='shariah';
+  var items=[
+    ['Товар определён и существует в натуре',1,''],
+    ['Категория товара дозволена',pending?0:1,pending?'на проверке':'проверено'],
+    ['Собственность переходит к ZK Finance до продажи',1,''],
+    ['Наценка фиксирована, не зависит от просрочки',1,''],
+    ['Процентные условия отсутствуют',1,''],
+    ['Страхование по модели такафул',d.prod==='Автомобиль'?(pending?0:1):1,d.prod==='Автомобиль'?'':'не требуется']
+  ];
+  var chk='<div class="chk">'+items.map(function(i){
+    return '<div class="chk-i '+(i[1]?'yes':'no')+'"><span class="chk-b">'+(i[1]?'✓':'!')+'</span>'+
+      esc(i[0])+(i[2]?'<span class="chk-note">'+esc(i[2])+'</span>':'')+'</div>';
+  }).join('')+'</div>';
+  var stIdx=STAGES.map(function(s){return s.id}).indexOf(d.stage);
+  var nxt=STAGES[stIdx+1];
+  var body=
+    '<div><div class="dr-sec-t">Условия сделки</div>'+kvBox([
+      ['Продукт',esc(d.prod)],['Город',esc(d.city)],
+      ['Стоимость товара',money(d.sum)],['Первый взнос',d.down+'% · '+money(d.sum-fin)],
+      ['Финансируем',money(fin)],['Срок',d.term+' мес'],
+      ['Наценка ('+rate+'%)',money(mk)],['Ежемесячный платёж',money(mo)],
+      ['Итого по договору',money(total)],['Скоринг',d.score?String(d.score):'—']
+    ])+'</div>'+
+    '<div><div class="dr-sec-t">Шариатский чек-лист</div>'+chk+'</div>'+
+    '<div><div class="dr-sec-t">Комментарий</div><p style="font-size:14px;color:var(--muted)">'+
+      esc(d.note||'—')+'</p></div>'+
+    '<div><div class="dr-sec-t">Ведение</div>'+kvBox([
+      ['Менеджер',esc(d.mgr)],['Стадия',esc((STAGES[stIdx]||{}).t||'—')],
+      ['В стадии',d.days+' дн'],['Источник',d.src==='lead'?'Сайт':'Офис']
+    ])+'</div>';
+  var foot=(nxt?'<button class="btn" data-adv="'+esc(d.id)+'">В «'+esc(nxt.t)+'»</button>':
+    '<button class="btn" disabled style="opacity:.4">Сделка выдана</button>')+
+    '<button class="btn btn-out" data-rej="'+esc(d.id)+'">Отказать</button>';
+  drawerOpen(d.name,d.id+' · заявка',body,foot);
+  var a=$('[data-adv]'),r=$('[data-rej]');
+  if(a)a.addEventListener('click',function(){
+    d.stage=nxt.id;d.days=0;drawerClose();render();toast(d.id+' → «'+nxt.t+'»');
+  });
+  if(r)r.addEventListener('click',function(){
+    state.deals=state.deals.filter(function(o){return o.id!==d.id});
+    REJECTED.unshift({id:d.id,name:d.name,prod:d.prod,sum:d.sum,
+      reason:'Отказ менеджера',by:state.user?state.user.name:'—'});
+    persist();drawerClose();render();toast('Отказ по '+d.id+' оформлен');
+  });
+}
+function openContract(id){
+  var c=CONTRACTS.filter(function(o){return o.id===id})[0];if(!c)return;
+  var p=paidOf(c),rows=schedule(c);
+  var extra=state.paidExtra[c.id]||0;
+  var tb='<div class="tbl-scroll"><table class="sched"><thead><tr>'+
+    '<th>№</th><th>Дата</th><th class="n">Платёж</th><th>Статус</th></tr></thead><tbody>'+
+    rows.map(function(r,i){
+      var st=i<p?'paid':(i===p?(c.late&&!extra?'late':'next'):'plan');
+      var chip={paid:'<span class="chip ok">оплачен</span>',
+        next:'<span class="chip info">следующий</span>',
+        late:'<span class="chip crit">просрочен</span>',
+        plan:'<span class="who-s">по графику</span>'}[st];
+      return '<tr class="'+(st==='paid'?'paid':'')+'"><td class="n">'+r.n+'</td>'+
+        '<td class="n">'+dfull(r.date)+'</td><td class="n">'+money(r.sum)+'</td><td>'+chip+'</td></tr>';
+    }).join('')+'</tbody></table></div>';
+  var body=
+    '<div><div class="dr-sec-t">Договор мурабаха</div>'+kvBox([
+      ['Продукт',esc(c.prod)],['Город',esc(c.city)],
+      ['Стоимость товара',money(c.price)],['Первый взнос',c.down+'% · '+money(c.price-c.fin)],
+      ['Профинансировано',money(c.fin)],['Наценка',money(c.mk)],
+      ['Сумма договора',money(c.total)],['Ежемесячный платёж',money(c.mo)],
+      ['Оплачено',p+' из '+c.term],['Остаток',money(restOf(c))]
+    ])+'</div>'+
+    '<div><div class="dr-sec-t">График платежей</div>'+tb+'</div>';
+  var foot=p<c.term?'<button class="btn" data-pay="'+esc(c.id)+'">Принять платёж '+money(c.mo)+'</button>':
+    '<button class="btn" disabled style="opacity:.4">Договор закрыт</button>';
+  drawerOpen(c.name,c.id+' · договор',body,foot);
+  var b=$('.dr-f [data-pay]');
+  if(b)b.addEventListener('click',function(){
+    state.paidExtra[c.id]=(state.paidExtra[c.id]||0)+1;persist();
+    drawerClose();render();toast('Платёж по '+c.id+' принят');
+  });
+}
+function openClient(name){
+  var cs=CONTRACTS.filter(function(c){return c.name===name});if(!cs.length)return;
+  var tot=0,rest=0,late=0;
+  cs.forEach(function(c){tot+=c.total;rest+=restOf(c);late=Math.max(late,c.late)});
+  var list='<div class="tbl-scroll"><table class="sched"><thead><tr>'+
+    '<th>Договор</th><th>Продукт</th><th class="n">Сумма</th><th class="n">Остаток</th>'+
+    '</tr></thead><tbody>'+cs.map(function(c){
+      return '<tr data-ct2="'+esc(c.id)+'" style="cursor:pointer"><td class="n">'+esc(c.id)+'</td>'+
+      '<td>'+esc(c.prod)+'</td><td class="n">'+money(c.total)+'</td>'+
+      '<td class="n">'+money(restOf(c))+'</td></tr>';
+    }).join('')+'</tbody></table></div>';
+  var body='<div><div class="dr-sec-t">Клиент</div>'+kvBox([
+      ['Город',esc(cs[0].city)],['Договоров',String(cs.length)],
+      ['Профинансировано',money(tot)],['Остаток',money(rest)],
+      ['Дисциплина',late?'просрочка '+late+' дн':'без просрочек'],
+      ['Клиент с',dfull(cs[0].start)]
+    ])+'</div>'+
+    '<div><div class="dr-sec-t">Договоры</div>'+list+'</div>'+
+    '<div><div class="dr-sec-t">Проверки</div><div class="chk">'+
+      '<div class="chk-i yes"><span class="chk-b">✓</span>Паспорт проверен<span class="chk-note">действителен</span></div>'+
+      '<div class="chk-i yes"><span class="chk-b">✓</span>Доход подтверждён<span class="chk-note">6 месяцев</span></div>'+
+      '<div class="chk-i yes"><span class="chk-b">✓</span>Источник средств дозволен<span class="chk-note">халяль</span></div>'+
+    '</div></div>';
+  drawerOpen(name,'карточка клиента',body,'');
+  $$('[data-ct2]').forEach(function(tr){
+    tr.addEventListener('click',function(){openContract(tr.dataset.ct2)});
+  });
+}
+
+/* ============ RENDER ============ */
+function renderRail(){
+  var n=$('#railNav');n.innerHTML='';
+  PAGES.forEach(function(p){
+    if(p.g){n.appendChild(el('div','rail-sec',esc(p.g)));return}
+    var b=el('button','rl'+(state.page===p.id?' on':''));
+    b.type='button';
+    var badge=p.id==='deals'?'<span class="rl-badge">'+inWork()+'</span>':
+      (p.id==='shariah'?'<span class="rl-badge">'+state.deals.filter(function(d){return d.stage==='shariah'}).length+'</span>':'');
+    b.innerHTML=ico(p.ic)+'<span>'+esc(p.t)+'</span>'+badge;
+    b.addEventListener('click',function(){
+      location.hash='#/hub/'+p.id;$('#rail').classList.remove('open');
+    });
+    n.appendChild(b);
+  });
+  if(state.user){
+    $('#meName').textContent=state.user.name;
+    $('#meRole').textContent=state.user.role;
+    $('#meAv').textContent=ini(state.user.name);
+  }
+  $('#tbDate').textContent='4 сентября 2026';
+}
+var RENDERERS={dash:pgDash,deals:pgDeals,clients:pgClients,contracts:pgContracts,
+  payments:pgPayments,shariah:pgShariah,analytics:pgAnalytics,settings:pgSettings};
+function render(){
+  var p=PAGES.filter(function(x){return x.id===state.page})[0]||PAGES[1];
+  $('#tbTitle').textContent=p.t;$('#tbCrumb').textContent=p.crumb;
+  CHARTS=[];
+  $('#hubBody').innerHTML=(RENDERERS[state.page]||pgDash)();
+  drawCharts();
+  renderRail();
+  if(state.page==='deals')bindDeals();
+  $$('[data-ct]').forEach(function(tr){
+    tr.addEventListener('click',function(e){
+      if(e.target.closest('[data-pay]'))return;
+      openContract(tr.dataset.ct);
+    });
+  });
+  $$('.pay-btn').forEach(function(b){
+    b.addEventListener('click',function(e){
+      e.stopPropagation();
+      var id=b.dataset.pay;
+      state.paidExtra[id]=(state.paidExtra[id]||0)+1;persist();
+      render();toast('Платёж по '+id+' принят');
+    });
+  });
+  $$('[data-cl]').forEach(function(tr){
+    tr.addEventListener('click',function(){openClient(tr.dataset.cl)});
+  });
+  if(state.page==='shariah'){
+    $$('#hubBody tr[data-id]').forEach(function(tr){
+      tr.addEventListener('click',function(){openDeal(tr.dataset.id)});
+    });
+  }
+  $$('[data-mk]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=b.dataset.mk,dir=+b.dataset.dir;
+      CFG.markup[t]=Math.max(3,Math.min(60,CFG.markup[t]+dir));
+      render();calcRun();toast('Наценка на '+t+' мес: '+CFG.markup[t]+'%');
+    });
+  });
+  $$('[data-set]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var k=b.dataset.set,dir=+b.dataset.dir;
+      if(k==='down')CFG.minDown=Math.max(0,Math.min(60,CFG.minDown+dir*5));
+      if(k==='pen')CFG.penalty=Math.max(0,CFG.penalty+dir*500);
+      render();
+    });
+  });
+}
+
+
+/* ============ STAGE MARKERS ============ */
+function stagesInit(){
+  var c=$('.calc');if(!c)return;
+  var mark=function(){
+    $$('.stg[data-n]').forEach(function(s,i){
+      setTimeout(function(){s.classList.add('hot')},RM?0:i*260);
+    });
+  };
+  if(RM||!('IntersectionObserver' in window)){mark();return}
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(en){if(en.isIntersecting){io.unobserve(en.target);mark()}});
+  },{threshold:.3});
+  io.observe(c);
+}
+
+/* ============ ROUTER ============ */
+function showView(v){
+  $('#site').hidden=v!=='site';
+  $('#gate').hidden=v!=='gate';
+  $('#hub').hidden=v!=='hub';
+  $('#prog').hidden=v!=='site';
+  document.body.style.overflowY=v==='gate'?'hidden':'';
+}
+function route(){
+  var h=location.hash||'#/';
+  if(h.indexOf('#/hub')===0){
+    if(!state.user){showView('gate');gateInit();return}
+    var parts=h.split('/');
+    var pg=parts[2]||'dash';
+    if(!PAGES.filter(function(p){return p.id===pg}).length)pg='dash';
+    state.page=pg;showView('hub');render();
+    window.scrollTo(0,0);
+  }else{
+    showView('site');
+    requestAnimationFrame(girih);
+    if(h.length>1&&h!=='#/'&&h.indexOf('/')<0){
+      try{
+        var t=document.querySelector(h);
+        if(t)setTimeout(function(){
+          t.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+        },30);
+      }catch(e){}
+    }
+  }
+}
+
+/* ============ INIT ============ */
+function init(){
+  navInit();calcInit();faqInit();wzInit();marqueeInit();
+  revealInit();countersInit();scrollInit();flowInit();stagesInit();
+
+  $('#scrim').addEventListener('click',drawerClose);
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&!$('#drawer').hidden)drawerClose();
+  });
+  var s=$('#hubSearch');
+  s.addEventListener('input',function(){state.q=s.value;render()});
+  $('#hubMenu').addEventListener('click',function(){$('#rail').classList.toggle('open')});
+
+  window.addEventListener('hashchange',route);
+  var rt;
+  window.addEventListener('resize',function(){
+    clearTimeout(rt);rt=setTimeout(function(){girih();drawCharts()},150);
+  });
+  var mq=window.matchMedia('(prefers-color-scheme: dark)');
+  var onTheme=function(){girih();drawCharts()};
+  if(mq.addEventListener)mq.addEventListener('change',onTheme);
+  else if(mq.addListener)mq.addListener(onTheme);
+
+  route();
+  setTimeout(girih,120);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){drawCharts();girih()});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+else init();
+})();
+</script>
+</body>
+</html>
