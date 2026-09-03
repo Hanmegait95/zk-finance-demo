@@ -2221,6 +2221,7 @@ function navInit(){
 
 /* ============ GATE ============ */
 var pickUser=USERS[0];
+var pendingHub='#/hub/dash';
 function gateInit(){
   var box=$('#gateUsers');box.innerHTML='';
   USERS.forEach(function(u){
@@ -2237,7 +2238,9 @@ function gateInit(){
     box.appendChild(b);
   });
   $('#gateGo').addEventListener('click',function(){
-    state.user=pickUser;location.hash='#/hub/dash';
+    state.user=pickUser;
+    if(location.hash===pendingHub)route();
+    else location.hash=pendingHub;
   });
 }
 /* ============ ICONS ============ */
@@ -2982,7 +2985,10 @@ function showView(v){
 function route(){
   var h=location.hash||'#/';
   if(h.indexOf('#/hub')===0){
-    if(!state.user){showView('gate');gateInit();return}
+    if(!state.user){
+      if(h.split('/')[2])pendingHub=h;
+      showView('gate');gateInit();return;
+    }
     var parts=h.split('/');
     var pg=parts[2]||'dash';
     if(!PAGES.filter(function(p){return p.id===pg}).length)pg='dash';
