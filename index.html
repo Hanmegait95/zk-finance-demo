@@ -905,6 +905,77 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
   .mq-in{animation:none}
 }
 
+/* ============ СПИСОК ДЕЛ НА ДАШБОРДЕ ============ */
+.todo-g{border-bottom:1px solid var(--rule)}
+.todo-g:last-child{border-bottom:0}
+.todo-h{display:flex;align-items:center;gap:10px;padding:14px 18px 8px}
+.todo-n{margin-left:auto;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.todo-i{
+  display:flex;align-items:center;gap:12px;padding:11px 18px;cursor:pointer;
+  transition:background .15s;border-top:1px solid var(--rule);
+}
+.todo-i:hover{background:var(--ivory-lo)}
+.todo-t{display:flex;flex-direction:column;min-width:0;line-height:1.35}
+.todo-t b{font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.todo-a{margin-left:auto;flex:0 0 auto}
+.tel{
+  display:inline-block;font-size:13px;font-weight:600;color:var(--ink);
+  border:1px solid var(--rule-strong);border-radius:var(--r-pill);padding:6px 14px;
+  white-space:nowrap;transition:background .2s,color .2s;
+}
+.tel:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.dr-b .tel{margin-top:2px}
+
+/* ============ ЗАМЕТКИ ============ */
+.notes{display:flex;flex-direction:column;gap:8px}
+.note-i{background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-md);padding:12px 14px}
+.note-m{display:flex;gap:10px;font-size:11.5px;color:var(--muted);margin-bottom:5px}
+.note-t{font-size:14px;line-height:1.5;white-space:pre-wrap}
+.note-add{display:flex;gap:8px;margin-top:10px}
+.note-add textarea{
+  flex:1;min-height:44px;max-height:140px;padding:11px 14px;background:var(--ivory);
+  border:1px solid var(--rule-strong);border-radius:var(--r-md);font-size:14px;resize:vertical;
+}
+.note-add textarea:focus{outline:none;border-color:var(--ink)}
+th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+th.sortable:hover{color:var(--ink)}
+th.sortable .arw{opacity:.35;margin-left:4px}
+th.sortable.on .arw{opacity:1}
+
+/* ============ БЫСТРЫЕ ДЕЙСТВИЯ И ПОИСК ============ */
+.rail-act{padding:12px 12px 0}
+.rail-search{
+  width:100%;display:flex;align-items:center;gap:9px;padding:10px 12px;cursor:pointer;
+  background:rgba(255,255,255,.08);border:1px solid var(--ink-rule);color:var(--on-ink);
+  border-radius:var(--r-md);font-size:13.5px;opacity:.8;transition:opacity .2s,background .2s;
+}
+.rail-search:hover{opacity:1;background:rgba(255,255,255,.14)}
+.rail-search kbd{
+  margin-left:auto;font:inherit;font-size:11px;opacity:.55;border:1px solid var(--ink-rule);
+  border-radius:6px;padding:1px 5px;
+}
+.rl-badge.warn{background:var(--crit-on-ink);color:#fff}
+.find{position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.45);display:flex;
+  align-items:flex-start;justify-content:center;padding:12vh 20px 20px}
+.find-box{width:100%;max-width:620px;background:var(--ivory);border-radius:var(--r-xl);
+  box-shadow:var(--lift);overflow:hidden;display:flex;flex-direction:column;max-height:70vh}
+.find-top{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--rule)}
+.find-top svg{opacity:.5;flex:0 0 auto}
+.find-top input{flex:1;border:0;outline:none;background:none;font-size:17px;font-weight:500}
+.find-top kbd{font:inherit;font-size:11px;color:var(--muted);border:1px solid var(--rule-strong);
+  border-radius:6px;padding:2px 7px}
+.find-res{overflow-y:auto;padding:8px}
+.find-g{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;padding:12px 14px 6px}
+.find-i{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--r-md);
+  cursor:pointer;transition:background .15s}
+.find-i:hover,.find-i.sel{background:var(--ivory-lo)}
+.find-i>span:nth-child(2){display:flex;flex-direction:column;min-width:0;line-height:1.35}
+.find-n{display:block;font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.find-s{display:block;font-size:12.5px;color:var(--muted)}
+.find-r{margin-left:auto;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.find-empty{padding:34px 20px;text-align:center;color:var(--muted);font-size:14px}
+
 /* ============ АДМИНКА КОНТЕНТА ============ */
 .adm{display:grid;grid-template-columns:236px 1fr;gap:14px;align-items:start}
 .adm-nav{background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg);padding:10px;position:sticky;top:88px}
@@ -1263,6 +1334,20 @@ function enrich(c){
   }else o.late=0;
   return o;
 }
+/* Заявки с сервера приводим к виду, который ждут экраны CRM. */
+function mergeLeads(rows){
+  var byId={};state.deals.forEach(function(d,i){byId[d.id]=i});
+  rows.filter(function(l){return !l.deleted}).forEach(function(l){
+    var item={
+      id:l.id,name:l.name,phone:l.phone||'',prod:l.prod||'—',city:l.city||'—',
+      sum:+l.sum||0,term:+l.term||12,down:30,mgr:l.mgr||'Не назначен',
+      stage:l.stage||'new',days:0,score:+l.score||0,
+      note:l.note||'',at:l.at||'',notes:l.notes||[],src:'lead'
+    };
+    if(byId[l.id]!==undefined)state.deals[byId[l.id]]=item;
+    else state.deals.unshift(item);
+  });
+}
 function rawContract(c){
   return {id:c.id||'',name:c.name||'',city:c.city||'',prod:c.prod||'',phone:c.phone||'',
           price:c.price||0,down:c.down||0,term:c.term||12,markup:c.markup||0,
@@ -1312,7 +1397,7 @@ function persist(){
 }
 /* ============ ХРАНИЛИЩЕ: СЕРВЕР ИЛИ БРАУЗЕР ============ */
 var API='/api/';
-var SRV={on:false,installed:false,authed:false,csrf:'',user:null};
+var SRV={on:false,installed:false,authed:false,locked:false,csrf:'',user:null};
 function api(action,opts,cb){
   opts=opts||{};
   var o={method:opts.method||'GET',credentials:'same-origin',headers:{}};
@@ -1340,7 +1425,8 @@ var Store={
   probe:function(cb){
     api('me',null,function(d){
       if(d&&d.server){
-        SRV.on=true;SRV.installed=!!d.installed;SRV.authed=!!d.authed;SRV.user=d.user||null;
+        SRV.on=true;SRV.installed=!!d.installed;SRV.authed=!!d.authed;
+        SRV.locked=!!d.locked;SRV.user=d.user||null;
         if(SRV.user)state.user={name:SRV.user.name,role:SRV.user.role==='owner'?'Владелец':'Сотрудник',login:SRV.user.login};
       }
       cb();
@@ -1370,17 +1456,7 @@ var Store={
   loadLeads:function(cb){
     if(!SRV.on||!SRV.authed)return cb();
     api('leads',null,function(d){
-      if(d&&d.leads&&d.leads.length){
-        var have={};state.deals.forEach(function(x){have[x.id]=1});
-        d.leads.filter(function(l){return !l.deleted&&!have[l.id]}).forEach(function(l){
-          state.deals.unshift({
-            id:l.id,name:l.name,prod:l.prod||'—',city:l.city||'—',
-            sum:+l.sum||0,term:+l.term||12,down:30,mgr:'Не назначен',
-            stage:l.stage||'new',days:0,score:0,
-            note:(l.note||'Заявка с сайта')+' · '+(l.phone||''),src:'lead'
-          });
-        });
-      }
+      if(d&&Array.isArray(d.leads))mergeLeads(d.leads);
       cb();
     });
   },
@@ -1397,6 +1473,41 @@ var Store={
     });
   },
   logout:function(cb){api('logout',{method:'POST'},function(){SRV.authed=false;SRV.user=null;cb&&cb()})},
+  updateLead:function(id,patch,cb){
+    var d=state.deals.filter(function(x){return x.id===id})[0];
+    if(d)for(var k in patch)d[k]=patch[k];
+    if(!SRV.on){persistLocal();return cb(null)}
+    api('lead-update',{method:'POST',body:{id:id,patch:patch}},function(x,err){cb(err)});
+  },
+  addNote:function(kind,id,text,cb){
+    if(!SRV.on){
+      var arr=kind==='contract'
+        ? CONTRACTS.filter(function(c){return c.id===id})[0]
+        : state.deals.filter(function(d){return d.id===id})[0];
+      if(arr){if(!arr.notes)arr.notes=[];
+        arr.notes.unshift({at:new Date().toISOString(),who:(state.user||{}).name||'—',text:text})}
+      persistLocal();return cb(null);
+    }
+    api('note-add',{method:'POST',body:{kind:kind,id:id,text:text}},function(d,err){
+      if(!err){
+        if(kind==='contract'&&d&&Array.isArray(d.notes))CONTRACTS=d.notes.map(enrich);
+        else if(d&&Array.isArray(d.notes))mergeLeads(d.notes);
+      }
+      cb(err);
+    });
+  },
+  addPayment:function(id,sum,date,cb){
+    if(!SRV.on){
+      var c=CONTRACTS.filter(function(x){return x.id===id})[0];
+      if(c){var raw=rawContract(c);raw.paid=Math.min(raw.term,raw.paid+1);
+        var k=CONTRACTS.indexOf(c);CONTRACTS[k]=enrich(raw)}
+      persistLocal();return cb(null);
+    }
+    api('payment-add',{method:'POST',body:{id:id,sum:sum,date:date}},function(d,err){
+      if(d&&Array.isArray(d.contracts))CONTRACTS=d.contracts.map(enrich);
+      cb(err);
+    });
+  },
   loadContracts:function(cb){
     if(!SRV.on)return cb();
     api('contracts',null,function(d){
