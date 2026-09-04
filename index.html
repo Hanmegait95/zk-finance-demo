@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="ZK Finance — исламская рассрочка без процентов по договору мурабаха. Демо-версия сайта и CRM.">
-<meta name="color-scheme" content="light dark">
+<meta name="description" content="ZK Finance — исламская рассрочка без процентов по договору мурабаха. Сайт и хаб с админкой.">
+<meta name="color-scheme" content="light">
 </head>
 <body>
 <title>ZK Finance</title>
@@ -12,69 +12,32 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
-/* ============ TOKENS ============ */
+/* ============ TOKENS — одна светлая тема, фирменная ============ */
 :root{
+  color-scheme:light;
   --ink:#000000;
-  --ink-soft:#26241E;
+  --ink-soft:#1F1D19;
   --ivory:#F6F0E4;
-  --ivory-hi:#FBF8F0;
-  --ivory-lo:#EDE5D4;
-  --rule:#E0D8C6;
+  --ivory-hi:#FBF7EE;
+  --ivory-lo:#EBE3D2;
+  --rule:#E1D9C7;
   --rule-strong:#CDC3AC;
-  --muted:#6E6759;
-  --muted-2:#918A7A;
-  --on-ink:#F6F0E4;
-  --on-ink-muted:#A49C8A;
-  --ink-rule:#26251F;
-  --ink-surface:#141310;
-  --ok:#3E6B4E; --ok-bg:#E3EBE1;
-  --warn:#8A6A1F; --warn-bg:#F0E8D1;
-  --crit:#8E3B2E; --crit-bg:#F3E1DB;
-  --crit-on-ink:#E08872;
-  --info:#3A5A7A; --info-bg:#E0E7ED;
+  --muted:#6B6459;
+  --muted-2:#8F887A;
+  --on-ink:#FFFFFF;
+  --on-ink-muted:#ADA79D;
+  --ink-rule:#2B2B2B;
+  --ink-surface:#151515;
+  --ok:#3E6B4E; --ok-bg:#E4EBE2; --ok-on-ink:#8CC79C;
+  --warn:#8A6A1F; --warn-bg:#F1E9D2; --warn-on-ink:#DCB765;
+  --crit:#9B4030; --crit-bg:#F4E2DC; --crit-on-ink:#E8917A;
+  --info:#3A5A7A; --info-bg:#E1E8EE;
   --shadow:0 1px 2px rgba(0,0,0,.03), 0 10px 30px -24px rgba(0,0,0,.4);
   --lift:0 2px 4px rgba(0,0,0,.04), 0 26px 52px -34px rgba(0,0,0,.5);
   --r-xl:34px; --r-lg:24px; --r-md:18px; --r-sm:12px; --r-pill:999px;
   --maxw:1320px;
   --ease:cubic-bezier(.22,.72,.24,1);
-  --f-display:"Manrope","Helvetica Neue",Arial,sans-serif;
-  --f-body:"Manrope","Helvetica Neue",Arial,sans-serif;
-  --f-mono:"Manrope","Helvetica Neue",Arial,sans-serif;
-  color-scheme:light;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --ink:#F2ECE0; --ink-soft:#D2CBBB;
-    --ivory:#121110; --ivory-hi:#1C1A16; --ivory-lo:#0A0908;
-    --rule:#2C2A24; --rule-strong:#474235;
-    --muted:#9C9585; --muted-2:#7E7767;
-    --on-ink:#121110; --on-ink-muted:#565044;
-    --ink-rule:#DCD6C8; --ink-surface:#EEE9DC;
-    --ok:#8CBE9A; --ok-bg:#1D2A20;
-    --warn:#D9B25C; --warn-bg:#2C2413;
-    --crit:#E08872; --crit-bg:#2E1A15;
-    --crit-on-ink:#8E3B2E;
-    --info:#8FB6D6; --info-bg:#16212B;
-    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px -24px rgba(0,0,0,.9);
-    --lift:0 2px 6px rgba(0,0,0,.4), 0 28px 56px -34px rgba(0,0,0,1);
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --ink:#F2ECE0; --ink-soft:#D2CBBB;
-  --ivory:#121110; --ivory-hi:#1C1A16; --ivory-lo:#0A0908;
-  --rule:#2C2A24; --rule-strong:#474235;
-  --muted:#9C9585; --muted-2:#7E7767;
-  --on-ink:#121110; --on-ink-muted:#565044;
-  --ink-rule:#DCD6C8; --ink-surface:#EEE9DC;
-  --ok:#8CBE9A; --ok-bg:#1D2A20;
-  --warn:#D9B25C; --warn-bg:#2C2413;
-  --crit:#E08872; --crit-bg:#2E1A15;
-  --crit-on-ink:#8E3B2E;
-  --info:#8FB6D6; --info-bg:#16212B;
-  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px -24px rgba(0,0,0,.9);
-  --lift:0 2px 6px rgba(0,0,0,.4), 0 28px 56px -34px rgba(0,0,0,1);
-  color-scheme:dark;
+  --f:"Manrope","Helvetica Neue",Arial,sans-serif;
 }
 
 /* ============ BASE ============ */
@@ -83,7 +46,7 @@
 img{max-width:100%}
 body{
   margin:0;background:var(--ivory);color:var(--ink);
-  font-family:var(--f-body);font-size:16px;line-height:1.6;font-weight:400;
+  font-family:var(--f);font-size:16px;line-height:1.6;font-weight:400;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
 h1,h2,h3,h4,h5{margin:0;font-weight:600;text-wrap:balance;letter-spacing:-.03em;line-height:1.1}
@@ -91,12 +54,9 @@ p{margin:0}
 a{color:inherit;text-decoration:none}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-.mono,.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
-.eyebrow{
-  font-size:11px;letter-spacing:.16em;font-weight:600;
-  text-transform:uppercase;color:var(--muted);display:block;
-}
+.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:600;text-transform:uppercase;color:var(--muted);display:block}
 
 /* ============ MOTION ============ */
 .anim .reveal{
@@ -105,100 +65,75 @@ button,input,select,textarea{font:inherit;color:inherit}
   transition-delay:var(--d,0s);
 }
 .anim .reveal.in{opacity:1;transform:none}
-#prog{
-  position:fixed;top:0;left:0;height:2px;background:var(--ink);
-  z-index:100;width:0;transition:width .1s linear;
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--ink);z-index:100;width:0;transition:width .1s linear}
+
+/* ============ BUTTONS — белый текст на чёрном ============ */
+.btn{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px 26px;background:var(--ink);color:#FFFFFF;border:1px solid var(--ink);
+  cursor:pointer;font-size:14.5px;font-weight:600;letter-spacing:-.01em;
+  border-radius:var(--r-pill);white-space:nowrap;
+  transition:transform .3s var(--ease),opacity .3s var(--ease),background .3s var(--ease),color .3s var(--ease);
 }
+.btn:hover{transform:translateY(-2px);opacity:.88}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--rule-strong)}
+.btn-ghost:hover{background:var(--ink);color:#FFFFFF;border-color:var(--ink);opacity:1}
+.btn-sm{padding:10px 18px;font-size:13.5px}
+.btn-lg{padding:17px 32px;font-size:15.5px}
+.btn-arr{transition:transform .35s var(--ease);display:inline-block}
+.btn:hover .btn-arr{transform:translateX(4px)}
+.btn-white{background:#FFFFFF;color:var(--ink);border-color:#FFFFFF}
+.btn-white:hover{opacity:.9}
 
 /* ============ HEADER ============ */
-.hdr{
-  position:sticky;top:0;z-index:60;background:var(--ivory);
-  border-bottom:1px solid transparent;transition:border-color .3s,box-shadow .3s;
-}
+.hdr{position:sticky;top:0;z-index:60;background:var(--ivory);border-bottom:1px solid transparent;transition:border-color .3s}
 .hdr.stuck{border-bottom-color:var(--rule)}
 .hdr-in{display:flex;align-items:center;gap:26px;height:80px}
 .brand{display:flex;align-items:center;gap:12px;flex:0 0 auto}
 .mark{
-  width:40px;height:40px;background:var(--ink);color:var(--on-ink);
-  display:grid;place-items:center;font-size:13px;font-weight:700;letter-spacing:.02em;
-  flex:0 0 auto;border-radius:var(--r-pill);transition:transform .45s var(--ease);
+  width:40px;height:40px;background:var(--ink);color:#FFFFFF;display:grid;place-items:center;
+  font-size:13px;font-weight:700;letter-spacing:.02em;flex:0 0 auto;border-radius:var(--r-pill);
+  transition:transform .45s var(--ease);
 }
 .brand:hover .mark{transform:scale(1.06)}
 .brand-txt{display:flex;flex-direction:column;line-height:1.15}
 .brand-name{font-size:17px;font-weight:600;letter-spacing:-.02em}
 .brand-sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500}
-.nav{display:flex;gap:6px;margin-left:auto;align-items:center}
-.nav a{
-  font-size:14px;color:var(--muted);padding:8px 14px;border-radius:var(--r-pill);
-  white-space:nowrap;transition:color .25s,background .25s;font-weight:500;
-}
+.nav{display:flex;gap:4px;margin-left:auto;align-items:center}
+.nav a{font-size:14px;color:var(--muted);padding:8px 13px;border-radius:var(--r-pill);white-space:nowrap;transition:color .25s,background .25s;font-weight:500}
 .nav a:hover{color:var(--ink);background:rgba(0,0,0,.05)}
 .hdr-act{display:flex;gap:10px;align-items:center;flex:0 0 auto}
-.demo-tag{
-  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;
-  border:1px solid var(--rule-strong);color:var(--muted);padding:5px 11px;border-radius:var(--r-pill);
-}
-.btn{
-  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  padding:14px 26px;background:var(--ink);color:var(--on-ink);border:1px solid var(--ink);
-  cursor:pointer;font-size:14.5px;font-weight:600;letter-spacing:-.01em;
-  border-radius:var(--r-pill);white-space:nowrap;
-  transition:transform .3s var(--ease),opacity .3s var(--ease),background .3s var(--ease),color .3s var(--ease);
-}
-.btn:hover{transform:translateY(-2px);opacity:.9}
-.btn:active{transform:translateY(0)}
-.btn-ghost{background:transparent;color:var(--ink);border-color:var(--rule-strong)}
-.btn-ghost:hover{background:var(--ink);color:var(--on-ink);border-color:var(--ink);opacity:1}
-.btn-sm{padding:10px 18px;font-size:13.5px}
-.btn-lg{padding:17px 32px;font-size:15.5px}
-.btn-arr{transition:transform .35s var(--ease);display:inline-block}
-.btn:hover .btn-arr{transform:translateX(4px)}
-.burger{
-  display:none;width:44px;height:44px;background:none;border:1px solid var(--rule-strong);
-  border-radius:var(--r-pill);cursor:pointer;align-items:center;justify-content:center;
-}
+.demo-tag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;border:1px solid var(--rule-strong);color:var(--muted);padding:5px 11px;border-radius:var(--r-pill)}
+.burger{display:none;width:44px;height:44px;background:none;border:1px solid var(--rule-strong);border-radius:var(--r-pill);cursor:pointer;align-items:center;justify-content:center}
 
-/* ============ PILL BADGE ============ */
+/* ============ PILL ============ */
 .pill{
   display:inline-flex;align-items:center;gap:9px;padding:8px 16px 8px 12px;
   border:1px solid var(--rule-strong);border-radius:var(--r-pill);
   font-size:13px;color:var(--muted);font-weight:500;background:var(--ivory-hi);
 }
 .pill svg{flex:0 0 auto;opacity:.8}
-.slab .pill{border-color:var(--ink-rule);background:transparent;color:var(--on-ink-muted)}
 
 /* ============ HERO ============ */
 .hero{position:relative;overflow:hidden}
-#girih{position:absolute;inset:0;width:100%;height:100%;opacity:.34;pointer-events:none;will-change:transform}
+#girih{position:absolute;inset:0;width:100%;height:100%;opacity:.32;pointer-events:none;will-change:transform}
 .hero-in{position:relative;padding-top:76px}
 .hero-grid{display:grid;grid-template-columns:1.16fr .84fr;gap:64px;align-items:end}
-.hero h1{
-  font-size:clamp(42px,5.9vw,80px);line-height:.96;letter-spacing:-.045em;
-  margin:22px 0 0;font-weight:700;
-}
+.hero h1{font-size:clamp(42px,5.9vw,80px);line-height:.96;letter-spacing:-.045em;margin:22px 0 0;font-weight:700}
 .hero h1 em{font-style:normal;display:block;color:var(--muted-2)}
 .hero-lead{margin-top:26px;font-size:18.5px;line-height:1.62;color:var(--ink-soft);max-width:47ch}
 .hero-cta{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap;align-items:center}
-.hero-trust{display:flex;align-items:center;gap:11px;font-size:13.5px;color:var(--muted);margin-top:26px}
+.hero-trust{display:flex;align-items:flex-start;gap:11px;font-size:13.5px;color:var(--muted);margin-top:26px}
 .hero-trust b{font-weight:600;color:var(--ink)}
-.hero-side{
-  padding:8px 26px;background:var(--ivory-hi);border:1px solid var(--rule);
-  border-radius:var(--r-lg);
-}
-.spec{
-  border-top:1px solid var(--rule);padding:17px 0;display:flex;
-  justify-content:space-between;align-items:baseline;gap:16px;
-}
+.hero-side{padding:8px 26px;background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg)}
+.spec{border-top:1px solid var(--rule);padding:17px 0;display:flex;justify-content:space-between;align-items:baseline;gap:16px}
 .spec:first-child{border-top:0}
 .spec-k{font-size:14px;color:var(--muted)}
 .spec-v{font-size:20px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.hero-strip{
-  margin-top:76px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
-}
-.hs{
-  padding:24px 24px 26px;background:var(--ivory-hi);border:1px solid var(--rule);
-  border-radius:var(--r-lg);transition:transform .4s var(--ease),box-shadow .4s var(--ease);
-}
+.hero-strip{margin-top:76px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.hs{padding:24px;background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg);transition:transform .4s var(--ease),box-shadow .4s var(--ease)}
 .hs:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
 .hs-n{font-size:32px;font-weight:700;letter-spacing:-.04em;display:block;font-variant-numeric:tabular-nums}
 .hs-l{font-size:13.5px;color:var(--muted);margin-top:8px;display:block;max-width:24ch;line-height:1.5}
@@ -207,13 +142,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 .mq{overflow:hidden;padding:22px 0;margin-top:56px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .mq-in{display:flex;width:max-content;animation:mq 46s linear infinite}
 .mq:hover .mq-in{animation-play-state:paused}
-.mq-i{
-  display:flex;align-items:center;gap:12px;padding:0 30px;
-  font-size:13px;letter-spacing:.02em;color:var(--muted);white-space:nowrap;font-weight:500;
-}
+.mq-i{display:flex;align-items:center;gap:12px;padding:0 30px;font-size:13px;color:var(--muted);white-space:nowrap;font-weight:500}
 .mq-i::before{content:"";width:6px;height:6px;background:var(--rule-strong);border-radius:50%}
 @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
 /* ============ SECTIONS ============ */
 .sec{padding:104px 0;position:relative}
 .sec-head{display:grid;grid-template-columns:220px 1fr;gap:48px;margin-bottom:52px;align-items:start}
@@ -437,7 +368,7 @@ input[type="range"]::-moz-range-thumb{
 .cmp-head .cmp-us{color:var(--on-ink)}
 .cmp-k{color:var(--on-ink-muted)}
 .cmp-bad{color:var(--on-ink-muted)}
-.cmp-us{background:rgba(246,240,228,.06);position:relative;font-weight:500}
+.cmp-us{background:rgba(255,255,255,.06);position:relative;font-weight:500}
 .cmp-us::before{
   content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--on-ink);
   transform-origin:top;transition:transform .6s var(--ease);transition-delay:var(--d,0s);
@@ -477,7 +408,7 @@ input[type="range"]::-moz-range-thumb{
 /* ============ CASES ============ */
 .cases{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .case{
-  background:rgba(246,240,228,.055);border:1px solid var(--ink-rule);border-radius:var(--r-xl);
+  background:rgba(255,255,255,.055);border:1px solid var(--ink-rule);border-radius:var(--r-xl);
   padding:30px 28px;display:flex;flex-direction:column;gap:18px;transition:transform .4s var(--ease);
 }
 .case:hover{transform:translateY(-4px)}
@@ -511,7 +442,7 @@ input[type="range"]::-moz-range-thumb{
 /* ============ COUNCIL ============ */
 .council{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .cm{
-  background:rgba(246,240,228,.055);border:1px solid var(--ink-rule);border-radius:var(--r-xl);
+  background:rgba(255,255,255,.055);border:1px solid var(--ink-rule);border-radius:var(--r-xl);
   padding:30px 28px;transition:transform .4s var(--ease);
 }
 .cm:hover{transform:translateY(-4px)}
@@ -672,8 +603,8 @@ select.inp{
   cursor:pointer;color:var(--on-ink);opacity:.66;font-size:14px;text-align:left;width:100%;
   border-radius:var(--r-md);transition:opacity .2s,background .2s;font-weight:500;
 }
-.rl:hover{opacity:1;background:rgba(246,240,228,.07)}
-.rl.on{opacity:1;background:rgba(246,240,228,.13)}
+.rl:hover{opacity:1;background:rgba(255,255,255,.07)}
+.rl.on{opacity:1;background:rgba(255,255,255,.13)}
 .rl-ic{width:16px;height:16px;flex:0 0 auto}
 .rl-badge{
   margin-left:auto;font-size:11px;background:var(--on-ink);color:var(--ink);
@@ -955,6 +886,9 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
   .res-side{text-align:left}
   .cta-in{gap:26px}
   .ps-col{padding:26px 22px 30px}
+  .prod-top{flex-wrap:wrap;gap:10px}
+  .tag{white-space:normal}
+  .prod-meta{gap:18px;flex-wrap:wrap}
   .drawer{top:0;right:0;bottom:0;width:100%;border-radius:0}
   .q-btn{padding:20px 20px;font-size:16px}
   .q-body p{padding:0 20px 22px}
@@ -963,6 +897,83 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
   *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important;animation-iteration-count:1 !important}
   .anim .reveal{opacity:1;transform:none}
   .mq-in{animation:none}
+}
+
+/* ============ АДМИНКА КОНТЕНТА ============ */
+.adm{display:grid;grid-template-columns:236px 1fr;gap:14px;align-items:start}
+.adm-nav{background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg);padding:10px;position:sticky;top:88px}
+.an{
+  display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:none;border:0;
+  cursor:pointer;text-align:left;font-size:14px;color:var(--muted);border-radius:var(--r-md);
+  font-weight:500;transition:background .2s,color .2s;
+}
+.an:hover{background:var(--ivory-lo);color:var(--ink)}
+.an.on{background:var(--ink);color:#FFFFFF}
+.an-n{margin-left:auto;font-size:11px;opacity:.6;font-variant-numeric:tabular-nums}
+.adm-pane{background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg);overflow:hidden}
+.adm-h{padding:20px 24px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.adm-h h3{font-size:19px;font-weight:600}
+.adm-h p{font-size:13px;color:var(--muted);width:100%;margin-top:2px}
+.adm-b{padding:24px}
+.fset{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.fset .full{grid-column:1/-1}
+.fw label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:600}
+.fw .hint{font-size:12px;color:var(--muted-2);margin-top:6px;line-height:1.45}
+.ai{
+  width:100%;padding:12px 15px;background:var(--ivory);border:1px solid var(--rule-strong);
+  border-radius:var(--r-md);font-size:15px;transition:border-color .2s,background .2s;
+}
+.ai:focus{outline:none;border-color:var(--ink);background:#FFFFFF}
+textarea.ai{min-height:96px;resize:vertical;line-height:1.55}
+input.ai[type=number]{font-variant-numeric:tabular-nums}
+.rep{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.rep-i{background:var(--ivory);border:1px solid var(--rule);border-radius:var(--r-lg);overflow:hidden}
+.rep-h{
+  display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--ivory-lo);
+  border-bottom:1px solid var(--rule);
+}
+.rep-t{font-size:13px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rep-num{
+  width:22px;height:22px;border-radius:var(--r-pill);background:var(--ink);color:#FFFFFF;
+  display:grid;place-items:center;font-size:11px;font-weight:600;flex:0 0 auto;
+}
+.rep-btn{
+  width:28px;height:28px;border:1px solid var(--rule-strong);background:var(--ivory-hi);
+  border-radius:var(--r-pill);cursor:pointer;font-size:13px;line-height:1;
+  display:grid;place-items:center;flex:0 0 auto;transition:background .2s,color .2s;
+}
+.rep-btn:hover{background:var(--ink);color:#FFFFFF;border-color:var(--ink)}
+.rep-btn.del:hover{background:var(--crit);border-color:var(--crit);color:#FFFFFF}
+.rep-btn:disabled{opacity:.3;cursor:not-allowed}
+.rep-btn:disabled:hover{background:var(--ivory-hi);color:inherit;border-color:var(--rule-strong)}
+.rep-b{padding:16px}
+.adm-bar{
+  position:sticky;bottom:0;background:var(--ivory-hi);border-top:1px solid var(--rule);
+  padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;z-index:5;
+}
+.adm-bar .dirty{font-size:13px;color:var(--warn);font-weight:600;display:none}
+.adm-bar.on .dirty{display:inline}
+.adm-bar .saved{font-size:13px;color:var(--ok);font-weight:600}
+.adm-bar.on .saved{display:none}
+.adm-tools{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.io-note{font-size:12.5px;color:var(--muted);line-height:1.55;max-width:62ch}
+.warnbox{
+  background:var(--warn-bg);border:1px solid var(--warn);border-radius:var(--r-md);
+  padding:14px 16px;font-size:13.5px;color:var(--warn);line-height:1.55;
+}
+.warnbox b{font-weight:700}
+
+@media (max-width:1140px){
+  .adm{grid-template-columns:1fr}
+  .adm-nav{position:static;display:flex;gap:6px;overflow-x:auto;padding:8px}
+  .an{width:auto;white-space:nowrap;flex:0 0 auto}
+  .an-n{display:none}
+}
+@media (max-width:780px){
+  .fset{grid-template-columns:1fr}
+  .adm-b{padding:18px}
+  .adm-h{padding:16px 18px}
+  .adm-bar{padding:12px 18px}
 }
 </style>
 
@@ -976,737 +987,24 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
 }catch(e){}})();
 </script>
 
-<!-- ==================== SITE ==================== -->
-<div id="site">
-<header class="hdr" id="hdr">
-  <div class="wrap hdr-in">
-    <a class="brand" href="#/">
-      <span class="mark">ZK</span>
-      <span class="brand-txt">
-        <span class="brand-name">ZK Finance</span>
-        <span class="brand-sub">Исламская рассрочка</span>
-      </span>
-    </a>
-    <nav class="nav" id="nav">
-      <a href="#kak">Как это работает</a>
-      <a href="#produkty">Продукты</a>
-      <a href="#kalkulyator">Калькулятор</a>
-      <a href="#klienty">Клиенты</a>
-      <a href="#sovet">Шариатский совет</a>
-      <a href="#voprosy">Вопросы</a>
-    </nav>
-    <div class="hdr-act">
-      <span class="demo-tag">Демо</span>
-      <a class="btn btn-ghost btn-sm" href="#/hub"><span>Кабинет</span></a>
-      <a class="btn btn-sm" href="#zayavka"><span>Оставить заявку</span></a>
-      <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">
-        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 1h16M0 6h16M0 11h16"/></svg>
-      </button>
-    </div>
-  </div>
-</header>
+<!-- сайт целиком собирается из данных в renderSite() -->
+<div id="site"></div>
 
-<section class="hero">
-  <canvas id="girih" aria-hidden="true"></canvas>
-  <div class="wrap hero-in">
-    <div class="hero-grid">
-      <div>
-        <span class="pill reveal"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1.5l5.5 2.2v4.6C13.5 11.6 8 14.5 8 14.5S2.5 11.6 2.5 8.3V3.7L8 1.5z"/><path d="M5.8 8l1.6 1.6L10.4 6"/></svg>Наценка фиксируется в договоре и не растёт</span>
-        <h1 class="reveal" style="--d:.08s">Рассрочка без процентов.<em>Договор мурабаха.</em></h1>
-        <p class="hero-lead reveal" style="--d:.16s">Мы покупаем товар, который вы выбрали, и продаём его вам в рассрочку с наценкой, известной заранее. Наценка фиксируется в договоре и не меняется никогда — ни при просрочке, ни при досрочном погашении.</p>
-        <div class="hero-cta reveal" style="--d:.24s">
-          <a class="btn btn-lg" href="#kalkulyator"><span>Рассчитать платёж</span><span class="btn-arr">→</span></a>
-          <a class="btn btn-ghost btn-lg" href="#kak"><span>Как это работает</span></a>
-        </div>
-        <div class="hero-trust reveal" style="--d:.32s">
-          <span class="mono">✓</span>
-          <span>Каждая сделка проходит <b>шариатский аудит</b> — заключения публикуются в открытом реестре</span>
-        </div>
-      </div>
-      <div class="hero-side reveal" style="--d:.4s">
-        <div class="spec"><span class="spec-k">Наценка</span><span class="spec-v">от 8%</span></div>
-        <div class="spec"><span class="spec-k">Срок рассрочки</span><span class="spec-v">до 24 мес</span></div>
-        <div class="spec"><span class="spec-k">Первый взнос</span><span class="spec-v">от 20%</span></div>
-        <div class="spec"><span class="spec-k">Решение по заявке</span><span class="spec-v">30 мин</span></div>
-        <div class="spec"><span class="spec-k">Штраф за просрочку</span><span class="spec-v">на садаку</span></div>
-      </div>
-    </div>
-    <div class="hero-strip">
-      <div class="hs reveal"><span class="hs-n" data-count="0" data-suffix="%">0%</span><span class="hs-l">годовых — процентов нет вообще</span></div>
-      <div class="hs reveal" style="--d:.09s"><span class="hs-n" data-count="1480">1 480</span><span class="hs-l">договоров заключено с 2021 года</span></div>
-      <div class="hs reveal" style="--d:.18s"><span class="hs-n" data-count="2.4" data-prefix="₽" data-suffix=" млрд" data-dec="1">₽2,4 млрд</span><span class="hs-l">профинансировано клиентам</span></div>
-      <div class="hs reveal" style="--d:.27s"><span class="hs-n" data-count="97" data-suffix="%">97%</span><span class="hs-l">клиентов закрывают договор без просрочек</span></div>
-    </div>
-  </div>
-</section>
-
-<div class="mq" aria-label="Партнёры">
-  <div class="mq-in" id="mqIn"></div>
-</div>
-
-<section class="sec" id="pochemu">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Зачем это нужно</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Вы не обязаны выбирать между нуждой и убеждениями</h2>
-        <p class="sec-desc">Машина для работы, квартира для семьи, оборудование для дела — всё это нужно сейчас. Банк предлагает единственный путь: процент. Мы предлагаем другой договор, в котором процента нет по своей конструкции, а не по названию.</p>
-      </div>
-    </div>
-    <div class="ps reveal">
-      <div class="ps-col">
-        <div class="ps-h">
-          <h3>Что останавливает</h3>
-          <span class="ps-badge bad">Кредит</span>
-        </div>
-        <div class="ps-i"><span class="ps-m">01</span><span><b>Риба в договоре</b><span>Процент — прямой запрет. Подписывая кредит, вы принимаете условие, которое не можете принять.</span></span></div>
-        <div class="ps-i"><span class="ps-m">02</span><span><b>Долг растёт сам по себе</b><span>Задержали платёж на месяц — сумма увеличилась. Дальше она растёт быстрее, чем вы успеваете гасить.</span></span></div>
-        <div class="ps-i"><span class="ps-m">03</span><span><b>Непонятно, сколько отдадите</b><span>Эффективная ставка, страховка, комиссии за обслуживание. Итоговая цифра всплывает в конце.</span></span></div>
-        <div class="ps-i"><span class="ps-m">04</span><span><b>Копить придётся годы</b><span>Отказ от кредита часто означает отказ от покупки вообще — и цена за это время уходит вверх.</span></span></div>
-      </div>
-      <div class="ps-col acc">
-        <div class="ps-h">
-          <h3>Как решаем</h3>
-          <span class="ps-badge good">ZK Finance</span>
-        </div>
-        <div class="ps-i"><span class="ps-m">✓</span><span><b>Купля-продажа вместо займа</b><span>Мы приобретаем товар в собственность и перепродаём вам дороже. Это торговля, а торговля дозволена.</span></span></div>
-        <div class="ps-i"><span class="ps-m">✓</span><span><b>Сумма зафиксирована навсегда</b><span>В договоре одна конечная цифра. Она не вырастет ни при просрочке, ни при изменении ставок в стране.</span></span></div>
-        <div class="ps-i"><span class="ps-m">✓</span><span><b>Всё видно до подписания</b><span>Наценка, график, штраф — на одной странице. Скрытых комиссий и страховок в договоре нет.</span></span></div>
-        <div class="ps-i"><span class="ps-m">✓</span><span><b>Покупка сегодня</b><span>Решение за 30 минут, оплата продавцу в тот же день. Товар вы получаете сразу, платите частями.</span></span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="sec" id="principy">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Основания</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Три запрета, на которых держится договор</h2>
-        <p class="sec-desc">Исламское финансирование отличается от кредита не вывеской, а структурой сделки. Каждая заявка проверяется по трём основаниям — и любая из них может быть отклонена шариатским советом, даже если клиент платёжеспособен.</p>
-      </div>
-    </div>
-    <div class="cols-3">
-      <div class="cell reveal">
-        <span class="cell-ar">ربا</span>
-        <span class="eyebrow">Запрет 01</span>
-        <h3>Риба — процент</h3>
-        <p>Деньги не могут порождать деньги. Наш доход — торговая наценка при перепродаже реального товара, а не плата за время пользования суммой.</p>
-        <div class="cell-note">Следствие: наличными мы не выдаём. В сделке всегда есть товар и продавец.</div>
-      </div>
-      <div class="cell reveal" style="--d:.1s">
-        <span class="cell-ar">غرر</span>
-        <span class="eyebrow">Запрет 02</span>
-        <h3>Гарар — неизвестность</h3>
-        <p>Товар, цена, наценка, срок и график определены в момент подписания. Ни одна цифра не может измениться позже — плавающих ставок не существует.</p>
-        <div class="cell-note">Следствие: досрочная скидка — наше право, а не пункт договора. Иначе цена стала бы неопределённой.</div>
-      </div>
-      <div class="cell reveal" style="--d:.2s">
-        <span class="cell-ar">حرام</span>
-        <span class="eyebrow">Запрет 03</span>
-        <h3>Харам — запретный товар</h3>
-        <p>Мы не финансируем алкоголь, табак, азартные игры, свинину и ростовщические услуги. Категория товара проверяется до одобрения заявки.</p>
-        <div class="cell-note">Следствие: спорные категории уходят на совет. Ответ — в течение двух рабочих дней.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="sec" id="kak">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Мурабаха</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Как проходит сделка</h2>
-        <p class="sec-desc">Порядок шагов принципиален: мы обязаны стать собственником товара до того, как продадим его вам. Продажа того, чем не владеешь, недействительна — именно этим мурабаха отличается от кредита с целевым назначением.</p>
-      </div>
-    </div>
-    <div class="flow reveal">
-      <div class="flow-row">
-        <div class="fnode" data-node="1"><span class="fnode-t">Сторона 1</span><span class="fnode-n">Продавец</span></div>
-        <div class="farr" data-arrow style="--d:.2s"><i></i></div>
-        <div class="fnode mid" data-node="2"><span class="fnode-t">Сторона 2</span><span class="fnode-n">ZK Finance</span></div>
-        <div class="farr" data-arrow style="--d:.5s"><i></i></div>
-        <div class="fnode" data-node="3"><span class="fnode-t">Сторона 3</span><span class="fnode-n">Вы</span></div>
-      </div>
-      <div class="flow-lbl">
-        <span>Дилер, застройщик, поставщик</span>
-        <span>оплата 100%</span>
-        <span>становится собственником товара</span>
-        <span>рассрочка</span>
-        <span>получаете товар сразу</span>
-      </div>
-    </div>
-    <div class="steps">
-      <div class="step reveal">
-        <span class="step-n">Шаг 01</span>
-        <h4>Вы выбираете товар</h4>
-        <p>Автомобиль у дилера, квартиру у застройщика, оборудование у поставщика. Присылаете счёт или ссылку на объявление — продавца выбираете сами, мы не навязываем партнёров.</p>
-        <span class="step-tag">30 минут на решение</span>
-      </div>
-      <div class="step reveal" style="--d:.08s">
-        <span class="step-n">Шаг 02</span>
-        <h4>ZK Finance покупает его</h4>
-        <p>Мы оплачиваем товар продавцу напрямую и оформляем его в свою собственность. Деньги вам на руки не выдаются — их в этой сделке попросту нет.</p>
-        <span class="step-tag">Оплата в день одобрения</span>
-      </div>
-      <div class="step reveal" style="--d:.16s">
-        <span class="step-n">Шаг 03</span>
-        <h4>Продаём вам с наценкой</h4>
-        <p>Подписываем договор купли-продажи в рассрочку. Итоговая цена — стоимость товара плюс наценка — зафиксирована одной суммой и разбита на равные платежи.</p>
-        <span class="step-tag">Один документ, без приложений</span>
-      </div>
-      <div class="step reveal" style="--d:.24s">
-        <span class="step-n">Шаг 04</span>
-        <h4>Вы платите равными долями</h4>
-        <p>График составлен при подписании и не пересматривается. Долг не растёт. Погасите досрочно — заплатите остаток, а часть наценки за неиспользованный срок вернём скидкой.</p>
-        <span class="step-tag">Досрочно — без штрафов</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="sec" id="kalkulyator">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Калькулятор</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Посчитайте платёж по этапам</h2>
-        <p class="sec-desc">Расчёт показан так же, как он выглядит в договоре: от цены товара до последнего платежа, без «эффективных ставок». Наценка зависит только от срока и известна до подписания.</p>
-      </div>
-    </div>
-    <div class="calc reveal">
-      <div class="calc-in">
-        <div class="fld">
-          <div class="fld-top"><span class="fld-l">Что финансируем</span></div>
-          <div class="seg seg-2" id="cProd">
-            <button type="button" data-p="0" aria-pressed="true"><span>Авто</span></button>
-            <button type="button" data-p="1" aria-pressed="false"><span>Жильё</span></button>
-            <button type="button" data-p="2" aria-pressed="false"><span>Техника</span></button>
-            <button type="button" data-p="3" aria-pressed="false"><span>Бизнес</span></button>
-          </div>
-        </div>
-        <div class="fld">
-          <div class="fld-top"><span class="fld-l">Стоимость товара</span><span class="fld-v" id="cPriceV">2 400 000 ₽</span></div>
-          <input type="range" id="cPrice" min="100000" max="6000000" step="50000" value="2400000" aria-label="Стоимость товара">
-          <div class="fld-scale"><span id="cPriceMin">100 тыс</span><span id="cPriceMax">6 млн</span></div>
-        </div>
-        <div class="fld">
-          <div class="fld-top"><span class="fld-l">Первоначальный взнос</span><span class="fld-v" id="cDownV">30% · 720 000 ₽</span></div>
-          <input type="range" id="cDown" min="0" max="70" step="5" value="30" aria-label="Первоначальный взнос">
-          <div class="fld-scale"><span id="cDownMin">минимум 20%</span><span>70%</span></div>
-        </div>
-        <div class="fld">
-          <div class="fld-top"><span class="fld-l">Срок рассрочки</span><span class="fld-v" id="cTermV">12 месяцев</span></div>
-          <div class="seg" id="cTerm">
-            <button type="button" data-t="6" aria-pressed="false"><span>6</span></button>
-            <button type="button" data-t="12" aria-pressed="true"><span>12</span></button>
-            <button type="button" data-t="18" aria-pressed="false"><span>18</span></button>
-            <button type="button" data-t="24" aria-pressed="false"><span>24</span></button>
-          </div>
-        </div>
-        <div class="prop">
-          <div class="prop-bar">
-            <i class="prop-down" id="pbDown" style="width:30%"></i>
-            <i class="prop-fin" id="pbFin" style="width:52%"></i>
-            <i class="prop-mark" id="pbMark" style="width:18%"></i>
-          </div>
-          <div class="prop-leg">
-            <span class="pl"><i class="prop-down"></i>Ваш взнос</span>
-            <span class="pl"><i class="prop-fin"></i>Финансируем</span>
-            <span class="pl"><i class="prop-mark"></i>Наценка</span>
-          </div>
-        </div>
-        <div class="calc-help">
-          <span class="eyebrow">Что происходит дальше</span>
-          <div class="ch-i"><b>01</b>Присылаете счёт от продавца или ссылку на объявление</div>
-          <div class="ch-i"><b>02</b>Проверяем товар и категорию — решение за 30 минут</div>
-          <div class="ch-i"><b>03</b>Оплачиваем продавцу и подписываем договор с этой суммой</div>
-        </div>
-      </div>
-      <div class="calc-out">
-        <span class="eyebrow" style="margin-bottom:22px">Этапы расчёта</span>
-        <div class="stages">
-          <div class="stg" data-n="1">
-            <span class="stg-l">Стоимость товара<small>цена у продавца, которого выбрали вы</small></span>
-            <span class="stg-v" id="s1">2 400 000 ₽</span>
-          </div>
-          <div class="stg">
-            <span class="stg-op">−</span>
-            <span class="stg-l">Ваш первоначальный взнос<small>оплачиваете продавцу напрямую</small></span>
-            <span class="stg-v" id="s2">720 000 ₽</span>
-          </div>
-          <div class="stg" data-n="2">
-            <span class="stg-l">Финансируем — выкупаем товар<small>ZK Finance становится собственником</small></span>
-            <span class="stg-v" id="s3">1 680 000 ₽</span>
-          </div>
-          <div class="stg">
-            <span class="stg-op">+</span>
-            <span class="stg-l">Наценка <b id="sRate" class="mono">15%</b> за весь срок<small>фиксируется в договоре и больше не меняется</small></span>
-            <span class="stg-v" id="s4">252 000 ₽</span>
-          </div>
-          <div class="stg sum" data-n="3">
-            <span class="stg-l">Итого по договору<small>вся сумма, которую вы отдадите нам</small></span>
-            <span class="stg-v" id="s5">1 932 000 ₽</span>
-          </div>
-        </div>
-        <div class="res-main">
-          <div>
-            <span class="res-lab">Ежемесячный платёж</span>
-            <div class="res-big" id="rMonth">161 000 ₽</div>
-          </div>
-          <div class="res-side">
-            <b id="rTermN">× 12 мес</b><span>равными долями</span>
-            <b id="rAll" style="margin-top:12px">2 652 000 ₽</b><span>полная стоимость покупки</span>
-          </div>
-        </div>
-        <div class="bankcmp">
-          <span class="bankcmp-t">В банке под 28% годовых переплата за тот же срок составила бы <b>и продолжала бы расти при просрочке</b></span>
-          <span class="bankcmp-v" id="rBank">— ₽</span>
-        </div>
-        <div class="mini-sched">
-          <div class="mini-sched-h">
-            <span class="eyebrow">Остаток долга по месяцам</span>
-            <span class="mono" style="font-size:11px;color:var(--muted)">снижается ровно</span>
-          </div>
-          <div class="msc" id="msc"></div>
-        </div>
-        <p class="res-note">Расчёт предварительный и не является публичной офертой. Итоговые условия фиксируются в договоре купли-продажи после проверки товара и одобрения шариатским советом.</p>
-        <a class="btn btn-lg" href="#zayavka" style="margin-top:20px"><span>Отправить заявку на эти условия</span><span class="btn-arr">→</span></a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="sec slab" id="otlichiya">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Сравнение</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Чем это отличается от кредита</h2>
-        <p class="sec-desc">Разница не в маркетинге. Меняется предмет договора: вместо денег под процент — товар по фиксированной цене. Отсюда следует всё остальное.</p>
-      </div>
-    </div>
-    <div class="cmp">
-      <div class="cmp-row cmp-head"><div>Параметр</div><div>Банковский кредит</div><div class="cmp-us">ZK Finance</div></div>
-      <div class="cmp-row" data-cmp><div class="cmp-k">Предмет договора</div><div class="cmp-bad">Заём денежных средств</div><div class="cmp-us">Купля-продажа товара</div></div>
-      <div class="cmp-row" data-cmp><div class="cmp-k">Плата</div><div class="cmp-bad">Процент, начисляется на остаток</div><div class="cmp-us">Наценка, зафиксирована суммой</div></div>
-      <div class="cmp-row" data-cmp><div class="cmp-k">Рост долга при просрочке</div><div class="cmp-bad">Проценты продолжают начисляться</div><div class="cmp-us">Долг не растёт ни на рубль</div></div>
-      <div class="cmp-row" data-cmp><div class="cmp-k">Досрочное погашение</div><div class="cmp-bad">Пересчёт по условиям банка</div><div class="cmp-us">Платите остаток, часть наценки вернём</div></div>
-      <div class="cmp-row" data-cmp><div class="cmp-k">Штраф за просрочку</div><div class="cmp-bad">Пени в доход банка</div><div class="cmp-us">Фиксированный, идёт на садаку</div></div>
-      <div class="cmp-row" data-cmp><div class="cmp-k">Страховка</div><div class="cmp-bad">Навязывается, входит в платёж</div><div class="cmp-us">Такафул по желанию, отдельно</div></div>
-      <div class="cmp-row" data-cmp><div class="cmp-k">Контроль сделки</div><div class="cmp-bad">Внутренний регламент</div><div class="cmp-us">Шариатский совет, аудит выборки</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="sec" id="produkty">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Продукты</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Что можно взять в рассрочку</h2>
-        <p class="sec-desc">Условия по каждому направлению утверждены шариатским советом и не меняются в течение срока договора. Для недвижимости и партнёрских проектов применяются другие исламские контракты — мушарака и мудараба.</p>
-      </div>
-    </div>
-    <div class="prods">
-      <div class="prod reveal">
-        <svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">
-          <path d="M12 62h76M18 62l8-20a6 6 0 016-4h36a6 6 0 016 4l8 20"/>
-          <rect x="12" y="62" width="76" height="14"/>
-          <circle cx="30" cy="76" r="7"/><circle cx="70" cy="76" r="7"/>
-          <path d="M36 38h28M50 38v20"/>
-        </svg>
-        <div class="prod-top">
-          <div><h3>Автомобиль</h3><div class="prod-sub">Мурабаха · новые и с пробегом</div></div>
-          <span class="tag">Хит</span>
-        </div>
-        <p>Покупаем машину у дилера или частного продавца после проверки юридической чистоты. ПТС оформляется на вас при выдаче, залог — на срок рассрочки.</p>
-        <div class="prod-meta">
-          <span><span class="pm-k">Сумма</span><span class="pm-v">до ₽6 млн</span></span>
-          <span><span class="pm-k">Срок</span><span class="pm-v">до 24 мес</span></span>
-          <span><span class="pm-k">Взнос</span><span class="pm-v">от 20%</span></span>
-        </div>
-        <a class="prod-go" href="#kalkulyator">Рассчитать платёж <svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg></a>
-      </div>
-      <div class="prod reveal" style="--d:.08s">
-        <svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">
-          <path d="M14 46L50 18l36 28"/>
-          <path d="M22 42v38h56V42"/>
-          <rect x="42" y="56" width="16" height="24"/>
-          <rect x="28" y="52" width="10" height="10"/><rect x="62" y="52" width="10" height="10"/>
-        </svg>
-        <div class="prod-top">
-          <div><h3>Недвижимость</h3><div class="prod-sub">Мушарака мутанакиса</div></div>
-          <span class="tag">Убывающее партнёрство</span>
-        </div>
-        <p>Мы покупаем долю в квартире вместе с вами и постепенно продаём её вам. Плата за пользование нашей долей уменьшается с каждым выкупленным процентом.</p>
-        <div class="prod-meta">
-          <span><span class="pm-k">Сумма</span><span class="pm-v">до ₽15 млн</span></span>
-          <span><span class="pm-k">Срок</span><span class="pm-v">до 120 мес</span></span>
-          <span><span class="pm-k">Взнос</span><span class="pm-v">от 30%</span></span>
-        </div>
-        <a class="prod-go" href="#zayavka">Обсудить объект <svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg></a>
-      </div>
-      <div class="prod reveal" style="--d:.16s">
-        <svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">
-          <rect x="20" y="18" width="60" height="64"/>
-          <circle cx="50" cy="54" r="16"/><circle cx="50" cy="54" r="7"/>
-          <path d="M28 28h10M62 28h10"/>
-        </svg>
-        <div class="prod-top">
-          <div><h3>Техника и ремонт</h3><div class="prod-sub">Мурабаха · решение за 30 минут</div></div>
-          <span class="tag">Без залога</span>
-        </div>
-        <p>Бытовая техника, электроника, мебель, стройматериалы. Решение по паспорту, выдача — прямой оплатой счёта магазина в день обращения.</p>
-        <div class="prod-meta">
-          <span><span class="pm-k">Сумма</span><span class="pm-v">до ₽900 тыс</span></span>
-          <span><span class="pm-k">Срок</span><span class="pm-v">до 18 мес</span></span>
-          <span><span class="pm-k">Взнос</span><span class="pm-v">от 0%</span></span>
-        </div>
-        <a class="prod-go" href="#kalkulyator">Рассчитать платёж <svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg></a>
-      </div>
-      <div class="prod reveal" style="--d:.24s">
-        <svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">
-          <circle cx="50" cy="50" r="18"/><circle cx="50" cy="50" r="7"/>
-          <path d="M50 18v-8M50 90v-8M18 50h-8M90 50h-8M27 27l-6-6M79 79l-6-6M73 27l6-6M21 79l6-6"/>
-        </svg>
-        <div class="prod-top">
-          <div><h3>Бизнес-оборудование</h3><div class="prod-sub">Мурабаха и мудараба · для ИП и ООО</div></div>
-          <span class="tag">Для дела</span>
-        </div>
-        <p>Станки, автопарк, торговое и пищевое оборудование. Для проектов с распределением прибыли доступна мудараба — партнёрство, где мы делим и доход, и риск.</p>
-        <div class="prod-meta">
-          <span><span class="pm-k">Сумма</span><span class="pm-v">до ₽20 млн</span></span>
-          <span><span class="pm-k">Срок</span><span class="pm-v">до 36 мес</span></span>
-          <span><span class="pm-k">Взнос</span><span class="pm-v">от 25%</span></span>
-        </div>
-        <a class="prod-go" href="#zayavka">Оставить заявку <svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg></a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="sec slab" id="klienty">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Клиенты</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Как это выглядит на практике</h2>
-        <p class="sec-desc">Три закрытых договора с реальными цифрами. Истории приведены для демонстрации, суммы соответствуют действующим условиям.</p>
-      </div>
-    </div>
-    <div class="cases">
-      <div class="case reveal">
-        <p class="case-q">«Пять лет откладывал покупку машины, потому что кредит брать не хотел. Здесь подписал один договор и сразу знал конечную сумму».</p>
-        <div class="case-m">
-          <span><span class="case-k">Товар</span><span class="case-v">₽2,2 млн</span></span>
-          <span><span class="case-k">Срок</span><span class="case-v">12 мес</span></span>
-          <span><span class="case-k">Наценка</span><span class="case-v">15%</span></span>
-        </div>
-        <div class="case-who">
-          <span class="case-av">РД</span>
-          <span><span class="case-n">Рамзан Д.</span><span class="case-c">Гудермес · автомобиль</span></span>
-        </div>
-      </div>
-      <div class="case reveal" style="--d:.1s">
-        <p class="case-q">«Открывали швейный цех. Оборудование выкупили за месяц до сезона — без него мы бы просто не успели к заказам».</p>
-        <div class="case-m">
-          <span><span class="case-k">Товар</span><span class="case-v">₽890 тыс</span></span>
-          <span><span class="case-k">Срок</span><span class="case-v">12 мес</span></span>
-          <span><span class="case-k">Наценка</span><span class="case-v">15%</span></span>
-        </div>
-        <div class="case-who">
-          <span class="case-av">ЗХ</span>
-          <span><span class="case-n">Зулай Х.</span><span class="case-c">Хасавюрт · оборудование</span></span>
-        </div>
-      </div>
-      <div class="case reveal" style="--d:.2s">
-        <p class="case-q">«Закрыла договор на четыре месяца раньше. Пересчитали и вернули часть наценки — в банке за досрочное только штрафуют».</p>
-        <div class="case-m">
-          <span><span class="case-k">Товар</span><span class="case-v">₽480 тыс</span></span>
-          <span><span class="case-k">Срок</span><span class="case-v">18 → 14 мес</span></span>
-          <span><span class="case-k">Скидка</span><span class="case-v">₽23 тыс</span></span>
-        </div>
-        <div class="case-who">
-          <span class="case-av">СГ</span>
-          <span><span class="case-n">Седа Г.</span><span class="case-c">Гудермес · техника</span></span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="sec" id="dokumenty">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Прозрачность</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Что именно вы подписываете</h2>
-        <p class="sec-desc">Полный комплект — четыре документа. Ни один из них не содержит условий, которые вступают в силу позже или меняются в одностороннем порядке.</p>
-      </div>
-    </div>
-    <div class="docs">
-      <div class="doc reveal"><span class="doc-ic">01</span><div><h4>Договор купли-продажи в рассрочку</h4><p>Товар, конечная цена, наценка одной суммой, срок. Основной и единственный обязывающий документ сделки.</p></div></div>
-      <div class="doc reveal" style="--d:.06s"><span class="doc-ic">02</span><div><h4>График платежей</h4><p>Даты и равные суммы на весь срок. Составляется при подписании и не пересматривается в одностороннем порядке.</p></div></div>
-      <div class="doc reveal" style="--d:.12s"><span class="doc-ic">03</span><div><h4>Акт приёма-передачи товара</h4><p>Подтверждает, что ZK Finance владела товаром и передала его вам. Без него сделка не соответствует мурабахе.</p></div></div>
-      <div class="doc reveal" style="--d:.18s"><span class="doc-ic">04</span><div><h4>Заключение шариатского совета</h4><p>Подтверждение допустимости категории товара и структуры сделки. Хранится в открытом реестре под номером.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<section class="sec slab" id="sovet">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Надзор</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Шариатский совет</h2>
-        <p class="sec-desc">Совет утверждает шаблоны договоров, ведёт список допустимых категорий товара и рассматривает спорные сделки. Заключения публикуются в реестре фетв. Состав приведён для демонстрации.</p>
-      </div>
-    </div>
-    <div class="council">
-      <div class="cm reveal">
-        <div class="cm-av">01</div>
-        <h4>Председатель совета</h4>
-        <div class="cm-role">Фикх аль-муамалят</div>
-        <p>Утверждает шаблоны мурабахи и мушараки, подписывает итоговые заключения по продуктовой линейке и выносит решения по спорным категориям.</p>
-      </div>
-      <div class="cm reveal" style="--d:.1s">
-        <div class="cm-av">02</div>
-        <h4>Член совета</h4>
-        <div class="cm-role">Шариатский аудит</div>
-        <p>Выборочно проверяет закрытые сделки: последовательность перехода собственности, корректность наценки, отсутствие скрытых платежей. Охват выборки — 18%.</p>
-      </div>
-      <div class="cm reveal" style="--d:.2s">
-        <div class="cm-av">03</div>
-        <h4>Член совета</h4>
-        <div class="cm-role">Комплаенс и категории</div>
-        <p>Ведёт реестр запрещённых категорий товара и рассматривает пограничные заявки — от торгового оборудования до долей в действующем бизнесе.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="sec" id="zayavka">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Заявка</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Два шага до решения</h2>
-        <p class="sec-desc">Заполнение занимает минуту. Заявка попадает в CRM компании и распределяется на менеджера — в демо-версии вы можете открыть кабинет и увидеть её в воронке.</p>
-      </div>
-    </div>
-    <div class="wizard reveal">
-      <div class="wz-head">
-        <div class="wz-t on" data-tab="1"><span class="wz-n">1</span><span class="wz-l">Что финансируем</span></div>
-        <div class="wz-t" data-tab="2"><span class="wz-n">2</span><span class="wz-l">Контакты</span></div>
-        <div class="wz-t" data-tab="3"><span class="wz-n">3</span><span class="wz-l">Готово</span></div>
-      </div>
-      <div class="wz-body">
-        <div class="wz-pane on" data-pane="1">
-          <label class="lbl">Направление</label>
-          <div class="pick" id="wPick">
-            <button type="button" data-p="Автомобиль" aria-pressed="true"><span class="pick-t">Автомобиль</span><span class="pick-s">до ₽6 млн · 24 мес</span></button>
-            <button type="button" data-p="Недвижимость" aria-pressed="false"><span class="pick-t">Недвижимость</span><span class="pick-s">до ₽15 млн · 120 мес</span></button>
-            <button type="button" data-p="Техника и ремонт" aria-pressed="false"><span class="pick-t">Техника и ремонт</span><span class="pick-s">до ₽900 тыс · 18 мес</span></button>
-            <button type="button" data-p="Бизнес-оборудование" aria-pressed="false"><span class="pick-t">Бизнес</span><span class="pick-s">до ₽20 млн · 36 мес</span></button>
-          </div>
-          <div class="form-grid" style="margin-top:24px">
-            <div>
-              <label class="lbl" for="fSum">Стоимость товара, ₽</label>
-              <input class="inp" id="fSum" inputmode="numeric" value="2 400 000">
-            </div>
-            <div>
-              <label class="lbl" for="fTerm">Срок рассрочки</label>
-              <select class="inp" id="fTerm">
-                <option value="6">6 месяцев</option>
-                <option value="12" selected>12 месяцев</option>
-                <option value="18">18 месяцев</option>
-                <option value="24">24 месяца</option>
-              </select>
-            </div>
-          </div>
-          <div class="wz-foot">
-            <button class="btn btn-lg" type="button" id="wNext1"><span>Далее</span><span class="btn-arr">→</span></button>
-            <p>Предварительный платёж: <b class="mono" id="wPrev">161 000 ₽ × 12</b>. Точные условия зафиксируем в договоре.</p>
-          </div>
-        </div>
-        <div class="wz-pane" data-pane="2">
-          <div class="wz-sum" id="wSum"></div>
-          <div class="form-grid">
-            <div>
-              <label class="lbl" for="fName">Имя и фамилия</label>
-              <input class="inp" id="fName" placeholder="Ислам Хамзатов" autocomplete="name">
-            </div>
-            <div>
-              <label class="lbl" for="fPhone">Телефон</label>
-              <input class="inp" id="fPhone" placeholder="+7 (___) ___-__-__" inputmode="tel" autocomplete="tel">
-            </div>
-            <div>
-              <label class="lbl" for="fCity">Город</label>
-              <select class="inp" id="fCity">
-                <option>Грозный</option><option>Гудермес</option><option>Аргун</option>
-                <option>Назрань</option><option>Хасавюрт</option><option>Махачкала</option><option>Москва</option>
-              </select>
-            </div>
-            <div>
-              <label class="lbl" for="fWhen">Когда удобно звонить</label>
-              <select class="inp" id="fWhen">
-                <option>В любое время</option><option>С 9:00 до 13:00</option>
-                <option>С 13:00 до 18:00</option><option>После 18:00</option>
-              </select>
-            </div>
-            <div class="f-full">
-              <label class="lbl" for="fNote">Комментарий</label>
-              <input class="inp" id="fNote" placeholder="Марка и модель, ссылка на объявление, пожелания по графику">
-            </div>
-          </div>
-          <div class="wz-foot">
-            <button class="btn btn-lg" type="button" id="wSend"><span>Отправить заявку</span><span class="btn-arr">→</span></button>
-            <button class="btn btn-ghost" type="button" id="wBack"><span>Назад</span></button>
-            <p>Нажимая кнопку, вы соглашаетесь на обработку персональных данных. Это демо-форма — данные остаются в вашем браузере.</p>
-          </div>
-        </div>
-        <div class="wz-pane" data-pane="3">
-          <div class="done-box">
-            <div class="done-ic">✓</div>
-            <h3>Заявка принята</h3>
-            <p>Менеджер перезвонит в течение 30 минут в рабочее время. Если товар уже выбран — держите под рукой счёт или ссылку на объявление.</p>
-            <div class="done-id" id="wId">—</div>
-            <div class="wz-foot" style="justify-content:center;border-top:0;margin-top:26px">
-              <a class="btn" href="#/hub/deals"><span>Открыть заявку в CRM</span><span class="btn-arr">→</span></a>
-              <button class="btn btn-ghost" type="button" id="wAgain"><span>Отправить ещё одну</span></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="sec" id="voprosy">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow reveal">Вопросы</span>
-      <div class="reveal" style="--d:.08s">
-        <h2 class="sec-title">Частые вопросы</h2>
-        <p class="sec-desc">Здесь собраны те, которые задают на первом звонке. Если ответа нет — напишите в WhatsApp, отвечаем в рабочие часы.</p>
-      </div>
-    </div>
-    <div class="faq reveal" id="faq">
-      <div class="q">
-        <button class="q-btn" type="button">Наценка — это ведь тот же процент?<span class="q-mark">+</span></button>
-        <div class="q-body"><p>Нет. Процент начисляется на сумму долга и зависит от времени: чем дольше вы пользуетесь деньгами, тем больше платите. Наценка — это разница между закупочной и продажной ценой конкретного товара. Она названа один раз при подписании и после этого не может измениться: ни через год, ни при просрочке. Именно поэтому в сделке обязательно должен быть реальный товар, которым мы владели.</p></div>
-      </div>
-      <div class="q">
-        <button class="q-btn" type="button">Что будет, если я просрочу платёж?<span class="q-mark">+</span></button>
-        <div class="q-body"><p>Долг не увеличится — начислять на него нечего. Договором предусмотрен фиксированный штраф за недобросовестную просрочку, и он не является нашим доходом: сумма направляется на благотворительность, отчёт публикуется. Если просрочка вызвана реальными трудностями, мы пересматриваем график без штрафа — обратитесь к менеджеру до даты платежа, а не после.</p></div>
-      </div>
-      <div class="q">
-        <button class="q-btn" type="button">Можно ли погасить досрочно?<span class="q-mark">+</span></button>
-        <div class="q-body"><p>Да, в любой момент и без ограничений. Вы платите остаток по договору, а часть наценки за неиспользованный срок мы возвращаем в виде скидки. Скидка не прописана как обязанность в договоре — это право продавца, иначе конечная цена стала бы неопределённой, а это уже гарар.</p></div>
-      </div>
-      <div class="q">
-        <button class="q-btn" type="button">Почему нельзя просто получить деньги наличными?<span class="q-mark">+</span></button>
-        <div class="q-body"><p>Потому что тогда это был бы заём, а плата за заём — риба. Вся конструкция мурабахи держится на том, что предметом договора выступает товар: мы его покупаем, владеем им и продаём вам дороже. Если убрать товар, останется выдача денег под надбавку — ровно то, от чего мы уходим.</p></div>
-      </div>
-      <div class="q">
-        <button class="q-btn" type="button">Нужен ли залог и поручитель?<span class="q-mark">+</span></button>
-        <div class="q-body"><p>По автомобилям и недвижимости — да, залог оформляется на срок рассрочки; это обеспечение, а не дополнительная плата. По технике и ремонту до 900 тысяч рублей залог не требуется. Поручитель нужен, если у клиента нет подтверждённого дохода или выбран максимальный срок.</p></div>
-      </div>
-      <div class="q">
-        <button class="q-btn" type="button">Какие товары вы не финансируете?<span class="q-mark">+</span></button>
-        <div class="q-body"><p>Алкоголь и табак, свинину, азартные игры и лотереи, ночные заведения, ростовщические финансовые услуги, торговлю долгами и производными инструментами. Спорные категории выносятся на шариатский совет, решение принимается в течение двух рабочих дней и попадает в открытый реестр.</p></div>
-      </div>
-      <div class="q">
-        <button class="q-btn" type="button">Какие документы нужны?<span class="q-mark">+</span></button>
-        <div class="q-body"><p>Паспорт и счёт от продавца — этого достаточно для рассрочки на технику. Для автомобиля добавляется подтверждение дохода за 6 месяцев, для недвижимости — документы по объекту и справка о составе семьи. Для ИП и ООО: выписка из реестра, оборот за год, договор с поставщиком оборудования.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="cta">
-  <div class="wrap cta-in">
-    <h2 class="reveal">Посчитаем вашу покупку<br>и ответим на вопросы по договору</h2>
-    <div class="cta-side reveal" style="--d:.1s">
-      <span class="cta-phone">+7 938 000-11-22</span>
-      <span class="cta-hours">Пн–Сб, 9:00–19:00 · WhatsApp и Telegram</span>
-      <a class="btn btn-lg" href="#zayavka"><span>Оставить заявку</span><span class="btn-arr">→</span></a>
-    </div>
-  </div>
-</section>
-
-<footer class="ftr">
-  <div class="wrap">
-    <div class="ftr-grid">
-      <div>
-        <div class="brand">
-          <span class="mark">ZK</span>
-          <span class="brand-txt">
-            <span class="brand-name">ZK Finance</span>
-            <span class="brand-sub" style="color:var(--on-ink-muted)">Исламская рассрочка</span>
-          </span>
-        </div>
-        <p class="ftr-note">Финансирование по нормам шариата: мурабаха, мушарака мутанакиса, мудараба. Работаем с 2021 года, каждая сделка проходит шариатский аудит.</p>
-      </div>
-      <div>
-        <h5>Продукты</h5>
-        <ul>
-          <li><a href="#produkty">Автомобиль</a></li>
-          <li><a href="#produkty">Недвижимость</a></li>
-          <li><a href="#produkty">Техника и ремонт</a></li>
-          <li><a href="#produkty">Бизнес-оборудование</a></li>
-          <li><a href="#kalkulyator">Калькулятор</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Компания</h5>
-        <ul>
-          <li><a href="#kak">Как это работает</a></li>
-          <li><a href="#otlichiya">Отличия от кредита</a></li>
-          <li><a href="#dokumenty">Документы</a></li>
-          <li><a href="#sovet">Шариатский совет</a></li>
-          <li><a href="#voprosy">Вопросы</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Контакты</h5>
-        <div class="ftr-office">
-          +7 938 000-11-22<br>
-          Пн–Сб, 9:00–19:00
-          <b>Грозный</b>пр. им. В. Путина, 1 — головной офис
-          <b>Хасавюрт</b>ул. Тотурбиева, 42
-        </div>
-        <ul style="margin-top:18px">
-          <li><a href="#zayavka">Оставить заявку</a></li>
-          <li><a href="#/hub">Кабинет сотрудника</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="ftr-bot">
-      <span>Демонстрационная версия. Компания, договоры, клиенты и цифры вымышлены.</span>
-      <span>ZK Finance · 2026</span>
-    </div>
-  </div>
-</footer>
-</div>
-<!-- ==================== GATE ==================== -->
+<!-- ==================== ВХОД В ХАБ ==================== -->
 <div id="gate" hidden>
   <div class="gate">
     <div class="gate-card">
       <span class="mark">ZK</span>
-      <h2>Вход в кабинет</h2>
-      <p>Демо-режим: пароль не требуется. Выберите роль — интерфейс и права изменятся.</p>
+      <h2>Вход в хаб</h2>
+      <p>Демо-режим: пароль не требуется. Выберите роль — набор разделов и права изменятся.</p>
       <div class="gate-users" id="gateUsers"></div>
-      <button class="btn" id="gateGo" style="width:100%">Войти в CRM</button>
+      <button class="btn" id="gateGo" style="width:100%"><span>Войти</span></button>
       <p style="margin-top:16px"><a href="#/" style="color:var(--muted);text-decoration:underline">Вернуться на сайт</a></p>
     </div>
   </div>
 </div>
 
-<!-- ==================== HUB ==================== -->
+<!-- ==================== ХАБ ==================== -->
 <div id="hub" hidden>
   <div class="hub">
     <aside class="rail" id="rail">
@@ -1714,7 +1012,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
         <span class="mark">ZK</span>
         <span>
           <span class="rail-name" style="display:block">ZK Finance</span>
-          <span class="rail-sub">CRM · демо</span>
+          <span class="rail-sub">Хаб · демо</span>
         </span>
       </div>
       <nav class="rail-nav" id="railNav"></nav>
@@ -1748,6 +1046,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Карточка"></aside>
 <div class="toast" id="toast" hidden></div>
+<input type="file" id="importFile" accept="application/json" hidden>
+
 <script>
 (function(){
 "use strict";
@@ -1756,7 +1056,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
-function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function nf(n){return Math.round(n).toLocaleString('ru-RU')}
 function money(n){return nf(n)+' ₽'}
 function short(n){
@@ -1765,14 +1065,209 @@ function short(n){
   if(n>=1e3)return '₽'+Math.round(n/1e3)+' тыс';
   return '₽'+nf(n);
 }
-function ini(name){var p=name.split(' ');return ((p[0]||'')[0]||'')+((p[1]||'')[0]||'')}
+function ini(name){var p=String(name||'').trim().split(/\s+/);return ((p[0]||'')[0]||'')+((p[1]||'')[0]||'')}
 function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function clone(o){return JSON.parse(JSON.stringify(o))}
 var MONTHS=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
 function dstr(d){return d.getDate()+' '+MONTHS[d.getMonth()]}
 function dfull(d){return ('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear()}
 function addM(d,m){var x=new Date(d.getTime());x.setMonth(x.getMonth()+m);return x}
 var TODAY=new Date(2026,8,4);
+var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* ============ КОНТЕНТ САЙТА (редактируется в хабе) ============ */
+var DEFAULT_CONTENT={
+  brand:{
+    name:'ZK Finance',
+    tagline:'Исламская рассрочка',
+    phone:'+7 938 000-11-22',
+    hours:'Пн–Сб, 9:00–19:00 · WhatsApp и Telegram',
+    demoBadge:'Демо'
+  },
+  nav:[
+    {label:'Как это работает',anchor:'kak'},
+    {label:'Продукты',anchor:'produkty'},
+    {label:'Калькулятор',anchor:'kalkulyator'},
+    {label:'Клиенты',anchor:'klienty'},
+    {label:'Шариатский совет',anchor:'sovet'},
+    {label:'Вопросы',anchor:'voprosy'}
+  ],
+  hero:{
+    badge:'Наценка фиксируется в договоре и не растёт',
+    title:'Рассрочка без процентов.',
+    accent:'Договор мурабаха.',
+    lead:'Мы покупаем товар, который вы выбрали, и продаём его вам в рассрочку с наценкой, известной заранее. Наценка фиксируется в договоре и не меняется никогда — ни при просрочке, ни при досрочном погашении.',
+    cta1:'Рассчитать платёж',
+    cta2:'Как это работает',
+    trust:'Каждая сделка проходит <b>шариатский аудит</b> — заключения публикуются в открытом реестре',
+    specs:[
+      {k:'Наценка',v:'от 8%'},
+      {k:'Срок рассрочки',v:'до 24 мес'},
+      {k:'Первый взнос',v:'от 20%'},
+      {k:'Решение по заявке',v:'30 мин'},
+      {k:'Штраф за просрочку',v:'на садаку'}
+    ],
+    metrics:[
+      {n:'0',suffix:'%',count:'0',label:'годовых — процентов нет вообще'},
+      {n:'1 480',suffix:'',count:'1480',label:'договоров заключено с 2021 года'},
+      {n:'₽2,4 млрд',suffix:'',count:'',label:'профинансировано клиентам'},
+      {n:'97',suffix:'%',count:'97',label:'клиентов закрывают договор без просрочек'}
+    ]
+  },
+  partners:['Автосалон «Кавказ»','ТЦ «Беркат»','М.Видео','Дом Техники','Автодом Грозный',
+    'СтройМаркет 95','Мебельный дом «Даймохк»','Технопарк Хасавюрт','Автополис Махачкала','Гранд Кавказ'],
+  problem:{
+    eyebrow:'Зачем это нужно',
+    title:'Вы не обязаны выбирать между нуждой и убеждениями',
+    desc:'Машина для работы, квартира для семьи, оборудование для дела — всё это нужно сейчас. Банк предлагает единственный путь: процент. Мы предлагаем другой договор, в котором процента нет по своей конструкции, а не по названию.',
+    badTitle:'Что останавливает',badBadge:'Кредит',
+    goodTitle:'Как решаем',goodBadge:'ZK Finance',
+    bad:[
+      {t:'Риба в договоре',d:'Процент — прямой запрет. Подписывая кредит, вы принимаете условие, которое не можете принять.'},
+      {t:'Долг растёт сам по себе',d:'Задержали платёж на месяц — сумма увеличилась. Дальше она растёт быстрее, чем вы успеваете гасить.'},
+      {t:'Непонятно, сколько отдадите',d:'Эффективная ставка, страховка, комиссии за обслуживание. Итоговая цифра всплывает в конце.'},
+      {t:'Копить придётся годы',d:'Отказ от кредита часто означает отказ от покупки вообще — и цена за это время уходит вверх.'}
+    ],
+    good:[
+      {t:'Купля-продажа вместо займа',d:'Мы приобретаем товар в собственность и перепродаём вам дороже. Это торговля, а торговля дозволена.'},
+      {t:'Сумма зафиксирована навсегда',d:'В договоре одна конечная цифра. Она не вырастет ни при просрочке, ни при изменении ставок в стране.'},
+      {t:'Всё видно до подписания',d:'Наценка, график, штраф — на одной странице. Скрытых комиссий и страховок в договоре нет.'},
+      {t:'Покупка сегодня',d:'Решение за 30 минут, оплата продавцу в тот же день. Товар вы получаете сразу, платите частями.'}
+    ]
+  },
+  principles:{
+    eyebrow:'Основания',
+    title:'Три запрета, на которых держится договор',
+    desc:'Исламское финансирование отличается от кредита не вывеской, а структурой сделки. Каждая заявка проверяется по трём основаниям — и любая из них может быть отклонена шариатским советом, даже если клиент платёжеспособен.',
+    items:[
+      {ar:'ربا',eyebrow:'Запрет 01',h:'Риба — процент',p:'Деньги не могут порождать деньги. Наш доход — торговая наценка при перепродаже реального товара, а не плата за время пользования суммой.',note:'Следствие: наличными мы не выдаём. В сделке всегда есть товар и продавец.'},
+      {ar:'غرر',eyebrow:'Запрет 02',h:'Гарар — неизвестность',p:'Товар, цена, наценка, срок и график определены в момент подписания. Ни одна цифра не может измениться позже — плавающих ставок не существует.',note:'Следствие: досрочная скидка — наше право, а не пункт договора. Иначе цена стала бы неопределённой.'},
+      {ar:'حرام',eyebrow:'Запрет 03',h:'Харам — запретный товар',p:'Мы не финансируем алкоголь, табак, азартные игры, свинину и ростовщические услуги. Категория товара проверяется до одобрения заявки.',note:'Следствие: спорные категории уходят на совет. Ответ — в течение двух рабочих дней.'}
+    ]
+  },
+  how:{
+    eyebrow:'Мурабаха',
+    title:'Как проходит сделка',
+    desc:'Порядок шагов принципиален: мы обязаны стать собственником товара до того, как продадим его вам. Продажа того, чем не владеешь, недействительна — именно этим мурабаха отличается от кредита с целевым назначением.',
+    flow:[
+      {t:'Сторона 1',n:'Продавец',lbl:'Дилер, застройщик, поставщик'},
+      {t:'Сторона 2',n:'ZK Finance',lbl:'становится собственником товара'},
+      {t:'Сторона 3',n:'Вы',lbl:'получаете товар сразу'}
+    ],
+    arrow1:'оплата 100%',arrow2:'рассрочка',
+    steps:[
+      {h:'Вы выбираете товар',p:'Автомобиль у дилера, квартиру у застройщика, оборудование у поставщика. Присылаете счёт или ссылку на объявление — продавца выбираете сами, мы не навязываем партнёров.',tag:'30 минут на решение'},
+      {h:'ZK Finance покупает его',p:'Мы оплачиваем товар продавцу напрямую и оформляем его в свою собственность. Деньги вам на руки не выдаются — их в этой сделке попросту нет.',tag:'Оплата в день одобрения'},
+      {h:'Продаём вам с наценкой',p:'Подписываем договор купли-продажи в рассрочку. Итоговая цена — стоимость товара плюс наценка — зафиксирована одной суммой и разбита на равные платежи.',tag:'Один документ, без приложений'},
+      {h:'Вы платите равными долями',p:'График составлен при подписании и не пересматривается. Долг не растёт. Погасите досрочно — заплатите остаток, а часть наценки за неиспользованный срок вернём скидкой.',tag:'Досрочно — без штрафов'}
+    ]
+  },
+  calc:{
+    eyebrow:'Калькулятор',
+    title:'Посчитайте платёж по этапам',
+    desc:'Расчёт показан так же, как он выглядит в договоре: от цены товара до последнего платежа, без «эффективных ставок». Наценка зависит только от срока и известна до подписания.',
+    bankRate:28,
+    note:'Расчёт предварительный и не является публичной офертой. Итоговые условия фиксируются в договоре купли-продажи после проверки товара и одобрения шариатским советом.',
+    help:[
+      'Присылаете счёт от продавца или ссылку на объявление',
+      'Проверяем товар и категорию — решение за 30 минут',
+      'Оплачиваем продавцу и подписываем договор с этой суммой'
+    ]
+  },
+  compare:{
+    eyebrow:'Сравнение',
+    title:'Чем это отличается от кредита',
+    desc:'Разница не в маркетинге. Меняется предмет договора: вместо денег под процент — товар по фиксированной цене. Отсюда следует всё остальное.',
+    colBad:'Банковский кредит',colGood:'ZK Finance',
+    rows:[
+      {k:'Предмет договора',bad:'Заём денежных средств',good:'Купля-продажа товара'},
+      {k:'Плата',bad:'Процент, начисляется на остаток',good:'Наценка, зафиксирована суммой'},
+      {k:'Рост долга при просрочке',bad:'Проценты продолжают начисляться',good:'Долг не растёт ни на рубль'},
+      {k:'Досрочное погашение',bad:'Пересчёт по условиям банка',good:'Платите остаток, часть наценки вернём'},
+      {k:'Штраф за просрочку',bad:'Пени в доход банка',good:'Фиксированный, идёт на садаку'},
+      {k:'Страховка',bad:'Навязывается, входит в платёж',good:'Такафул по желанию, отдельно'},
+      {k:'Контроль сделки',bad:'Внутренний регламент',good:'Шариатский совет, аудит выборки'}
+    ]
+  },
+  products:{
+    eyebrow:'Продукты',
+    title:'Что можно взять в рассрочку',
+    desc:'Условия по каждому направлению утверждены шариатским советом и не меняются в течение срока договора. Для недвижимости и партнёрских проектов применяются другие исламские контракты — мушарака и мудараба.',
+    items:[
+      {ill:'car',h:'Автомобиль',sub:'Мурабаха · новые и с пробегом',tag:'Хит',p:'Покупаем машину у дилера или частного продавца после проверки юридической чистоты. ПТС оформляется на вас при выдаче, залог — на срок рассрочки.',sum:'до ₽6 млн',term:'до 24 мес',down:'от 20%',cta:'Рассчитать платёж',href:'#kalkulyator'},
+      {ill:'house',h:'Недвижимость',sub:'Мушарака мутанакиса',tag:'Убывающее партнёрство',p:'Мы покупаем долю в квартире вместе с вами и постепенно продаём её вам. Плата за пользование нашей долей уменьшается с каждым выкупленным процентом.',sum:'до ₽15 млн',term:'до 120 мес',down:'от 30%',cta:'Обсудить объект',href:'#zayavka'},
+      {ill:'tech',h:'Техника и ремонт',sub:'Мурабаха · решение за 30 минут',tag:'Без залога',p:'Бытовая техника, электроника, мебель, стройматериалы. Решение по паспорту, выдача — прямой оплатой счёта магазина в день обращения.',sum:'до ₽900 тыс',term:'до 18 мес',down:'от 0%',cta:'Рассчитать платёж',href:'#kalkulyator'},
+      {ill:'gear',h:'Бизнес-оборудование',sub:'Мурабаха и мудараба · для ИП и ООО',tag:'Для дела',p:'Станки, автопарк, торговое и пищевое оборудование. Для проектов с распределением прибыли доступна мудараба — партнёрство, где мы делим и доход, и риск.',sum:'до ₽20 млн',term:'до 36 мес',down:'от 25%',cta:'Оставить заявку',href:'#zayavka'}
+    ]
+  },
+  cases:{
+    eyebrow:'Клиенты',
+    title:'Как это выглядит на практике',
+    desc:'Три закрытых договора с реальными цифрами. Истории приведены для демонстрации, суммы соответствуют действующим условиям.',
+    items:[
+      {q:'«Пять лет откладывал покупку машины, потому что кредит брать не хотел. Здесь подписал один договор и сразу знал конечную сумму».',m1k:'Товар',m1v:'₽2,2 млн',m2k:'Срок',m2v:'12 мес',m3k:'Наценка',m3v:'15%',name:'Рамзан Д.',city:'Гудермес · автомобиль'},
+      {q:'«Открывали швейный цех. Оборудование выкупили за месяц до сезона — без него мы бы просто не успели к заказам».',m1k:'Товар',m1v:'₽890 тыс',m2k:'Срок',m2v:'12 мес',m3k:'Наценка',m3v:'15%',name:'Зулай Х.',city:'Хасавюрт · оборудование'},
+      {q:'«Закрыла договор на четыре месяца раньше. Пересчитали и вернули часть наценки — в банке за досрочное только штрафуют».',m1k:'Товар',m1v:'₽480 тыс',m2k:'Срок',m2v:'18 → 14 мес',m3k:'Скидка',m3v:'₽23 тыс',name:'Седа Г.',city:'Гудермес · техника'}
+    ]
+  },
+  docs:{
+    eyebrow:'Прозрачность',
+    title:'Что именно вы подписываете',
+    desc:'Полный комплект — четыре документа. Ни один из них не содержит условий, которые вступают в силу позже или меняются в одностороннем порядке.',
+    items:[
+      {h:'Договор купли-продажи в рассрочку',p:'Товар, конечная цена, наценка одной суммой, срок. Основной и единственный обязывающий документ сделки.'},
+      {h:'График платежей',p:'Даты и равные суммы на весь срок. Составляется при подписании и не пересматривается в одностороннем порядке.'},
+      {h:'Акт приёма-передачи товара',p:'Подтверждает, что ZK Finance владела товаром и передала его вам. Без него сделка не соответствует мурабахе.'},
+      {h:'Заключение шариатского совета',p:'Подтверждение допустимости категории товара и структуры сделки. Хранится в открытом реестре под номером.'}
+    ]
+  },
+  council:{
+    eyebrow:'Надзор',
+    title:'Шариатский совет',
+    desc:'Совет утверждает шаблоны договоров, ведёт список допустимых категорий товара и рассматривает спорные сделки. Заключения публикуются в реестре фетв. Состав приведён для демонстрации.',
+    items:[
+      {h:'Председатель совета',role:'Фикх аль-муамалят',p:'Утверждает шаблоны мурабахи и мушараки, подписывает итоговые заключения по продуктовой линейке и выносит решения по спорным категориям.'},
+      {h:'Член совета',role:'Шариатский аудит',p:'Выборочно проверяет закрытые сделки: последовательность перехода собственности, корректность наценки, отсутствие скрытых платежей. Охват выборки — 18%.'},
+      {h:'Член совета',role:'Комплаенс и категории',p:'Ведёт реестр запрещённых категорий товара и рассматривает пограничные заявки — от торгового оборудования до долей в действующем бизнесе.'}
+    ]
+  },
+  form:{
+    eyebrow:'Заявка',
+    title:'Два шага до решения',
+    desc:'Заполнение занимает минуту. Заявка попадает в CRM компании и распределяется на менеджера — в демо-версии вы можете открыть хаб и увидеть её в воронке.',
+    cities:['Грозный','Гудермес','Аргун','Назрань','Хасавюрт','Махачкала','Москва'],
+    consent:'Нажимая кнопку, вы соглашаетесь на обработку персональных данных. Это демо-форма — данные остаются в вашем браузере.',
+    doneTitle:'Заявка принята',
+    doneText:'Менеджер перезвонит в течение 30 минут в рабочее время. Если товар уже выбран — держите под рукой счёт или ссылку на объявление.'
+  },
+  faq:{
+    eyebrow:'Вопросы',
+    title:'Частые вопросы',
+    desc:'Здесь собраны те, которые задают на первом звонке. Если ответа нет — напишите в WhatsApp, отвечаем в рабочие часы.',
+    items:[
+      {q:'Наценка — это ведь тот же процент?',a:'Нет. Процент начисляется на сумму долга и зависит от времени: чем дольше вы пользуетесь деньгами, тем больше платите. Наценка — это разница между закупочной и продажной ценой конкретного товара. Она названа один раз при подписании и после этого не может измениться: ни через год, ни при просрочке. Именно поэтому в сделке обязательно должен быть реальный товар, которым мы владели.'},
+      {q:'Что будет, если я просрочу платёж?',a:'Долг не увеличится — начислять на него нечего. Договором предусмотрен фиксированный штраф за недобросовестную просрочку, и он не является нашим доходом: сумма направляется на благотворительность, отчёт публикуется. Если просрочка вызвана реальными трудностями, мы пересматриваем график без штрафа — обратитесь к менеджеру до даты платежа, а не после.'},
+      {q:'Можно ли погасить досрочно?',a:'Да, в любой момент и без ограничений. Вы платите остаток по договору, а часть наценки за неиспользованный срок мы возвращаем в виде скидки. Скидка не прописана как обязанность в договоре — это право продавца, иначе конечная цена стала бы неопределённой, а это уже гарар.'},
+      {q:'Почему нельзя просто получить деньги наличными?',a:'Потому что тогда это был бы заём, а плата за заём — риба. Вся конструкция мурабахи держится на том, что предметом договора выступает товар: мы его покупаем, владеем им и продаём вам дороже. Если убрать товар, останется выдача денег под надбавку — ровно то, от чего мы уходим.'},
+      {q:'Нужен ли залог и поручитель?',a:'По автомобилям и недвижимости — да, залог оформляется на срок рассрочки; это обеспечение, а не дополнительная плата. По технике и ремонту до 900 тысяч рублей залог не требуется. Поручитель нужен, если у клиента нет подтверждённого дохода или выбран максимальный срок.'},
+      {q:'Какие товары вы не финансируете?',a:'Алкоголь и табак, свинину, азартные игры и лотереи, ночные заведения, ростовщические финансовые услуги, торговлю долгами и производными инструментами. Спорные категории выносятся на шариатский совет, решение принимается в течение двух рабочих дней и попадает в открытый реестр.'},
+      {q:'Какие документы нужны?',a:'Паспорт и счёт от продавца — этого достаточно для рассрочки на технику. Для автомобиля добавляется подтверждение дохода за 6 месяцев, для недвижимости — документы по объекту и справка о составе семьи. Для ИП и ООО: выписка из реестра, оборот за год, договор с поставщиком оборудования.'}
+    ]
+  },
+  cta:{
+    title:'Посчитаем вашу покупку<br>и ответим на вопросы по договору',
+    btn:'Оставить заявку'
+  },
+  footer:{
+    note:'Финансирование по нормам шариата: мурабаха, мушарака мутанакиса, мудараба. Работаем с 2021 года, каждая сделка проходит шариатский аудит.',
+    offices:[
+      {city:'Грозный',addr:'пр. им. В. Путина, 1 — головной офис'},
+      {city:'Хасавюрт',addr:'ул. Тотурбиева, 42'}
+    ],
+    disclaimer:'Демонстрационная версия. Компания, договоры, клиенты и цифры вымышлены.',
+    copyright:'ZK Finance · 2026'
+  }
+};
 /* ============ PRODUCT CONFIG ============ */
 var CFG={markup:{6:8,12:15,18:22,24:30},minDown:20,maxSum:6000000,penalty:3000};
 var PRODUCTS=['Автомобиль','Недвижимость','Техника и ремонт','Бизнес-оборудование'];
@@ -1867,37 +1362,360 @@ function clientsFromContracts(){
   });
 }
 
-/* ============ STATE ============ */
-var LS='zkf.demo.v1';
-var state={user:null,deals:DEALS.slice(),page:'dash',q:'',filt:'all',paidExtra:{}};
-try{
-  var saved=JSON.parse(localStorage.getItem(LS)||'null');
-  if(saved&&saved.leads&&saved.leads.length){
-    saved.leads.forEach(function(l){state.deals.unshift(l)});
-  }
-  if(saved&&saved.paidExtra)state.paidExtra=saved.paidExtra;
-}catch(e){}
+
+/* ============ СОСТОЯНИЕ И ХРАНЕНИЕ ============ */
+var LS='zkf.v4';
+var CONTENT=clone(DEFAULT_CONTENT);
+var state={user:null,deals:DEALS.slice(),page:'dash',q:'',filt:'all',paidExtra:{},
+           admSec:'brand',dirty:false};
+
+function deepMerge(base,patch){
+  if(patch===null||patch===undefined)return base;
+  if(Array.isArray(base))return Array.isArray(patch)?patch:base;
+  if(typeof base!=='object')return patch;
+  if(typeof patch!=='object')return base;
+  var out={},k;
+  for(k in base)out[k]=deepMerge(base[k],patch[k]);
+  for(k in patch)if(!(k in out))out[k]=patch[k];
+  return out;
+}
+function load(){
+  try{
+    var raw=localStorage.getItem(LS);if(!raw)return;
+    var d=JSON.parse(raw);
+    if(d.content)CONTENT=deepMerge(clone(DEFAULT_CONTENT),d.content);
+    if(d.cfg)CFG=deepMerge(CFG,d.cfg);
+    if(d.leads&&d.leads.length)d.leads.forEach(function(l){state.deals.unshift(l)});
+    if(d.paidExtra)state.paidExtra=d.paidExtra;
+  }catch(e){}
+}
 function persist(){
   try{
     localStorage.setItem(LS,JSON.stringify({
+      v:4,content:CONTENT,cfg:CFG,
       leads:state.deals.filter(function(d){return d.src==='lead'}),
       paidExtra:state.paidExtra
     }));
-  }catch(e){}
+    return true;
+  }catch(e){toast('Не удалось сохранить: хранилище браузера недоступно');return false}
 }
-
-
-var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+load();
 
 /* ============ TOAST ============ */
 var toastT;
 function toast(msg){
-  var t=$('#toast');t.innerHTML='<span class="mono" style="opacity:.5">●</span> '+esc(msg);
+  var t=$('#toast');t.innerHTML='<span style="opacity:.5">●</span> '+esc(msg);
   t.hidden=false;requestAnimationFrame(function(){t.classList.add('on')});
   clearTimeout(toastT);
   toastT=setTimeout(function(){
     t.classList.remove('on');setTimeout(function(){t.hidden=true},300);
   },2900);
+}
+
+/* ============ СБОРКА САЙТА ИЗ КОНТЕНТА ============ */
+var ILL={
+  car:'<path d="M12 62h76M18 62l8-20a6 6 0 016-4h36a6 6 0 016 4l8 20"/><rect x="12" y="62" width="76" height="14"/><circle cx="30" cy="76" r="7"/><circle cx="70" cy="76" r="7"/><path d="M36 38h28M50 38v20"/>',
+  house:'<path d="M14 46L50 18l36 28"/><path d="M22 42v38h56V42"/><rect x="42" y="56" width="16" height="24"/><rect x="28" y="52" width="10" height="10"/><rect x="62" y="52" width="10" height="10"/>',
+  tech:'<rect x="20" y="18" width="60" height="64"/><circle cx="50" cy="54" r="16"/><circle cx="50" cy="54" r="7"/><path d="M28 28h10M62 28h10"/>',
+  gear:'<circle cx="50" cy="50" r="18"/><circle cx="50" cy="50" r="7"/><path d="M50 18v-8M50 90v-8M18 50h-8M90 50h-8M27 27l-6-6M79 79l-6-6M73 27l6-6M21 79l6-6"/>'
+};
+function ill(k){
+  return '<svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">'+(ILL[k]||ILL.gear)+'</svg>';
+}
+var ARR='<svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg>';
+function head(eyebrow,title,desc){
+  return '<div class="sec-head"><span class="eyebrow reveal">'+esc(eyebrow)+'</span>'+
+    '<div class="reveal" style="--d:.08s"><h2 class="sec-title">'+esc(title)+'</h2>'+
+    '<p class="sec-desc">'+esc(desc)+'</p></div></div>';
+}
+function d(i){return ' style="--d:'+(i*0.08).toFixed(2)+'s"'}
+
+function renderSite(){
+  var C=CONTENT,h='';
+
+  /* — шапка — */
+  h+='<header class="hdr" id="hdr"><div class="wrap hdr-in">'+
+    '<a class="brand" href="#/"><span class="mark">ZK</span><span class="brand-txt">'+
+      '<span class="brand-name">'+esc(C.brand.name)+'</span>'+
+      '<span class="brand-sub">'+esc(C.brand.tagline)+'</span></span></a>'+
+    '<nav class="nav" id="nav">'+C.nav.map(function(n){
+      return '<a href="#'+esc(n.anchor)+'">'+esc(n.label)+'</a>';
+    }).join('')+'</nav>'+
+    '<div class="hdr-act">'+
+      (C.brand.demoBadge?'<span class="demo-tag">'+esc(C.brand.demoBadge)+'</span>':'')+
+      '<a class="btn btn-ghost btn-sm" href="#/hub"><span>Хаб</span></a>'+
+      '<a class="btn btn-sm" href="#zayavka"><span>Оставить заявку</span></a>'+
+      '<button class="burger" id="burger" aria-label="Меню" aria-expanded="false">'+
+      '<svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 1h16M0 6h16M0 11h16"/></svg></button>'+
+    '</div></div></header>';
+
+  /* — первый экран — */
+  var H=C.hero;
+  h+='<section class="hero"><canvas id="girih" aria-hidden="true"></canvas><div class="wrap hero-in">'+
+    '<div class="hero-grid"><div>'+
+      (H.badge?'<span class="pill reveal"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1.5l5.5 2.2v4.6C13.5 11.6 8 14.5 8 14.5S2.5 11.6 2.5 8.3V3.7L8 1.5z"/><path d="M5.8 8l1.6 1.6L10.4 6"/></svg>'+esc(H.badge)+'</span>':'')+
+      '<h1 class="reveal" style="--d:.08s">'+esc(H.title)+'<em>'+esc(H.accent)+'</em></h1>'+
+      '<p class="hero-lead reveal" style="--d:.16s">'+esc(H.lead)+'</p>'+
+      '<div class="hero-cta reveal" style="--d:.24s">'+
+        '<a class="btn btn-lg" href="#kalkulyator"><span>'+esc(H.cta1)+'</span><span class="btn-arr">→</span></a>'+
+        '<a class="btn btn-ghost btn-lg" href="#kak"><span>'+esc(H.cta2)+'</span></a></div>'+
+      (H.trust?'<div class="hero-trust reveal" style="--d:.32s"><span>✓</span><span>'+H.trust+'</span></div>':'')+
+    '</div>'+
+    '<div class="hero-side reveal" style="--d:.4s">'+H.specs.map(function(s){
+      return '<div class="spec"><span class="spec-k">'+esc(s.k)+'</span><span class="spec-v">'+esc(s.v)+'</span></div>';
+    }).join('')+'</div></div>'+
+    '<div class="hero-strip">'+H.metrics.map(function(m,i){
+      var attr=m.count?' data-count="'+esc(m.count)+'" data-suffix="'+esc(m.suffix||'')+'"':'';
+      return '<div class="hs reveal"'+d(i)+'><span class="hs-n"'+attr+'>'+esc(m.n)+esc(m.suffix||'')+'</span>'+
+        '<span class="hs-l">'+esc(m.label)+'</span></div>';
+    }).join('')+'</div></div></section>';
+
+  /* — партнёры — */
+  if(C.partners.length){
+    var mq=C.partners.map(function(p){return '<span class="mq-i">'+esc(p)+'</span>'}).join('');
+    h+='<div class="mq" aria-label="Партнёры"><div class="mq-in">'+mq+mq+'</div></div>';
+  }
+
+  /* — боль и решение — */
+  var P=C.problem;
+  h+='<section class="sec" id="pochemu"><div class="wrap">'+head(P.eyebrow,P.title,P.desc)+
+    '<div class="ps reveal">'+
+    '<div class="ps-col"><div class="ps-h"><h3>'+esc(P.badTitle)+'</h3>'+
+      '<span class="ps-badge bad">'+esc(P.badBadge)+'</span></div>'+
+      P.bad.map(function(x,i){
+        return '<div class="ps-i"><span class="ps-m">'+('0'+(i+1)).slice(-2)+'</span>'+
+          '<span><b>'+esc(x.t)+'</b><span>'+esc(x.d)+'</span></span></div>';
+      }).join('')+'</div>'+
+    '<div class="ps-col acc"><div class="ps-h"><h3>'+esc(P.goodTitle)+'</h3>'+
+      '<span class="ps-badge good">'+esc(P.goodBadge)+'</span></div>'+
+      P.good.map(function(x){
+        return '<div class="ps-i"><span class="ps-m">✓</span>'+
+          '<span><b>'+esc(x.t)+'</b><span>'+esc(x.d)+'</span></span></div>';
+      }).join('')+'</div></div></div></section>';
+
+  /* — принципы — */
+  var PR=C.principles;
+  h+='<section class="sec" id="principy"><div class="wrap">'+head(PR.eyebrow,PR.title,PR.desc)+
+    '<div class="cols-3">'+PR.items.map(function(x,i){
+      return '<div class="cell reveal"'+d(i)+'><span class="cell-ar">'+esc(x.ar)+'</span>'+
+        '<span class="eyebrow">'+esc(x.eyebrow)+'</span><h3>'+esc(x.h)+'</h3>'+
+        '<p>'+esc(x.p)+'</p>'+(x.note?'<div class="cell-note">'+esc(x.note)+'</div>':'')+'</div>';
+    }).join('')+'</div></div></section>';
+
+  /* — как проходит сделка — */
+  var W=C.how,f=W.flow;
+  h+='<section class="sec" id="kak"><div class="wrap">'+head(W.eyebrow,W.title,W.desc)+
+    '<div class="flow reveal"><div class="flow-row">'+
+      '<div class="fnode"><span class="fnode-t">'+esc(f[0].t)+'</span><span class="fnode-n">'+esc(f[0].n)+'</span></div>'+
+      '<div class="farr" data-arrow style="--d:.2s"><i></i></div>'+
+      '<div class="fnode mid"><span class="fnode-t">'+esc(f[1].t)+'</span><span class="fnode-n">'+esc(f[1].n)+'</span></div>'+
+      '<div class="farr" data-arrow style="--d:.5s"><i></i></div>'+
+      '<div class="fnode"><span class="fnode-t">'+esc(f[2].t)+'</span><span class="fnode-n">'+esc(f[2].n)+'</span></div>'+
+      '</div><div class="flow-lbl">'+
+      '<span>'+esc(f[0].lbl)+'</span><span>'+esc(W.arrow1)+'</span>'+
+      '<span>'+esc(f[1].lbl)+'</span><span>'+esc(W.arrow2)+'</span>'+
+      '<span>'+esc(f[2].lbl)+'</span></div></div>'+
+    '<div class="steps">'+W.steps.map(function(s,i){
+      return '<div class="step reveal"'+d(i)+'><span class="step-n">Шаг '+('0'+(i+1)).slice(-2)+'</span>'+
+        '<h4>'+esc(s.h)+'</h4><p>'+esc(s.p)+'</p>'+
+        (s.tag?'<span class="step-tag">'+esc(s.tag)+'</span>':'')+'</div>';
+    }).join('')+'</div></div></section>';
+
+  /* — калькулятор — */
+  var K=C.calc;
+  h+='<section class="sec" id="kalkulyator"><div class="wrap">'+head(K.eyebrow,K.title,K.desc)+
+    '<div class="calc reveal"><div class="calc-in">'+
+      '<div class="fld"><div class="fld-top"><span class="fld-l">Что финансируем</span></div>'+
+      '<div class="seg seg-2" id="cProd">'+['Авто','Жильё','Техника','Бизнес'].map(function(t,i){
+        return '<button type="button" data-p="'+i+'" aria-pressed="'+(i===0)+'"><span>'+t+'</span></button>';
+      }).join('')+'</div></div>'+
+      '<div class="fld"><div class="fld-top"><span class="fld-l">Стоимость товара</span><span class="fld-v" id="cPriceV">—</span></div>'+
+      '<input type="range" id="cPrice" min="100000" max="6000000" step="50000" value="2400000" aria-label="Стоимость товара">'+
+      '<div class="fld-scale"><span id="cPriceMin"></span><span id="cPriceMax"></span></div></div>'+
+      '<div class="fld"><div class="fld-top"><span class="fld-l">Первоначальный взнос</span><span class="fld-v" id="cDownV">—</span></div>'+
+      '<input type="range" id="cDown" min="0" max="70" step="5" value="30" aria-label="Первоначальный взнос">'+
+      '<div class="fld-scale"><span id="cDownMin"></span><span>70%</span></div></div>'+
+      '<div class="fld"><div class="fld-top"><span class="fld-l">Срок рассрочки</span><span class="fld-v" id="cTermV">—</span></div>'+
+      '<div class="seg" id="cTerm">'+[6,12,18,24].map(function(t){
+        return '<button type="button" data-t="'+t+'" aria-pressed="'+(t===12)+'"><span>'+t+'</span></button>';
+      }).join('')+'</div></div>'+
+      '<div class="prop"><div class="prop-bar">'+
+        '<i class="prop-down" id="pbDown"></i><i class="prop-fin" id="pbFin"></i><i class="prop-mark" id="pbMark"></i></div>'+
+        '<div class="prop-leg"><span class="pl"><i class="prop-down"></i>Ваш взнос</span>'+
+        '<span class="pl"><i class="prop-fin"></i>Финансируем</span>'+
+        '<span class="pl"><i class="prop-mark"></i>Наценка</span></div></div>'+
+      '<div class="calc-help"><span class="eyebrow">Что происходит дальше</span>'+
+        K.help.map(function(t,i){
+          return '<div class="ch-i"><b>'+('0'+(i+1)).slice(-2)+'</b>'+esc(t)+'</div>';
+        }).join('')+'</div>'+
+    '</div>'+
+    '<div class="calc-out"><span class="eyebrow" style="margin-bottom:22px">Этапы расчёта</span>'+
+      '<div class="stages">'+
+        '<div class="stg" data-n="1"><span class="stg-l">Стоимость товара<small>цена у продавца, которого выбрали вы</small></span><span class="stg-v" id="s1">—</span></div>'+
+        '<div class="stg"><span class="stg-op">−</span><span class="stg-l">Ваш первоначальный взнос<small>оплачиваете продавцу напрямую</small></span><span class="stg-v" id="s2">—</span></div>'+
+        '<div class="stg" data-n="2"><span class="stg-l">Финансируем — выкупаем товар<small>'+esc(C.brand.name)+' становится собственником</small></span><span class="stg-v" id="s3">—</span></div>'+
+        '<div class="stg"><span class="stg-op">+</span><span class="stg-l">Наценка <b id="sRate">—</b> за весь срок<small>фиксируется в договоре и больше не меняется</small></span><span class="stg-v" id="s4">—</span></div>'+
+        '<div class="stg sum" data-n="3"><span class="stg-l">Итого по договору<small>вся сумма, которую вы отдадите нам</small></span><span class="stg-v" id="s5">—</span></div>'+
+      '</div>'+
+      '<div class="res-main"><div><span class="res-lab">Ежемесячный платёж</span>'+
+        '<div class="res-big" id="rMonth">—</div></div>'+
+        '<div class="res-side"><b id="rTermN">—</b><span>равными долями</span>'+
+        '<b id="rAll" style="margin-top:12px">—</b><span>полная стоимость покупки</span></div></div>'+
+      '<div class="bankcmp"><span class="bankcmp-t">В банке под '+esc(K.bankRate)+'% годовых переплата за тот же срок составила бы <b>и продолжала бы расти при просрочке</b></span>'+
+        '<span class="bankcmp-v" id="rBank">—</span></div>'+
+      '<div class="mini-sched"><div class="mini-sched-h"><span class="eyebrow">Остаток долга по месяцам</span>'+
+        '<span style="font-size:11px;color:var(--on-ink-muted)">снижается ровно</span></div>'+
+        '<div class="msc" id="msc"></div></div>'+
+      '<p class="res-note">'+esc(K.note)+'</p>'+
+      '<a class="btn btn-white btn-lg" href="#zayavka" style="margin-top:20px"><span>Отправить заявку на эти условия</span><span class="btn-arr">→</span></a>'+
+    '</div></div></div></section>';
+
+  /* — сравнение — */
+  var CM=C.compare;
+  h+='<section class="sec slab" id="otlichiya"><div class="wrap">'+head(CM.eyebrow,CM.title,CM.desc)+
+    '<div class="cmp"><div class="cmp-row cmp-head"><div>Параметр</div><div>'+esc(CM.colBad)+
+    '</div><div class="cmp-us">'+esc(CM.colGood)+'</div></div>'+
+    CM.rows.map(function(r){
+      return '<div class="cmp-row" data-cmp><div class="cmp-k">'+esc(r.k)+'</div>'+
+        '<div class="cmp-bad">'+esc(r.bad)+'</div><div class="cmp-us">'+esc(r.good)+'</div></div>';
+    }).join('')+'</div></div></section>';
+
+  /* — продукты — */
+  var PD=C.products;
+  h+='<section class="sec" id="produkty"><div class="wrap">'+head(PD.eyebrow,PD.title,PD.desc)+
+    '<div class="prods">'+PD.items.map(function(x,i){
+      return '<div class="prod reveal"'+d(i)+'>'+ill(x.ill)+
+        '<div class="prod-top"><div><h3>'+esc(x.h)+'</h3><div class="prod-sub">'+esc(x.sub)+'</div></div>'+
+        (x.tag?'<span class="tag">'+esc(x.tag)+'</span>':'')+'</div>'+
+        '<p>'+esc(x.p)+'</p>'+
+        '<div class="prod-meta">'+
+          '<span><span class="pm-k">Сумма</span><span class="pm-v">'+esc(x.sum)+'</span></span>'+
+          '<span><span class="pm-k">Срок</span><span class="pm-v">'+esc(x.term)+'</span></span>'+
+          '<span><span class="pm-k">Взнос</span><span class="pm-v">'+esc(x.down)+'</span></span></div>'+
+        '<a class="prod-go" href="'+esc(x.href||'#zayavka')+'">'+esc(x.cta)+' '+ARR+'</a></div>';
+    }).join('')+'</div></div></section>';
+
+  /* — кейсы — */
+  var CS=C.cases;
+  h+='<section class="sec slab" id="klienty"><div class="wrap">'+head(CS.eyebrow,CS.title,CS.desc)+
+    '<div class="cases">'+CS.items.map(function(x,i){
+      return '<div class="case reveal"'+d(i)+'><p class="case-q">'+esc(x.q)+'</p>'+
+        '<div class="case-m">'+
+          '<span><span class="case-k">'+esc(x.m1k)+'</span><span class="case-v">'+esc(x.m1v)+'</span></span>'+
+          '<span><span class="case-k">'+esc(x.m2k)+'</span><span class="case-v">'+esc(x.m2v)+'</span></span>'+
+          '<span><span class="case-k">'+esc(x.m3k)+'</span><span class="case-v">'+esc(x.m3v)+'</span></span></div>'+
+        '<div class="case-who"><span class="case-av">'+esc(ini(x.name))+'</span>'+
+        '<span><span class="case-n">'+esc(x.name)+'</span><span class="case-c">'+esc(x.city)+'</span></span></div></div>';
+    }).join('')+'</div></div></section>';
+
+  /* — документы — */
+  var DC=C.docs;
+  h+='<section class="sec" id="dokumenty"><div class="wrap">'+head(DC.eyebrow,DC.title,DC.desc)+
+    '<div class="docs">'+DC.items.map(function(x,i){
+      return '<div class="doc reveal"'+d(i)+'><span class="doc-ic">'+('0'+(i+1)).slice(-2)+'</span>'+
+        '<div><h4>'+esc(x.h)+'</h4><p>'+esc(x.p)+'</p></div></div>';
+    }).join('')+'</div></div></section>';
+
+  /* — совет — */
+  var CO=C.council;
+  h+='<section class="sec slab" id="sovet"><div class="wrap">'+head(CO.eyebrow,CO.title,CO.desc)+
+    '<div class="council">'+CO.items.map(function(x,i){
+      return '<div class="cm reveal"'+d(i)+'><div class="cm-av">'+('0'+(i+1)).slice(-2)+'</div>'+
+        '<h4>'+esc(x.h)+'</h4><div class="cm-role">'+esc(x.role)+'</div><p>'+esc(x.p)+'</p></div>';
+    }).join('')+'</div></div></section>';
+
+  h+=renderForm()+renderFaq()+renderCta()+renderFooter();
+  return h;
+}
+
+function renderForm(){
+  var F=CONTENT.form,P=CONTENT.products.items;
+  return '<section class="sec" id="zayavka"><div class="wrap">'+head(F.eyebrow,F.title,F.desc)+
+    '<div class="wizard reveal"><div class="wz-head">'+
+      '<div class="wz-t on" data-tab="1"><span class="wz-n">1</span><span class="wz-l">Что финансируем</span></div>'+
+      '<div class="wz-t" data-tab="2"><span class="wz-n">2</span><span class="wz-l">Контакты</span></div>'+
+      '<div class="wz-t" data-tab="3"><span class="wz-n">3</span><span class="wz-l">Готово</span></div></div>'+
+    '<div class="wz-body">'+
+      '<div class="wz-pane on" data-pane="1">'+
+        '<label class="lbl">Направление</label><div class="pick" id="wPick">'+
+        P.map(function(x,i){
+          return '<button type="button" data-p="'+esc(x.h)+'" aria-pressed="'+(i===0)+'">'+
+            '<span class="pick-t">'+esc(x.h)+'</span>'+
+            '<span class="pick-s">'+esc(x.sum)+' · '+esc(x.term)+'</span></button>';
+        }).join('')+'</div>'+
+        '<div class="form-grid" style="margin-top:24px">'+
+          '<div><label class="lbl" for="fSum">Стоимость товара, ₽</label>'+
+          '<input class="inp" id="fSum" inputmode="numeric" value="2 400 000"></div>'+
+          '<div><label class="lbl" for="fTerm">Срок рассрочки</label><select class="inp" id="fTerm">'+
+          [6,12,18,24].map(function(t){
+            return '<option value="'+t+'"'+(t===12?' selected':'')+'>'+t+' месяцев</option>';
+          }).join('')+'</select></div></div>'+
+        '<div class="wz-foot"><button class="btn btn-lg" type="button" id="wNext1"><span>Далее</span><span class="btn-arr">→</span></button>'+
+        '<p>Предварительный платёж: <b id="wPrev">—</b>. Точные условия зафиксируем в договоре.</p></div>'+
+      '</div>'+
+      '<div class="wz-pane" data-pane="2"><div class="wz-sum" id="wSum"></div>'+
+        '<div class="form-grid">'+
+          '<div><label class="lbl" for="fName">Имя и фамилия</label><input class="inp" id="fName" placeholder="Ислам Хамзатов" autocomplete="name"></div>'+
+          '<div><label class="lbl" for="fPhone">Телефон</label><input class="inp" id="fPhone" placeholder="+7 (___) ___-__-__" inputmode="tel" autocomplete="tel"></div>'+
+          '<div><label class="lbl" for="fCity">Город</label><select class="inp" id="fCity">'+
+          F.cities.map(function(c){return '<option>'+esc(c)+'</option>'}).join('')+'</select></div>'+
+          '<div><label class="lbl" for="fWhen">Когда удобно звонить</label><select class="inp" id="fWhen">'+
+          ['В любое время','С 9:00 до 13:00','С 13:00 до 18:00','После 18:00'].map(function(c){
+            return '<option>'+c+'</option>';
+          }).join('')+'</select></div>'+
+          '<div class="f-full"><label class="lbl" for="fNote">Комментарий</label>'+
+          '<input class="inp" id="fNote" placeholder="Марка и модель, ссылка на объявление, пожелания по графику"></div></div>'+
+        '<div class="wz-foot"><button class="btn btn-lg" type="button" id="wSend"><span>Отправить заявку</span><span class="btn-arr">→</span></button>'+
+        '<button class="btn btn-ghost" type="button" id="wBack"><span>Назад</span></button>'+
+        '<p>'+esc(F.consent)+'</p></div></div>'+
+      '<div class="wz-pane" data-pane="3"><div class="done-box"><div class="done-ic">✓</div>'+
+        '<h3>'+esc(F.doneTitle)+'</h3><p>'+esc(F.doneText)+'</p>'+
+        '<div class="done-id" id="wId">—</div>'+
+        '<div class="wz-foot" style="justify-content:center;border-top:0;margin-top:26px">'+
+        '<a class="btn" href="#/hub/deals"><span>Открыть заявку в CRM</span><span class="btn-arr">→</span></a>'+
+        '<button class="btn btn-ghost" type="button" id="wAgain"><span>Отправить ещё одну</span></button>'+
+        '</div></div></div>'+
+    '</div></div></div></section>';
+}
+function renderFaq(){
+  var Q=CONTENT.faq;
+  return '<section class="sec" id="voprosy"><div class="wrap">'+head(Q.eyebrow,Q.title,Q.desc)+
+    '<div class="faq reveal" id="faq">'+Q.items.map(function(x){
+      return '<div class="q"><button class="q-btn" type="button">'+esc(x.q)+
+        '<span class="q-mark">+</span></button><div class="q-body"><p>'+esc(x.a)+'</p></div></div>';
+    }).join('')+'</div></div></section>';
+}
+function renderCta(){
+  var T=CONTENT.cta,B=CONTENT.brand;
+  return '<section class="cta"><div class="wrap cta-in">'+
+    '<h2 class="reveal">'+T.title+'</h2>'+
+    '<div class="cta-side reveal" style="--d:.1s">'+
+      '<span class="cta-phone">'+esc(B.phone)+'</span>'+
+      '<span class="cta-hours">'+esc(B.hours)+'</span>'+
+      '<a class="btn btn-white btn-lg" href="#zayavka"><span>'+esc(T.btn)+'</span><span class="btn-arr">→</span></a>'+
+    '</div></div></section>';
+}
+function renderFooter(){
+  var F=CONTENT.footer,B=CONTENT.brand,C=CONTENT;
+  return '<footer class="ftr"><div class="wrap"><div class="ftr-grid">'+
+    '<div><div class="brand"><span class="mark">ZK</span><span class="brand-txt">'+
+      '<span class="brand-name">'+esc(B.name)+'</span>'+
+      '<span class="brand-sub">'+esc(B.tagline)+'</span></span></div>'+
+      '<p class="ftr-note">'+esc(F.note)+'</p></div>'+
+    '<div><h5>Продукты</h5><ul>'+C.products.items.map(function(x){
+      return '<li><a href="#produkty">'+esc(x.h)+'</a></li>';
+    }).join('')+'<li><a href="#kalkulyator">Калькулятор</a></li></ul></div>'+
+    '<div><h5>Компания</h5><ul>'+C.nav.map(function(n){
+      return '<li><a href="#'+esc(n.anchor)+'">'+esc(n.label)+'</a></li>';
+    }).join('')+'</ul></div>'+
+    '<div><h5>Контакты</h5><div class="ftr-office">'+esc(B.phone)+'<br>'+esc(B.hours)+
+      F.offices.map(function(o){
+        return '<b>'+esc(o.city)+'</b>'+esc(o.addr);
+      }).join('')+'</div>'+
+      '<ul style="margin-top:18px"><li><a href="#zayavka">Оставить заявку</a></li>'+
+      '<li><a href="#/hub">Хаб сотрудника</a></li></ul></div>'+
+    '</div><div class="ftr-bot"><span>'+esc(F.disclaimer)+'</span>'+
+    '<span>'+esc(F.copyright)+'</span></div></div></footer>';
 }
 
 /* ============ REVEAL ON SCROLL ============ */
@@ -1956,15 +1774,6 @@ function scrollInit(){
     if(g&&!RM&&y<1400)g.style.transform='translateY('+(y*0.14)+'px)';
   }
   window.addEventListener('scroll',on,{passive:true});on();
-}
-
-/* ============ MARQUEE ============ */
-function marqueeInit(){
-  var items=['Автосалон «Кавказ»','ТЦ «Беркат»','М.Видео','Дом Техники','Автодом Грозный',
-    'СтройМаркет 95','Мебельный дом «Даймохк»','Технопарк Хасавюрт','Автополис Махачкала','Гранд Кавказ'];
-  var box=$('#mqIn');if(!box)return;
-  var html=items.map(function(i){return '<span class="mq-i">'+esc(i)+'</span>'}).join('');
-  box.innerHTML=html+html;
 }
 
 /* ============ GIRIH PATTERN ============ */
@@ -2034,7 +1843,7 @@ var CPROD=[
   {n:'Бизнес-оборудование',min:200000,max:20000000,step:100000,def:3000000,down:25,note:''}
 ];
 var calc={p:0,price:2400000,down:30,term:12};
-var BASE_NOTE='Расчёт предварительный и не является публичной офертой. Итоговые условия фиксируются в договоре купли-продажи после проверки товара и одобрения шариатским советом.';
+
 
 function calcRun(){
   var P=CPROD[calc.p];
@@ -2063,7 +1872,8 @@ function calcRun(){
   $('#pbFin').style.width=(fin/whole*100)+'%';
   $('#pbMark').style.width=(mk/whole*100)+'%';
 
-  var i=0.28/12,bankPay=fin*i/(1-Math.pow(1+i,-calc.term));
+  var br=(+CONTENT.calc.bankRate||28)/100;
+  var i=br/12,bankPay=fin*i/(1-Math.pow(1+i,-calc.term));
   var bankOver=Math.round(bankPay*calc.term-fin);
   $('#rBank').textContent=money(bankOver);
 
@@ -2073,7 +1883,8 @@ function calcRun(){
     h+='<i style="height:'+Math.max(4,rest/total*100)+'%" title="После '+k+' платежей: '+money(Math.max(0,rest))+'"></i>';
   }
   msc.innerHTML=h;
-  $('.res-note').textContent=P.note?P.note+' '+BASE_NOTE:BASE_NOTE;
+  var bn=CONTENT.calc.note||'';
+  var rn=$('.res-note');if(rn)rn.textContent=P.note?P.note+' '+bn:bn;
 
   return {dp:dp,fin:fin,mk:mk,total:total,mo:mo,rate:rate};
 }
@@ -2093,6 +1904,7 @@ function setProd(i){
 }
 function calcInit(){
   if(!$('#cPrice'))return;
+  setProd(0);
   $('#cPrice').addEventListener('input',function(){calc.price=+this.value;calcRun()});
   $('#cDown').addEventListener('input',function(){
     var P=CPROD[calc.p];
@@ -2243,6 +2055,354 @@ function gateInit(){
     else location.hash=pendingHub;
   });
 }
+
+/* ============ СХЕМА АДМИНКИ ============ */
+function F(p,l,type,hint){return {p:p,l:l,type:type||'text',hint:hint}}
+var SCHEMA=[
+ {id:'brand',t:'Компания',desc:'Название, контакты, меню и офисы — используются в шапке, подвале и блоке призыва.',
+  fields:[F('brand.name','Название'),F('brand.tagline','Подпись под названием'),
+          F('brand.phone','Телефон'),F('brand.hours','Часы работы'),
+          F('brand.demoBadge','Плашка у логотипа','text','Оставьте пустым, чтобы убрать')],
+  lists:[{p:'nav',l:'Пункты меню',title:'label',blank:{label:'Новый пункт',anchor:'kak'},
+          fields:[{k:'label',l:'Название'},{k:'anchor',l:'Якорь секции',hint:'kak, produkty, kalkulyator, klienty, sovet, voprosy, zayavka, dokumenty, otlichiya'}]},
+         {p:'footer.offices',l:'Офисы',title:'city',blank:{city:'Город',addr:'Адрес'},
+          fields:[{k:'city',l:'Город'},{k:'addr',l:'Адрес'}]}]},
+
+ {id:'hero',t:'Первый экран',desc:'Самый заметный блок сайта: заголовок, подзаголовок, кнопки, характеристики и цифры.',
+  fields:[F('hero.badge','Плашка над заголовком'),F('hero.title','Заголовок'),
+          F('hero.accent','Вторая строка заголовка','text','Показывается серым под основной'),
+          F('hero.lead','Вводный текст','area'),
+          F('hero.cta1','Кнопка 1'),F('hero.cta2','Кнопка 2'),
+          F('hero.trust','Строка доверия','area','Можно выделить фрагмент тегом &lt;b&gt;')],
+  lists:[{p:'hero.specs',l:'Характеристики справа',title:'k',blank:{k:'Параметр',v:'Значение'},
+          fields:[{k:'k',l:'Название'},{k:'v',l:'Значение'}]},
+         {p:'hero.metrics',l:'Цифры под первым экраном',title:'label',
+          blank:{n:'0',suffix:'',count:'',label:'Описание'},
+          fields:[{k:'n',l:'Число'},{k:'suffix',l:'Суффикс',hint:'% или пусто'},
+                  {k:'count',l:'Анимировать до',hint:'Число без пробелов. Пусто — без анимации'},
+                  {k:'label',l:'Подпись',full:true}]}]},
+
+ {id:'partners',t:'Партнёры',desc:'Бегущая строка под первым экраном.',
+  strlists:[{p:'partners',l:'Названия',blank:'Новый партнёр'}]},
+
+ {id:'problem',t:'Боль и решение',desc:'Два столбца: что останавливает клиента и как вы это решаете.',
+  fields:[F('problem.eyebrow','Надзаголовок'),F('problem.title','Заголовок'),F('problem.desc','Описание','area'),
+          F('problem.badTitle','Заголовок левой колонки'),F('problem.badBadge','Плашка левой колонки'),
+          F('problem.goodTitle','Заголовок правой колонки'),F('problem.goodBadge','Плашка правой колонки')],
+  lists:[{p:'problem.bad',l:'Что останавливает',title:'t',blank:{t:'Заголовок',d:'Описание'},
+          fields:[{k:'t',l:'Заголовок'},{k:'d',l:'Описание',type:'area',full:true}]},
+         {p:'problem.good',l:'Как решаем',title:'t',blank:{t:'Заголовок',d:'Описание'},
+          fields:[{k:'t',l:'Заголовок'},{k:'d',l:'Описание',type:'area',full:true}]}]},
+
+ {id:'principles',t:'Принципы',desc:'Три запрета: риба, гарар, харам.',
+  fields:[F('principles.eyebrow','Надзаголовок'),F('principles.title','Заголовок'),F('principles.desc','Описание','area')],
+  lists:[{p:'principles.items',l:'Карточки',title:'h',
+          blank:{ar:'',eyebrow:'Запрет 04',h:'Заголовок',p:'Текст',note:''},
+          fields:[{k:'h',l:'Заголовок'},{k:'eyebrow',l:'Надпись сверху'},
+                  {k:'ar',l:'Арабское слово'},{k:'p',l:'Текст',type:'area',full:true},
+                  {k:'note',l:'Следствие',type:'area',full:true}]}]},
+
+ {id:'how',t:'Как проходит сделка',desc:'Схема из трёх сторон и четыре шага сделки.',
+  fields:[F('how.eyebrow','Надзаголовок'),F('how.title','Заголовок'),F('how.desc','Описание','area'),
+          F('how.arrow1','Подпись первой стрелки'),F('how.arrow2','Подпись второй стрелки')],
+  lists:[{p:'how.flow',l:'Стороны сделки',title:'n',blank:{t:'Сторона',n:'Название',lbl:'Подпись'},
+          fields:[{k:'t',l:'Надпись сверху'},{k:'n',l:'Название'},{k:'lbl',l:'Подпись снизу',full:true}],
+          fixed:true,hint:'Ровно три стороны — схема рассчитана на них'},
+         {p:'how.steps',l:'Шаги',title:'h',blank:{h:'Заголовок',p:'Описание',tag:''},
+          fields:[{k:'h',l:'Заголовок'},{k:'tag',l:'Плашка внизу'},{k:'p',l:'Описание',type:'area',full:true}]}]},
+
+ {id:'calc',t:'Калькулятор',desc:'Тексты блока и ставка банка для сравнения. Наценку по срокам меняйте в «Параметрах продукта».',
+  fields:[F('calc.eyebrow','Надзаголовок'),F('calc.title','Заголовок'),F('calc.desc','Описание','area'),
+          F('calc.bankRate','Ставка банка для сравнения, % годовых','num'),
+          F('calc.note','Дисклеймер под расчётом','area')],
+  strlists:[{p:'calc.help',l:'Пункты «Что происходит дальше»',blank:'Новый пункт'}]},
+
+ {id:'compare',t:'Сравнение с кредитом',desc:'Таблица различий на чёрном блоке.',
+  fields:[F('compare.eyebrow','Надзаголовок'),F('compare.title','Заголовок'),F('compare.desc','Описание','area'),
+          F('compare.colBad','Заголовок колонки «кредит»'),F('compare.colGood','Заголовок колонки «вы»')],
+  lists:[{p:'compare.rows',l:'Строки таблицы',title:'k',blank:{k:'Параметр',bad:'У банка',good:'У нас'},
+          fields:[{k:'k',l:'Параметр'},{k:'bad',l:'Банк'},{k:'good',l:'ZK Finance',full:true}]}]},
+
+ {id:'products',t:'Продукты',desc:'Направления финансирования. Названия подставляются в форму заявки и подвал.',
+  fields:[F('products.eyebrow','Надзаголовок'),F('products.title','Заголовок'),F('products.desc','Описание','area')],
+  lists:[{p:'products.items',l:'Карточки продуктов',title:'h',
+          blank:{ill:'gear',h:'Новый продукт',sub:'Мурабаха',tag:'',p:'Описание',sum:'до ₽1 млн',term:'до 12 мес',down:'от 20%',cta:'Оставить заявку',href:'#zayavka'},
+          fields:[{k:'h',l:'Название'},{k:'sub',l:'Подпись'},
+                  {k:'tag',l:'Плашка справа'},{k:'ill',l:'Иконка',type:'sel',opts:['car','house','tech','gear']},
+                  {k:'p',l:'Описание',type:'area',full:true},
+                  {k:'sum',l:'Сумма'},{k:'term',l:'Срок'},{k:'down',l:'Взнос'},
+                  {k:'cta',l:'Текст ссылки'},{k:'href',l:'Куда ведёт',hint:'#kalkulyator или #zayavka'}]}]},
+
+ {id:'cases',t:'Кейсы клиентов',desc:'Истории с цифрами на чёрном блоке.',
+  fields:[F('cases.eyebrow','Надзаголовок'),F('cases.title','Заголовок'),F('cases.desc','Описание','area')],
+  lists:[{p:'cases.items',l:'Истории',title:'name',
+          blank:{q:'«Цитата клиента»',m1k:'Товар',m1v:'',m2k:'Срок',m2v:'',m3k:'Наценка',m3v:'',name:'Имя',city:'Город · продукт'},
+          fields:[{k:'q',l:'Цитата',type:'area',full:true},
+                  {k:'name',l:'Имя'},{k:'city',l:'Город и продукт'},
+                  {k:'m1k',l:'Показатель 1'},{k:'m1v',l:'Значение 1'},
+                  {k:'m2k',l:'Показатель 2'},{k:'m2v',l:'Значение 2'},
+                  {k:'m3k',l:'Показатель 3'},{k:'m3v',l:'Значение 3'}]}]},
+
+ {id:'docs',t:'Документы',desc:'Что клиент подписывает.',
+  fields:[F('docs.eyebrow','Надзаголовок'),F('docs.title','Заголовок'),F('docs.desc','Описание','area')],
+  lists:[{p:'docs.items',l:'Документы',title:'h',blank:{h:'Название',p:'Описание'},
+          fields:[{k:'h',l:'Название'},{k:'p',l:'Описание',type:'area',full:true}]}]},
+
+ {id:'council',t:'Шариатский совет',desc:'Состав надзорного органа.',
+  fields:[F('council.eyebrow','Надзаголовок'),F('council.title','Заголовок'),F('council.desc','Описание','area')],
+  lists:[{p:'council.items',l:'Члены совета',title:'h',blank:{h:'Член совета',role:'Направление',p:'Чем занимается'},
+          fields:[{k:'h',l:'Должность'},{k:'role',l:'Направление'},{k:'p',l:'Описание',type:'area',full:true}]}]},
+
+ {id:'form',t:'Форма заявки',desc:'Тексты формы и список городов в выпадающем списке.',
+  fields:[F('form.eyebrow','Надзаголовок'),F('form.title','Заголовок'),F('form.desc','Описание','area'),
+          F('form.consent','Текст согласия','area'),
+          F('form.doneTitle','Заголовок после отправки'),F('form.doneText','Текст после отправки','area')],
+  strlists:[{p:'form.cities',l:'Города',blank:'Новый город'}]},
+
+ {id:'faq',t:'Вопросы',desc:'Раскрывающийся список. Отвечайте так, как отвечаете по телефону.',
+  fields:[F('faq.eyebrow','Надзаголовок'),F('faq.title','Заголовок'),F('faq.desc','Описание','area')],
+  lists:[{p:'faq.items',l:'Вопросы и ответы',title:'q',blank:{q:'Новый вопрос?',a:'Ответ'},
+          fields:[{k:'q',l:'Вопрос',full:true},{k:'a',l:'Ответ',type:'area',full:true}]}]},
+
+ {id:'bottom',t:'Призыв и подвал',desc:'Последний экран и нижняя часть сайта.',
+  fields:[F('cta.title','Заголовок призыва','area','Перенос строки — тегом &lt;br&gt;'),
+          F('cta.btn','Кнопка призыва'),
+          F('footer.note','Текст о компании в подвале','area'),
+          F('footer.disclaimer','Дисклеймер внизу','area'),
+          F('footer.copyright','Копирайт')]}
+];
+
+/* ============ ДОСТУП ПО ПУТИ ============ */
+function getp(p){
+  var a=p.split('.'),o=CONTENT,i;
+  for(i=0;i<a.length;i++){if(o==null)return undefined;o=o[a[i]]}
+  return o;
+}
+function setp(p,v){
+  var a=p.split('.'),o=CONTENT,i;
+  for(i=0;i<a.length-1;i++){if(o[a[i]]==null)o[a[i]]={};o=o[a[i]]}
+  o[a[a.length-1]]=v;
+}
+function markDirty(){
+  state.dirty=true;siteStale=true;
+  var b=$('#admBar');if(b)b.classList.add('on');
+}
+
+/* ============ РЕДАКТОР КОНТЕНТА ============ */
+function fieldHtml(id,label,val,type,hint,attrs){
+  var inp;
+  if(type==='area')inp='<textarea class="ai" '+attrs+'>'+esc(val)+'</textarea>';
+  else if(type==='num')inp='<input class="ai" type="number" value="'+esc(val)+'" '+attrs+'>';
+  else if(type==='sel')inp=id;
+  else inp='<input class="ai" type="text" value="'+esc(val)+'" '+attrs+'>';
+  return '<div class="fw'+(hint&&hint.full?' full':'')+'"><label>'+esc(label)+'</label>'+inp+
+    (hint&&hint.text?'<div class="hint">'+hint.text+'</div>':'')+'</div>';
+}
+function selHtml(val,opts,attrs){
+  return '<select class="ai" '+attrs+'>'+opts.map(function(o){
+    return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>';
+  }).join('')+'</select>';
+}
+function listBlock(L){
+  var arr=getp(L.p)||[];
+  var h='<div class="fw full" style="margin-top:6px"><label>'+esc(L.l)+' — '+arr.length+'</label>';
+  if(L.hint)h+='<div class="hint" style="margin:-2px 0 10px">'+esc(L.hint)+'</div>';
+  h+='<div class="rep">'+arr.map(function(it,i){
+    var title=String(it[L.title]||'').slice(0,60)||('Пункт '+(i+1));
+    return '<div class="rep-i"><div class="rep-h">'+
+      '<span class="rep-num">'+(i+1)+'</span><span class="rep-t">'+esc(title)+'</span>'+
+      '<button class="rep-btn" data-mv="up" data-lp="'+esc(L.p)+'" data-i="'+i+'"'+(i===0?' disabled':'')+' title="Выше">↑</button>'+
+      '<button class="rep-btn" data-mv="down" data-lp="'+esc(L.p)+'" data-i="'+i+'"'+(i===arr.length-1?' disabled':'')+' title="Ниже">↓</button>'+
+      (L.fixed?'':'<button class="rep-btn del" data-del="1" data-lp="'+esc(L.p)+'" data-i="'+i+'" title="Удалить">✕</button>')+
+      '</div><div class="rep-b"><div class="fset">'+
+      L.fields.map(function(f){
+        var at='data-lp="'+esc(L.p)+'" data-i="'+i+'" data-k="'+esc(f.k)+'"';
+        var v=it[f.k]==null?'':it[f.k];
+        if(f.type==='sel')return fieldHtml(selHtml(v,f.opts,at),f.l,v,'sel',{full:f.full,text:f.hint});
+        return fieldHtml(null,f.l,v,f.type,{full:f.full,text:f.hint},at);
+      }).join('')+
+      '</div></div></div>';
+  }).join('')+'</div>';
+  if(!L.fixed)h+='<button class="btn btn-ghost btn-sm" style="margin-top:12px" data-add="1" data-lp="'+esc(L.p)+'"><span>+ Добавить</span></button>';
+  return h+'</div>';
+}
+function strListBlock(L){
+  var arr=getp(L.p)||[];
+  return '<div class="fw full" style="margin-top:6px"><label>'+esc(L.l)+' — '+arr.length+'</label>'+
+    '<div class="rep">'+arr.map(function(v,i){
+      return '<div class="rep-i"><div class="rep-h" style="border-bottom:0;background:transparent;padding:8px 10px">'+
+        '<span class="rep-num">'+(i+1)+'</span>'+
+        '<input class="ai" type="text" value="'+esc(v)+'" data-sp="'+esc(L.p)+'" data-i="'+i+'" style="flex:1;padding:8px 12px">'+
+        '<button class="rep-btn" data-mv="up" data-sp="'+esc(L.p)+'" data-i="'+i+'"'+(i===0?' disabled':'')+'>↑</button>'+
+        '<button class="rep-btn" data-mv="down" data-sp="'+esc(L.p)+'" data-i="'+i+'"'+(i===arr.length-1?' disabled':'')+'>↓</button>'+
+        '<button class="rep-btn del" data-del="1" data-sp="'+esc(L.p)+'" data-i="'+i+'">✕</button>'+
+      '</div></div>';
+    }).join('')+'</div>'+
+    '<button class="btn btn-ghost btn-sm" style="margin-top:12px" data-add="1" data-sp="'+esc(L.p)+'"><span>+ Добавить</span></button></div>';
+}
+function pgContent(){
+  var sec=SCHEMA.filter(function(s){return s.id===state.admSec})[0]||SCHEMA[0];
+  var nav='<div class="adm-nav">'+SCHEMA.map(function(s){
+    var n=0;
+    (s.lists||[]).forEach(function(L){n+=(getp(L.p)||[]).length});
+    (s.strlists||[]).forEach(function(L){n+=(getp(L.p)||[]).length});
+    return '<button class="an'+(s.id===state.admSec?' on':'')+'" data-sec="'+s.id+'">'+
+      '<span>'+esc(s.t)+'</span>'+(n?'<span class="an-n">'+n+'</span>':'')+'</button>';
+  }).join('')+'</div>';
+
+  var body='<div class="fset">'+(sec.fields||[]).map(function(f){
+    var v=getp(f.p);if(v===undefined)v='';
+    var at='data-p="'+esc(f.p)+'"';
+    var full=f.type==='area';
+    return fieldHtml(null,f.l,v,f.type,{full:full,text:f.hint},at);
+  }).join('')+'</div>';
+  (sec.lists||[]).forEach(function(L){body+='<div class="fset" style="margin-top:22px">'+listBlock(L)+'</div>'});
+  (sec.strlists||[]).forEach(function(L){body+='<div class="fset" style="margin-top:22px">'+strListBlock(L)+'</div>'});
+
+  var pane='<div class="adm-pane">'+
+    '<div class="adm-h"><h3>'+esc(sec.t)+'</h3>'+
+      '<a class="btn btn-ghost btn-sm" href="#'+(sec.id==='brand'?'/':anchorOf(sec.id))+'" style="margin-left:auto"><span>Посмотреть на сайте</span></a>'+
+      '<p>'+esc(sec.desc||'')+'</p></div>'+
+    '<div class="adm-b">'+body+'</div>'+
+    '<div class="adm-bar'+(state.dirty?' on':'')+'" id="admBar">'+
+      '<button class="btn" id="admSave"><span>Сохранить</span></button>'+
+      '<span class="dirty">Есть несохранённые правки</span>'+
+      '<span class="saved">Все правки сохранены</span>'+
+      '<span class="adm-tools">'+
+        '<button class="btn btn-ghost btn-sm" id="admExport"><span>Скачать JSON</span></button>'+
+        '<button class="btn btn-ghost btn-sm" id="admImport"><span>Загрузить JSON</span></button>'+
+        '<button class="btn btn-ghost btn-sm" id="admReset"><span>Сбросить всё</span></button>'+
+      '</span>'+
+    '</div></div>';
+
+  return '<div class="warnbox" style="margin-bottom:4px"><b>Правки сохраняются в этом браузере.</b> ' +
+    'Чтобы перенести контент на другое устройство или отдать разработчику — «Скачать JSON». ' +
+    'Общий для всех посетителей контент появится, когда подключим бэкенд на вашем хостинге.</div>'+
+    '<div class="adm">'+nav+pane+'</div>';
+}
+function anchorOf(id){
+  var m={hero:'/',partners:'/',problem:'pochemu',principles:'principy',how:'kak',calc:'kalkulyator',
+         compare:'otlichiya',products:'produkty',cases:'klienty',docs:'dokumenty',council:'sovet',
+         form:'zayavka',faq:'voprosy',bottom:'zayavka'};
+  return m[id]||'/';
+}
+function bindContent(){
+  var body=$('#hubBody');
+  $$('.an',body).forEach(function(b){
+    b.addEventListener('click',function(){state.admSec=b.dataset.sec;render()});
+  });
+  $('#admSave').addEventListener('click',function(){
+    if(persist()){
+      state.dirty=false;siteStale=true;$('#admBar').classList.remove('on');
+      toast('Контент сохранён — сайт обновлён');
+    }
+  });
+  $('#admExport').addEventListener('click',exportJson);
+  $('#admImport').addEventListener('click',function(){$('#importFile').click()});
+  $('#admReset').addEventListener('click',function(){
+    if(!confirm('Вернуть весь контент сайта к исходному виду? Ваши правки будут потеряны.'))return;
+    CONTENT=clone(DEFAULT_CONTENT);persist();state.dirty=false;siteStale=true;render();
+    toast('Контент возвращён к исходному');
+  });
+}
+var delegatesBound=false;
+function contentDelegates(){
+  if(delegatesBound)return;
+  delegatesBound=true;
+  var body=$('#hubBody');
+  body.addEventListener('input',function(e){
+    if(state.page!=='content')return;
+    var t=e.target;
+    if(t.dataset.p!==undefined&&t.dataset.p){
+      var v=t.type==='number'?(+t.value||0):t.value;
+      setp(t.dataset.p,v);markDirty();return;
+    }
+    if(t.dataset.lp&&t.dataset.k){
+      var arr=getp(t.dataset.lp);
+      if(arr&&arr[+t.dataset.i]){arr[+t.dataset.i][t.dataset.k]=t.value;markDirty()}
+      return;
+    }
+    if(t.dataset.sp&&t.dataset.i!==undefined&&t.tagName==='INPUT'){
+      var a2=getp(t.dataset.sp);
+      if(a2){a2[+t.dataset.i]=t.value;markDirty()}
+    }
+  });
+  body.addEventListener('change',function(e){
+    if(state.page!=='content')return;
+    var t=e.target;
+    if(t.tagName==='SELECT'&&t.dataset.lp&&t.dataset.k){
+      var arr=getp(t.dataset.lp);
+      if(arr&&arr[+t.dataset.i]){arr[+t.dataset.i][t.dataset.k]=t.value;markDirty()}
+    }
+  });
+  body.addEventListener('click',function(e){
+    if(state.page!=='content')return;
+    var b=e.target.closest('[data-add],[data-del],[data-mv]');
+    if(!b)return;
+    var path=b.dataset.lp||b.dataset.sp,arr=getp(path);
+    if(!arr)return;
+    var i=+b.dataset.i;
+    if(b.dataset.add){
+      if(b.dataset.sp){
+        var sl=findStrList(path);arr.push(sl?sl.blank:'Новый пункт');
+      }else{
+        var ls=findList(path);arr.push(clone(ls.blank));
+      }
+    }else if(b.dataset.del){
+      if(arr.length<=1){toast('Нельзя удалить последний элемент');return}
+      arr.splice(i,1);
+    }else if(b.dataset.mv){
+      var j=b.dataset.mv==='up'?i-1:i+1;
+      if(j<0||j>=arr.length)return;
+      var tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;
+    }
+    markDirty();render();
+  });
+}
+function findList(p){
+  var r=null;
+  SCHEMA.forEach(function(s){(s.lists||[]).forEach(function(L){if(L.p===p)r=L})});
+  return r||{blank:{}};
+}
+function findStrList(p){
+  var r=null;
+  SCHEMA.forEach(function(s){(s.strlists||[]).forEach(function(L){if(L.p===p)r=L})});
+  return r;
+}
+function exportJson(){
+  var data=JSON.stringify({v:4,content:CONTENT,cfg:CFG},null,2);
+  var name='zk-finance-content-'+dfull(new Date()).replace(/\./g,'-')+'.json';
+  try{
+    var blob=new Blob([data],{type:'application/json'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download=name;
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},400);
+    toast('Файл '+name+' скачан');
+  }catch(e){
+    drawerOpen('Контент в формате JSON','скопируйте и сохраните в файл',
+      '<textarea class="ai" style="min-height:420px;font-size:12px" readonly>'+esc(data)+'</textarea>','');
+  }
+}
+function importInit(){
+  $('#importFile').addEventListener('change',function(){
+    var f=this.files&&this.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{
+        var d=JSON.parse(r.result);
+        if(!d||!d.content)throw new Error('нет поля content');
+        CONTENT=deepMerge(clone(DEFAULT_CONTENT),d.content);
+        if(d.cfg)CFG=deepMerge(CFG,d.cfg);
+        persist();state.dirty=false;siteStale=true;render();
+        toast('Контент загружен из файла');
+      }catch(e){
+        toast('Не похоже на файл контента ZK Finance');
+      }
+    };
+    r.readAsText(f);this.value='';
+  });
+}
 /* ============ ICONS ============ */
 var ICO={
   dash:'<rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/>',
@@ -2252,14 +2412,15 @@ var ICO={
   payments:'<rect x="1" y="3" width="14" height="11"/><path d="M1 7h14M4.5 1v3M11.5 1v3"/>',
   shariah:'<path d="M8 1l6 2.5v5C14 12 8 15 8 15S2 12 2 8.5v-5L8 1z"/><path d="M5.5 8l1.8 1.8L10.8 6"/>',
   analytics:'<path d="M1 15V1"/><path d="M1 15h14"/><path d="M4 12V8M7.5 12V4M11 12V6M14 12V9"/>',
-  settings:'<path d="M1 4h14M1 12h14"/><circle cx="5.5" cy="4" r="2"/><circle cx="10.5" cy="12" r="2"/>'
+  settings:'<path d="M1 4h14M1 12h14"/><circle cx="5.5" cy="4" r="2"/><circle cx="10.5" cy="12" r="2"/>',
+  content:'<rect x="1.5" y="2" width="13" height="12" rx="1.5"/><path d="M1.5 5.5h13M4 8.5h8M4 11h5"/>'
 };
 function ico(n){
   return '<svg class="rl-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="square">'+ICO[n]+'</svg>';
 }
 
 var PAGES=[
-  {g:'Работа'},
+  {g:'CRM'},
   {id:'dash',t:'Дашборд',ic:'dash',crumb:'Обзор'},
   {id:'deals',t:'Заявки',ic:'deals',crumb:'Воронка продаж'},
   {id:'clients',t:'Клиенты',ic:'clients',crumb:'База клиентов'},
@@ -2268,8 +2429,9 @@ var PAGES=[
   {g:'Контроль'},
   {id:'shariah',t:'Шариат-контроль',ic:'shariah',crumb:'Комплаенс'},
   {id:'analytics',t:'Аналитика',ic:'analytics',crumb:'Отчёты'},
-  {g:'Система'},
-  {id:'settings',t:'Параметры продукта',ic:'settings',crumb:'Настройки'}
+  {g:'Сайт'},
+  {id:'content',t:'Контент сайта',ic:'content',crumb:'Админка сайта'},
+  {id:'settings',t:'Параметры продукта',ic:'settings',crumb:'Условия и наценка'}
 ];
 
 /* ============ DERIVED ============ */
@@ -2887,15 +3049,17 @@ function openClient(name){
   });
 }
 
-/* ============ RENDER ============ */
+
+/* ============ ОТРИСОВКА ХАБА ============ */
 function renderRail(){
   var n=$('#railNav');n.innerHTML='';
   PAGES.forEach(function(p){
     if(p.g){n.appendChild(el('div','rail-sec',esc(p.g)));return}
     var b=el('button','rl'+(state.page===p.id?' on':''));
     b.type='button';
-    var badge=p.id==='deals'?'<span class="rl-badge">'+inWork()+'</span>':
-      (p.id==='shariah'?'<span class="rl-badge">'+state.deals.filter(function(d){return d.stage==='shariah'}).length+'</span>':'');
+    var badge='';
+    if(p.id==='deals')badge='<span class="rl-badge">'+inWork()+'</span>';
+    if(p.id==='shariah')badge='<span class="rl-badge">'+state.deals.filter(function(d){return d.stage==='shariah'}).length+'</span>';
     b.innerHTML=ico(p.ic)+'<span>'+esc(p.t)+'</span>'+badge;
     b.addEventListener('click',function(){
       location.hash='#/hub/'+p.id;$('#rail').classList.remove('open');
@@ -2910,7 +3074,7 @@ function renderRail(){
   $('#tbDate').textContent='4 сентября 2026';
 }
 var RENDERERS={dash:pgDash,deals:pgDeals,clients:pgClients,contracts:pgContracts,
-  payments:pgPayments,shariah:pgShariah,analytics:pgAnalytics,settings:pgSettings};
+  payments:pgPayments,shariah:pgShariah,analytics:pgAnalytics,settings:pgSettings,content:pgContent};
 function render(){
   var p=PAGES.filter(function(x){return x.id===state.page})[0]||PAGES[1];
   $('#tbTitle').textContent=p.t;$('#tbCrumb').textContent=p.crumb;
@@ -2918,6 +3082,9 @@ function render(){
   $('#hubBody').innerHTML=(RENDERERS[state.page]||pgDash)();
   drawCharts();
   renderRail();
+  var searchBox=$('.tb-search');
+  if(searchBox)searchBox.style.display=(state.page==='content')?'none':'';
+  if(state.page==='content'){bindContent();return}
   if(state.page==='deals')bindDeals();
   $$('[data-ct]').forEach(function(tr){
     tr.addEventListener('click',function(e){
@@ -2945,7 +3112,8 @@ function render(){
     b.addEventListener('click',function(){
       var t=b.dataset.mk,dir=+b.dataset.dir;
       CFG.markup[t]=Math.max(3,Math.min(60,CFG.markup[t]+dir));
-      render();calcRun();toast('Наценка на '+t+' мес: '+CFG.markup[t]+'%');
+      persist();siteStale=true;render();
+      toast('Наценка на '+t+' мес: '+CFG.markup[t]+'%');
     });
   });
   $$('[data-set]').forEach(function(b){
@@ -2953,13 +3121,12 @@ function render(){
       var k=b.dataset.set,dir=+b.dataset.dir;
       if(k==='down')CFG.minDown=Math.max(0,Math.min(60,CFG.minDown+dir*5));
       if(k==='pen')CFG.penalty=Math.max(0,CFG.penalty+dir*500);
-      render();
+      persist();siteStale=true;render();
     });
   });
 }
 
-
-/* ============ STAGE MARKERS ============ */
+/* ============ МАРКЕРЫ ЭТАПОВ ============ */
 function stagesInit(){
   var c=$('.calc');if(!c)return;
   var mark=function(){
@@ -2974,7 +3141,29 @@ function stagesInit(){
   io.observe(c);
 }
 
-/* ============ ROUTER ============ */
+/* ============ СБОРКА САЙТА ============ */
+var siteMounted=false,siteStale=false;
+function mountSite(){
+  $('#site').innerHTML=renderSite();
+  navInit();calcInit();faqInit();wzInit();
+  revealInit();countersInit();flowInit();stagesInit();
+  requestAnimationFrame(girih);
+  siteMounted=true;siteStale=false;
+}
+function scrollBind(){
+  function on(){
+    var hdr=$('#hdr'),prog=$('#prog'),g=$('#girih');
+    if(!prog)return;
+    var y=window.scrollY||0;
+    if(hdr)hdr.classList.toggle('stuck',y>12);
+    var h=document.body.scrollHeight-window.innerHeight;
+    prog.style.width=(h>0?Math.min(100,y/h*100):0)+'%';
+    if(g&&!RM&&y<1400)g.style.transform='translateY('+(y*0.14)+'px)';
+  }
+  window.addEventListener('scroll',on,{passive:true});on();
+}
+
+/* ============ РОУТЕР ============ */
 function showView(v){
   $('#site').hidden=v!=='site';
   $('#gate').hidden=v!=='gate';
@@ -2989,30 +3178,26 @@ function route(){
       if(h.split('/')[2])pendingHub=h;
       showView('gate');gateInit();return;
     }
-    var parts=h.split('/');
-    var pg=parts[2]||'dash';
+    var pg=h.split('/')[2]||'dash';
     if(!PAGES.filter(function(p){return p.id===pg}).length)pg='dash';
     state.page=pg;showView('hub');render();
     window.scrollTo(0,0);
   }else{
+    if(!siteMounted||siteStale)mountSite();
     showView('site');
     requestAnimationFrame(girih);
     if(h.length>1&&h!=='#/'&&h.indexOf('/')<0){
       try{
         var t=document.querySelector(h);
-        if(t)setTimeout(function(){
-          t.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
-        },30);
+        if(t)setTimeout(function(){t.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'})},40);
       }catch(e){}
     }
   }
 }
 
-/* ============ INIT ============ */
+/* ============ ЗАПУСК ============ */
 function init(){
-  navInit();calcInit();faqInit();wzInit();marqueeInit();
-  revealInit();countersInit();scrollInit();flowInit();stagesInit();
-
+  importInit();scrollBind();contentDelegates();
   $('#scrim').addEventListener('click',drawerClose);
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape'&&!$('#drawer').hidden)drawerClose();
@@ -3020,19 +3205,15 @@ function init(){
   var s=$('#hubSearch');
   s.addEventListener('input',function(){state.q=s.value;render()});
   $('#hubMenu').addEventListener('click',function(){$('#rail').classList.toggle('open')});
-
   window.addEventListener('hashchange',route);
+  window.addEventListener('beforeunload',function(e){
+    if(state.dirty){e.preventDefault();e.returnValue=''}
+  });
   var rt;
   window.addEventListener('resize',function(){
     clearTimeout(rt);rt=setTimeout(function(){girih();drawCharts()},150);
   });
-  var mq=window.matchMedia('(prefers-color-scheme: dark)');
-  var onTheme=function(){girih();drawCharts()};
-  if(mq.addEventListener)mq.addEventListener('change',onTheme);
-  else if(mq.addListener)mq.addListener(onTheme);
-
   route();
-  setTimeout(girih,120);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){drawCharts();girih()});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
