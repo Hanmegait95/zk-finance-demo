@@ -1532,7 +1532,7 @@ function toast(msg){
 
 /* ============ GATE ============ */
 var pickUser=USERS[0];
-var pendingHub='#/hub/dash';
+var pendingHub='#dash';
 function gateInit(){
   if(SRV.on)return gateServer();
   var box=$('#gateUsers');box.innerHTML='';
@@ -2905,7 +2905,7 @@ function renderRail(){
     if(p.id==='shariah')badge='<span class="rl-badge">'+state.deals.filter(function(d){return d.stage==='shariah'}).length+'</span>';
     b.innerHTML=ico(p.ic)+'<span>'+esc(p.t)+'</span>'+badge;
     b.addEventListener('click',function(){
-      location.hash='#/hub/'+p.id;$('#rail').classList.remove('open');
+      location.hash='#'+p.id;$('#rail').classList.remove('open');
     });
     n.appendChild(b);
   });
