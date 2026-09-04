@@ -1223,16 +1223,57 @@ var STAGES=[
   {id:'approve',t:'Решение'},{id:'contract',t:'Договор'},{id:'issued',t:'Выдана'}
 ];
 
+/* Роли для автономного просмотра без сервера. На сервере — реальные учётные записи. */
 var USERS=[
-  {id:'u1',name:'Амина Мовсарова',role:'Руководитель отдела'},
-  {id:'u2',name:'Руслан Батаев',role:'Менеджер по рассрочке'},
-  {id:'u3',name:'Хава Дадаева',role:'Шариатский комплаенс'}
+  {id:'u1',name:'Владелец',role:'Полный доступ'},
+  {id:'u2',name:'Менеджер',role:'Заявки и договоры'},
+  {id:'u3',name:'Комплаенс',role:'Шариатский контроль'}
 ];
 
+/* ============ ДАННЫЕ CRM ============ */
+/* Демонстрационных записей нет: заявки приходят с сайта,
+   договоры заводит менеджер, всё остальное считается из них. */
+var DEALS=[];
+var REJECTED=[];
+var CONTRACTS=[];
+
+function isoToDate(v){
+  var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(v||''));
+  return m?new Date(+m[1],+m[2]-1,+m[3]):new Date(TODAY.getTime());
+}
+function dateToIso(d){
+  if(typeof d==='string')return /^\d{4}-\d{2}-\d{2}/.test(d)?d.slice(0,10):dateToIso(TODAY);
+  if(!d||typeof d.getFullYear!=='function')return dateToIso(TODAY);
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+}
+/* Договор с сервера хранит только исходные поля — остальное считаем здесь. */
+function enrich(c){
+  var o={},k;for(k in c)o[k]=c[k];
+  o.price=+c.price||0; o.down=+c.down||0; o.term=+c.term||12; o.markup=+c.markup||0;
+  o.fin=Math.round(o.price*(1-o.down/100));
+  o.mk=Math.round(o.fin*o.markup/100);
+  o.total=o.fin+o.mk;
+  o.mo=o.term?Math.round(o.total/o.term):0;
+  o.paid=Math.min(o.term,Math.max(0,+c.paid||0));
+  o.startISO=c.start||dateToIso(TODAY);
+  o.start=isoToDate(o.startISO);
+  if(o.paid<o.term){
+    var next=addM(o.start,o.paid+1);
+    o.late=Math.max(0,Math.round((TODAY-next)/86400000));
+  }else o.late=0;
+  return o;
+}
+function rawContract(c){
+  return {id:c.id||'',name:c.name||'',city:c.city||'',prod:c.prod||'',phone:c.phone||'',
+          price:c.price||0,down:c.down||0,term:c.term||12,markup:c.markup||0,
+          paid:c.paid||0,start:c.startISO||dateToIso(c.start||TODAY),
+          note:c.note||'',leadId:c.leadId||''};
+}
 /* ============ СОСТОЯНИЕ И ХРАНЕНИЕ ============ */
 var LS='zkf.v4';
 var CONTENT=clone(DEFAULT_CONTENT);
-var state={user:null,deals:(typeof DEALS!=='undefined'?DEALS.slice():[]),page:'dash',q:'',filt:'all',paidExtra:{},
+var siteStale=false;
+var state={user:null,deals:[],page:'dash',q:'',filt:'all',
            admSec:'brand',dirty:false};
 
 function deepMerge(base,patch){
@@ -1252,7 +1293,7 @@ function loadLocal(){
     if(d.content)CONTENT=deepMerge(clone(DEFAULT_CONTENT),d.content);
     if(d.cfg)CFG=deepMerge(CFG,d.cfg);
     if(d.leads&&d.leads.length)d.leads.forEach(function(l){state.deals.unshift(l)});
-    if(d.paidExtra)state.paidExtra=d.paidExtra;
+    if(Array.isArray(d.contracts))CONTRACTS=d.contracts.map(enrich);
   }catch(e){}
 }
 function persistLocal(){
@@ -1260,7 +1301,7 @@ function persistLocal(){
     localStorage.setItem(LS,JSON.stringify({
       v:4,content:CONTENT,cfg:CFG,
       leads:state.deals.filter(function(d){return d.src==='lead'}),
-      paidExtra:state.paidExtra
+      contracts:CONTRACTS.map(rawContract)
     }));
     return true;
   }catch(e){return false}
@@ -1356,6 +1397,29 @@ var Store={
     });
   },
   logout:function(cb){api('logout',{method:'POST'},function(){SRV.authed=false;SRV.user=null;cb&&cb()})},
+  loadContracts:function(cb){
+    if(!SRV.on)return cb();
+    api('contracts',null,function(d){
+      if(d&&Array.isArray(d.contracts))CONTRACTS=d.contracts.map(enrich);
+      cb();
+    });
+  },
+  saveContract:function(c,cb){
+    if(!SRV.on){persistLocal();return cb(null)}
+    api('contract-save',{method:'POST',body:{contract:rawContract(c)}},function(d,err){
+      if(d&&Array.isArray(d.contracts))CONTRACTS=d.contracts.map(enrich);
+      cb(err);
+    });
+  },
+  delContract:function(id,cb){
+    if(!SRV.on){
+      CONTRACTS=CONTRACTS.filter(function(c){return c.id!==id});persistLocal();return cb(null);
+    }
+    api('contract-del',{method:'POST',body:{id:id}},function(d,err){
+      if(d&&Array.isArray(d.contracts))CONTRACTS=d.contracts.map(enrich);
+      cb(err);
+    });
+  },
   loadUsers:function(cb){
     if(!SRV.on)return cb([{login:'—',name:'Автономный режим',role:'owner'}]);
     api('users',null,function(d,e){cb(d&&d.users||[],e)});
@@ -2020,7 +2084,7 @@ function stagesInit(){
 }
 
 /* ============ СБОРКА САЙТА ============ */
-var siteMounted=false,siteStale=false;
+var siteMounted=false;
 function mountSite(){
   $('#site').innerHTML=renderSite();
   navInit();calcInit();faqInit();wzInit();

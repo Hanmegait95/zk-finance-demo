@@ -1264,95 +1264,104 @@ var STAGES=[
   {id:'approve',t:'Решение'},{id:'contract',t:'Договор'},{id:'issued',t:'Выдана'}
 ];
 
+/* Роли для автономного просмотра без сервера. На сервере — реальные учётные записи. */
 var USERS=[
-  {id:'u1',name:'Амина Мовсарова',role:'Руководитель отдела'},
-  {id:'u2',name:'Руслан Батаев',role:'Менеджер по рассрочке'},
-  {id:'u3',name:'Хава Дадаева',role:'Шариатский комплаенс'}
+  {id:'u1',name:'Владелец',role:'Полный доступ'},
+  {id:'u2',name:'Менеджер',role:'Заявки и договоры'},
+  {id:'u3',name:'Комплаенс',role:'Шариатский контроль'}
 ];
 
-/* ============ SEED: DEALS ============ */
-function D(id,name,prod,city,sum,term,down,mgr,stage,days,score,note){
-  return {id:id,name:name,prod:prod,city:city,sum:sum,term:term,down:down,mgr:mgr,
-          stage:stage,days:days,score:score,note:note||'',src:'seed'};
+/* ============ ДАННЫЕ CRM ============ */
+/* Демонстрационных записей нет: заявки приходят с сайта,
+   договоры заводит менеджер, всё остальное считается из них. */
+var DEALS=[];
+var REJECTED=[];
+var CONTRACTS=[];
+
+function isoToDate(v){
+  var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(v||''));
+  return m?new Date(+m[1],+m[2]-1,+m[3]):new Date(TODAY.getTime());
 }
-var DEALS=[
-  D('ZK-2609-041','Ислам Хамзатов','Автомобиль','Грозный',2400000,12,30,'Руслан Батаев','new',1,74,'Toyota Camry 2021, счёт от дилера приложен'),
-  D('ZK-2609-040','Марьям Асхабова','Техника и ремонт','Гудермес',380000,12,0,'Руслан Батаев','new',1,68,'Кухонная техника, магазин «Дом»'),
-  D('ZK-2609-039','Ахмед Дудаев','Бизнес-оборудование','Хасавюрт',4600000,24,25,'Амина Мовсарова','new',2,71,'Пекарное оборудование, поставщик из Казани'),
-  D('ZK-2609-038','Лиза Тамаева','Техника и ремонт','Грозный',210000,6,0,'Руслан Батаев','new',2,80,'Стройматериалы для ремонта'),
-  D('ZK-2609-036','Заур Магомедов','Автомобиль','Махачкала',1850000,18,20,'Руслан Батаев','scoring',3,66,'Kia K5, продавец частное лицо'),
-  D('ZK-2609-034','Аминат Юсупова','Недвижимость','Грозный',7200000,60,30,'Амина Мовсарова','scoring',4,82,'Квартира в новостройке, мушарака'),
-  D('ZK-2609-033','Магомед Салаев','Бизнес-оборудование','Назрань',1200000,18,25,'Амина Мовсарова','scoring',5,59,'Автомойка, два поста'),
-  D('ZK-2609-031','Хеда Изнаурова','Автомобиль','Аргун',1450000,12,35,'Руслан Батаев','shariah',2,77,'Требуется проверка страховки — такафул'),
-  D('ZK-2609-030','Салман Эдилов','Бизнес-оборудование','Грозный',3100000,24,25,'Хава Дадаева','shariah',3,64,'Оборудование для кафе, уточняется меню'),
-  D('ZK-2609-028','Петимат Бакаева','Техника и ремонт','Грозный',540000,18,10,'Руслан Батаев','approve',1,86,'Мебель и техника, всё проверено'),
-  D('ZK-2609-027','Умар Кадиев','Автомобиль','Гудермес',3300000,24,30,'Амина Мовсарова','approve',2,73,'Hyundai Palisade, залог оформляется'),
-  D('ZK-2609-026','Раиса Мусаева','Техника и ремонт','Москва',290000,12,0,'Руслан Батаев','approve',2,91,'Повторный клиент, история чистая'),
-  D('ZK-2609-024','Иса Тепсуркаев','Автомобиль','Грозный',2050000,18,25,'Руслан Батаев','contract',1,79,'Договор на подписи у клиента'),
-  D('ZK-2609-022','Зулай Хасиева','Бизнес-оборудование','Хасавюрт',890000,12,25,'Амина Мовсарова','contract',2,75,'Швейный цех, договор готов'),
-  D('ZK-2609-019','Апти Гериханов','Автомобиль','Назрань',1700000,12,30,'Руслан Батаев','issued',1,84,'Выдано, товар передан'),
-  D('ZK-2609-017','Милана Ахмадова','Техника и ремонт','Аргун',430000,18,0,'Руслан Батаев','issued',3,88,'Выдано, первый платёж 20.09')
-];
-var REJECTED=[
-  {id:'ZK-2609-037',name:'Ваха Идрисов',prod:'Бизнес-оборудование',sum:2200000,reason:'Категория товара — торговля табаком',by:'Хава Дадаева'},
-  {id:'ZK-2609-032',name:'Тамара Сулейманова',prod:'Автомобиль',sum:1900000,reason:'Скоринг 41 — долговая нагрузка выше лимита',by:'Руслан Батаев'},
-  {id:'ZK-2609-029',name:'Бекхан Алиев',prod:'Техника и ремонт',sum:670000,reason:'Клиент отозвал заявку',by:'Руслан Батаев'}
-];
-
-/* ============ SEED: CLIENTS & CONTRACTS ============ */
-function C(id,name,city,prod,price,down,term,paid,late){
-  var fin=Math.round(price*(1-down/100));
-  var mk=Math.round(fin*CFG.markup[term===60?24:term]/100);
-  if(term===60)mk=Math.round(fin*0.62);
-  var total=fin+mk, mo=Math.round(total/term);
-  return {id:id,name:name,city:city,prod:prod,price:price,down:down,term:term,
-          fin:fin,mk:mk,total:total,mo:mo,paid:paid,late:late||0,
-          start:addM(TODAY,-paid)};
+function dateToIso(d){
+  if(typeof d==='string')return /^\d{4}-\d{2}-\d{2}/.test(d)?d.slice(0,10):dateToIso(TODAY);
+  if(!d||typeof d.getFullYear!=='function')return dateToIso(TODAY);
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
 }
-var CONTRACTS=[
-  C('ДГ-2412-118','Хамид Дакаев','Грозный','Автомобиль',2650000,30,24,9,0),
-  C('ДГ-2501-127','Седа Гайтукаева','Гудермес','Техника и ремонт',480000,10,18,8,0),
-  C('ДГ-2502-131','Руслан Чапаев','Махачкала','Бизнес-оборудование',3900000,25,24,7,0),
-  C('ДГ-2503-140','Айшат Дениева','Грозный','Автомобиль',1980000,20,18,6,12),
-  C('ДГ-2504-146','Шамиль Абдулаев','Хасавюрт','Бизнес-оборудование',1450000,25,12,5,0),
-  C('ДГ-2505-152','Луиза Мержоева','Назрань','Техника и ремонт',360000,0,12,4,0),
-  C('ДГ-2506-158','Адам Байсаров','Грозный','Автомобиль',3450000,35,24,3,41),
-  C('ДГ-2506-161','Мадина Эльмурзаева','Аргун','Техника и ремонт',290000,0,6,3,0),
-  C('ДГ-2507-166','Юсуп Хаджиев','Москва','Недвижимость',9800000,30,60,2,0),
-  C('ДГ-2507-170','Зара Идигова','Грозный','Техника и ремонт',620000,15,18,2,5),
-  C('ДГ-2508-175','Рамзан Дадаев','Гудермес','Автомобиль',2200000,25,12,1,0),
-  C('ДГ-2508-179','Хава Умарова','Махачкала','Бизнес-оборудование',5200000,25,24,1,0)
-];
-
+/* Договор с сервера хранит только исходные поля — остальное считаем здесь. */
+function enrich(c){
+  var o={},k;for(k in c)o[k]=c[k];
+  o.price=+c.price||0; o.down=+c.down||0; o.term=+c.term||12; o.markup=+c.markup||0;
+  o.fin=Math.round(o.price*(1-o.down/100));
+  o.mk=Math.round(o.fin*o.markup/100);
+  o.total=o.fin+o.mk;
+  o.mo=o.term?Math.round(o.total/o.term):0;
+  o.paid=Math.min(o.term,Math.max(0,+c.paid||0));
+  o.startISO=c.start||dateToIso(TODAY);
+  o.start=isoToDate(o.startISO);
+  if(o.paid<o.term){
+    var next=addM(o.start,o.paid+1);
+    o.late=Math.max(0,Math.round((TODAY-next)/86400000));
+  }else o.late=0;
+  return o;
+}
+function rawContract(c){
+  return {id:c.id||'',name:c.name||'',city:c.city||'',prod:c.prod||'',phone:c.phone||'',
+          price:c.price||0,down:c.down||0,term:c.term||12,markup:c.markup||0,
+          paid:c.paid||0,start:c.startISO||dateToIso(c.start||TODAY),
+          note:c.note||'',leadId:c.leadId||''};
+}
+/* ============ CRM: ПРОИЗВОДНЫЕ ============ */
 function schedule(c){
   var rows=[],i,d;
   for(i=1;i<=c.term;i++){
     d=addM(c.start,i);
-    var st=i<=c.paid?'paid':(i===c.paid+1?'next':'plan');
-    if(c.late>0&&i===c.paid+1)st='late';
-    rows.push({n:i,date:d,sum:i===c.term?c.total-c.mo*(c.term-1):c.mo,st:st});
+    rows.push({n:i,date:d,sum:i===c.term?c.total-c.mo*(c.term-1):c.mo});
   }
   return rows;
 }
 function clientsFromContracts(){
   var m={};
   CONTRACTS.forEach(function(c){
-    if(!m[c.name])m[c.name]={name:c.name,city:c.city,n:0,total:0,rest:0,late:0,prods:{}};
-    var o=m[c.name];o.n++;o.total+=c.total;o.rest+=c.total-c.mo*c.paid;
-    o.late=Math.max(o.late,c.late);o.prods[c.prod]=1;
+    if(!m[c.name])m[c.name]={name:c.name,city:c.city||'—',n:0,total:0,rest:0,late:0,prods:{}};
+    var o=m[c.name];o.n++;o.total+=c.total;o.rest+=restOf(c);
+    o.late=Math.max(o.late,c.late);if(c.prod)o.prods[c.prod]=1;
   });
   return Object.keys(m).map(function(k){
-    var o=m[k];o.prod=Object.keys(o.prods).join(', ');
+    var o=m[k];o.prod=Object.keys(o.prods).join(', ')||'—';
     o.st=o.late>30?'crit':(o.late>0?'warn':'ok');
     return o;
   });
 }
-
+/* Выдачи по месяцам — из дат договоров, а не из зашитых чисел. */
+function issueSeries(){
+  var map={},out=[],i,d,k;
+  CONTRACTS.forEach(function(c){
+    k=c.start.getFullYear()+'-'+c.start.getMonth();
+    map[k]=(map[k]||0)+c.fin;
+  });
+  for(i=11;i>=0;i--){
+    d=addM(TODAY,-i);k=d.getFullYear()+'-'+d.getMonth();
+    out.push({m:MONTHS[d.getMonth()],v:Math.round((map[k]||0)/1e5)/10,part:i===0});
+  }
+  return out;
+}
+/* Портфель нарастающим итогом по тем же месяцам. */
+function portfolioSeries(){
+  var iss=issueSeries(),acc=0;
+  return iss.map(function(x){acc+=x.v;return {m:x.m,v:Math.round(acc*10)/10}});
+}
+function hasData(){return CONTRACTS.length>0}
+function emptyBlock(title,text,btn){
+  return '<div class="empty"><div style="font-size:16px;font-weight:600;color:var(--ink);margin-bottom:8px">'+
+    esc(title)+'</div><div style="max-width:52ch;margin:0 auto">'+esc(text)+'</div>'+
+    (btn||'')+'</div>';
+}
 
 /* ============ СОСТОЯНИЕ И ХРАНЕНИЕ ============ */
 var LS='zkf.v4';
 var CONTENT=clone(DEFAULT_CONTENT);
-var state={user:null,deals:(typeof DEALS!=='undefined'?DEALS.slice():[]),page:'dash',q:'',filt:'all',paidExtra:{},
+var siteStale=false;
+var state={user:null,deals:[],page:'dash',q:'',filt:'all',
            admSec:'brand',dirty:false};
 
 function deepMerge(base,patch){
@@ -1372,7 +1381,7 @@ function loadLocal(){
     if(d.content)CONTENT=deepMerge(clone(DEFAULT_CONTENT),d.content);
     if(d.cfg)CFG=deepMerge(CFG,d.cfg);
     if(d.leads&&d.leads.length)d.leads.forEach(function(l){state.deals.unshift(l)});
-    if(d.paidExtra)state.paidExtra=d.paidExtra;
+    if(Array.isArray(d.contracts))CONTRACTS=d.contracts.map(enrich);
   }catch(e){}
 }
 function persistLocal(){
@@ -1380,7 +1389,7 @@ function persistLocal(){
     localStorage.setItem(LS,JSON.stringify({
       v:4,content:CONTENT,cfg:CFG,
       leads:state.deals.filter(function(d){return d.src==='lead'}),
-      paidExtra:state.paidExtra
+      contracts:CONTRACTS.map(rawContract)
     }));
     return true;
   }catch(e){return false}
@@ -1476,6 +1485,29 @@ var Store={
     });
   },
   logout:function(cb){api('logout',{method:'POST'},function(){SRV.authed=false;SRV.user=null;cb&&cb()})},
+  loadContracts:function(cb){
+    if(!SRV.on)return cb();
+    api('contracts',null,function(d){
+      if(d&&Array.isArray(d.contracts))CONTRACTS=d.contracts.map(enrich);
+      cb();
+    });
+  },
+  saveContract:function(c,cb){
+    if(!SRV.on){persistLocal();return cb(null)}
+    api('contract-save',{method:'POST',body:{contract:rawContract(c)}},function(d,err){
+      if(d&&Array.isArray(d.contracts))CONTRACTS=d.contracts.map(enrich);
+      cb(err);
+    });
+  },
+  delContract:function(id,cb){
+    if(!SRV.on){
+      CONTRACTS=CONTRACTS.filter(function(c){return c.id!==id});persistLocal();return cb(null);
+    }
+    api('contract-del',{method:'POST',body:{id:id}},function(d,err){
+      if(d&&Array.isArray(d.contracts))CONTRACTS=d.contracts.map(enrich);
+      cb(err);
+    });
+  },
   loadUsers:function(cb){
     if(!SRV.on)return cb([{login:'—',name:'Автономный режим',role:'owner'}]);
     api('users',null,function(d,e){cb(d&&d.users||[],e)});
@@ -1524,9 +1556,11 @@ function gateInit(){
   });
 }
 function enterHub(){
+  Store.loadContracts(function(){
   Store.loadLeads(function(){
     if(location.hash===pendingHub)route();
     else location.hash=pendingHub;
+  });
   });
 }
 function gateServer(){
@@ -2006,22 +2040,35 @@ var PAGES=[
 ];
 
 /* ============ DERIVED ============ */
-function paidOf(c){return Math.min(c.term,c.paid+(state.paidExtra[c.id]||0))}
+function paidOf(c){return Math.min(c.term,Math.max(0,c.paid||0))}
 function restOf(c){return Math.max(0,c.total-c.mo*paidOf(c))}
-function portfolio(){var s=0;CONTRACTS.forEach(function(c){s+=restOf(c)});return s}
+function portfolio(){var t=0;CONTRACTS.forEach(function(c){t+=restOf(c)});return t}
 function activeCount(){return CONTRACTS.filter(function(c){return paidOf(c)<c.term}).length}
 function inWork(){return state.deals.filter(function(d){return d.stage!=='issued'}).length}
-function overdueSum(){
-  var s=0;CONTRACTS.forEach(function(c){if(c.late>0&&(state.paidExtra[c.id]||0)===0)s+=c.mo});
-  return s;
+function overdueList(){return CONTRACTS.filter(function(c){return c.late>0&&paidOf(c)<c.term})}
+function overdueSum(){var t=0;overdueList().forEach(function(c){t+=c.mo});return t}
+function overdueCount(){return overdueList().length}
+function collected(){var t=0;CONTRACTS.forEach(function(c){t+=c.mo*paidOf(c)});return t}
+function markupTotal(){var t=0;CONTRACTS.forEach(function(c){t+=c.mk});return t}
+function avgTicket(){
+  if(!CONTRACTS.length)return 0;
+  var t=0;CONTRACTS.forEach(function(c){t+=c.total});return Math.round(t/CONTRACTS.length);
 }
-function overdueCount(){
-  return CONTRACTS.filter(function(c){return c.late>0&&(state.paidExtra[c.id]||0)===0}).length;
+function avgTerm(){
+  if(!CONTRACTS.length)return 0;
+  var t=0;CONTRACTS.forEach(function(c){t+=c.term});return Math.round(t/CONTRACTS.length);
 }
-var ISSUE=[
-  {m:'окт',v:96},{m:'ноя',v:108},{m:'дек',v:141},{m:'янв',v:87},{m:'фев',v:102},{m:'мар',v:124},
-  {m:'апр',v:138},{m:'май',v:129},{m:'июн',v:151},{m:'июл',v:163},{m:'авг',v:158},{m:'сен',v:62,part:1}
-];
+function repeatShare(){
+  var m={},rep=0,tot=0;
+  CONTRACTS.forEach(function(c){m[c.name]=(m[c.name]||0)+1});
+  Object.keys(m).forEach(function(k){tot++;if(m[k]>1)rep++});
+  return tot?Math.round(rep/tot*100):0;
+}
+function approvalRate(){
+  var done=state.deals.filter(function(d){return d.stage==='issued'}).length;
+  var all=done+REJECTED.length;
+  return all?Math.round(done/all*100):0;
+}
 
 /* ============ CHARTS ============ */
 var CHARTS=[];
@@ -2121,7 +2168,7 @@ function card(title,body,right,pad){
 function nextPay(c){return addM(c.start,paidOf(c)+1)}
 function payStatus(c){
   if(paidOf(c)>=c.term)return{cls:'ok',t:'закрыт'};
-  if(c.late>0&&!(state.paidExtra[c.id]||0))return{cls:c.late>30?'crit':'warn',t:'просрочка '+c.late+' дн'};
+  if(c.late>0)return{cls:c.late>30?'crit':'warn',t:'просрочка '+c.late+' дн'};
   var d=Math.round((nextPay(c)-TODAY)/86400000);
   if(d<=7)return{cls:'info',t:'через '+d+' дн'};
   return{cls:'neut',t:'в графике'};
@@ -2129,17 +2176,15 @@ function payStatus(c){
 
 /* ============ PAGE: DASHBOARD ============ */
 function pgDash(){
-  var por=portfolio(),avg=0;
-  CONTRACTS.forEach(function(c){avg+=c.total});avg=Math.round(avg/CONTRACTS.length);
-  var odc=overdueCount(),odSum=overdueSum();
-  var odPct=(odSum/por*100).toFixed(1).replace('.',',');
+  var por=portfolio(),odc=overdueCount(),odSum=overdueSum();
+  var odPct=por?(odSum/por*100).toFixed(1).replace('.',','):'0,0';
   var h='';
   h+='<div class="kpis">'+
-    kpi('Портфель','<span class="num">'+short(por)+'</span>','остаток к получению','+12,4%','up')+
-    kpi('Активных договоров','<span class="num">'+activeCount()+'</span>','из '+CONTRACTS.length+' всего','+2','up')+
-    kpi('Заявок в работе','<span class="num">'+inWork()+'</span>','воронка продаж','+5','up')+
-    kpi('Просрочка 30+','<span class="num">'+odPct+'<small>%</small></span>',odc+' договора · '+short(odSum),'−0,4 п.п.','up')+
-    kpi('Средний чек','<span class="num">'+short(avg)+'</span>','по договору','+8,1%','up')+
+    kpi('Портфель','<span class="num">'+short(por)+'</span>','остаток к получению')+
+    kpi('Активных договоров','<span class="num">'+activeCount()+'</span>','из '+CONTRACTS.length+' всего')+
+    kpi('Заявок в работе','<span class="num">'+inWork()+'</span>','воронка продаж')+
+    kpi('Просрочка','<span class="num">'+odPct+'<small>%</small></span>',odc+' договоров · '+short(odSum))+
+    kpi('Средний чек','<span class="num">'+short(avgTicket())+'</span>','по договору')+
     '</div>';
 
   var funnel=STAGES.map(function(s){
@@ -2160,7 +2205,8 @@ function pgDash(){
   var pays=CONTRACTS.filter(function(c){return paidOf(c)<c.term}).map(function(c){
     return{c:c,d:nextPay(c),s:payStatus(c)};
   }).sort(function(a,b){return a.d-b.d}).slice(0,6);
-  var pt='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
+  var pt=!pays.length?emptyBlock('Платежей не запланировано','Появятся, как только будет заведён первый договор.'):
+    '<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
     '<th>Клиент</th><th>Договор</th><th class="r">Платёж</th><th>Дата</th><th>Статус</th>'+
     '</tr></thead><tbody>'+pays.map(function(p){
       return '<tr data-ct="'+esc(p.c.id)+'"><td><div class="who"><span class="av">'+esc(ini(p.c.name))+
@@ -2170,24 +2216,26 @@ function pgDash(){
         '<td><span class="chip '+p.s.cls+'">'+esc(p.s.t)+'</span></td></tr>';
     }).join('')+'</tbody></table></div>';
 
-  var feed=[
-    ['09:41','<b>Руслан Батаев</b> перевёл <b>ZK-2609-024</b> в стадию «Договор»'],
-    ['09:12','Поступил платёж <b>'+money(146000)+'</b> по договору <b>ДГ-2505-152</b>'],
-    ['08:55','<b>Хава Дадаева</b> одобрила товар по <b>ZK-2609-031</b> <span>— такафул принят</span>'],
-    ['вчера','Отказ по <b>ZK-2609-037</b> <span>— категория товара не соответствует</span>'],
-    ['вчера','<b>Амина Мовсарова</b> выдала <b>ZK-2609-019</b> <span>— товар передан клиенту</span>'],
-    ['вчера','Шариатский совет утвердил шаблон мушараки <span>— редакция 4</span>']
-  ];
-  var fd='<div class="feed">'+feed.map(function(f){
-    return '<div class="fi"><span class="fi-t">'+esc(f[0])+'</span><span class="fi-txt">'+f[1]+'</span></div>';
-  }).join('')+'</div>';
+  var feed=[];
+  state.deals.slice(0,5).forEach(function(d){
+    feed.push([d.at?dstr(new Date(d.at)):'—',
+      'Заявка <b>'+esc(d.id)+'</b> · '+esc(d.name)+' · '+money(d.sum)]);
+  });
+  CONTRACTS.slice().sort(function(a,b){return b.start-a.start}).slice(0,4).forEach(function(c){
+    feed.push([dstr(c.start),'Договор <b>'+esc(c.id)+'</b> · '+esc(c.name)+' · '+money(c.total)]);
+  });
+  var fd=feed.length
+    ? '<div class="feed">'+feed.map(function(f){
+        return '<div class="fi"><span class="fi-t">'+esc(f[0])+'</span><span class="fi-txt">'+f[1]+'</span></div>';
+      }).join('')+'</div>'
+    : emptyBlock('Событий пока нет','Здесь появятся заявки с сайта и заведённые договоры.');
 
   h+='<div class="grid-2">'+
-    card('Выдачи по месяцам',chart('bar',ISSUE,'₽ млн'),'сен — неполный месяц')+
+    card('Выдачи по месяцам',chart('bar',issueSeries(),'₽ млн'),'сен — неполный месяц')+
     card('Воронка заявок',fh,'сейчас')+
     '</div>';
   h+='<div class="grid-2">'+
-    card('Ближайшие платежи',pt,'6 из '+activeCount(),false)+
+    card('Ближайшие платежи',pt,pays.length?(pays.length+' из '+activeCount()):'',false)+
     card('Активность',fd,'сегодня')+
     '</div>';
   return h;
@@ -2229,6 +2277,7 @@ function pgDeals(){
       }).join('')+'</div></div>';
   }).join('')+'</div>';
 
+  if(!REJECTED.length)return h;
   h+=card('Отказы за период','<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
     '<th>Заявка</th><th>Клиент</th><th>Продукт</th><th class="r">Сумма</th><th>Причина</th><th>Кто</th>'+
     '</tr></thead><tbody>'+REJECTED.map(function(r){
@@ -2275,6 +2324,10 @@ function pgClients(){
   var cl=clientsFromContracts().filter(function(c){
     return !q||(c.name+' '+c.city+' '+c.prod).toLowerCase().indexOf(q)>=0;
   });
+  if(!CONTRACTS.length){
+    return card('База клиентов',emptyBlock('Клиентов пока нет',
+      'Клиенты появляются автоматически, когда вы заводите договоры.'),'',false);
+  }
   var body='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
     '<th>Клиент</th><th>Город</th><th>Продукты</th><th class="r">Договоров</th>'+
     '<th class="r">Профинансировано</th><th class="r">Остаток</th><th>Дисциплина</th>'+
@@ -2293,6 +2346,7 @@ function pgClients(){
 }
 
 /* ============ PAGE: CONTRACTS ============ */
+var NEWBTN='<button class="btn btn-sm new-contract"><span>+ Новый договор</span></button>';
 function pgContracts(){
   var q=state.q.toLowerCase();
   var list=CONTRACTS.filter(function(c){
@@ -2315,12 +2369,20 @@ function pgContracts(){
         '<td class="r n">'+money(restOf(c))+'</td>'+
         '<td><span class="chip '+s.cls+'">'+esc(s.t)+'</span></td></tr>';
     }).join('')+'</tbody></table></div>';
+  if(!CONTRACTS.length){
+    return '<div class="toolbar">'+NEWBTN+'</div>'+
+      card('Договоры',emptyBlock('Договоров пока нет',
+        'Заведите первый договор вручную или оформите его из заявки в разделе «Заявки».',
+        '<div style="margin-top:18px">'+NEWBTN+'</div>'),'',false);
+  }
   var mk=0,fin=0;CONTRACTS.forEach(function(c){mk+=c.mk;fin+=c.fin});
-  return '<div class="kpis" style="grid-template-columns:repeat(4,1fr)">'+
+  return '<div class="toolbar">'+NEWBTN+'<span style="margin-left:auto" class="eyebrow">'+
+      CONTRACTS.length+' договоров · портфель '+short(portfolio())+'</span></div>'+
+    '<div class="kpis" style="grid-template-columns:repeat(4,1fr)">'+
     kpi('Портфель','<span class="num">'+short(portfolio())+'</span>','остаток к получению')+
     kpi('Профинансировано','<span class="num">'+short(fin)+'</span>','себестоимость товара')+
     kpi('Наценка','<span class="num">'+short(mk)+'</span>','доход по договорам')+
-    kpi('Средний срок','<span class="num">19<small> мес</small></span>','по действующим')+
+    kpi('Средний срок','<span class="num">'+avgTerm()+'<small> мес</small></span>','по всем договорам')+
     '</div>'+card('Договоры',body,list.length+' записей',false);
 }
 
@@ -2353,11 +2415,14 @@ function pgPayments(){
         '<td class="r"><button class="filt pay-btn" data-pay="'+esc(r.c.id)+'">Отметить оплату</button></td>'+
         '</tr>';
     }).join('')+'</tbody></table></div>';
-  return '<div class="kpis" style="grid-template-columns:repeat(4,1fr)">'+
-    kpi('К поступлению','<span class="num">'+short(due)+'</span>','ближайший платёж по каждому')+
-    kpi('Просрочено','<span class="num">'+short(late)+'</span>',overdueCount()+' договора','−12%','up')+
-    kpi('Собрано в сентябре','<span class="num">'+short(4180000)+'</span>','план '+short(9600000))+
-    kpi('Штрафы на садаку','<span class="num">'+short(21000)+'</span>','перечислено в фонд')+
+  if(!rows.length){
+    return card('Реестр платежей',emptyBlock('Ожидаемых платежей нет',
+      CONTRACTS.length?'Все договоры закрыты.':'Заведите договор — график платежей появится автоматически.'),'',false);
+  }
+  return '<div class="kpis" style="grid-template-columns:repeat(3,1fr)">'+
+    kpi('К поступлению','<span class="num">'+short(due)+'</span>','ближайший платёж по каждому договору')+
+    kpi('Просрочено','<span class="num">'+short(late)+'</span>',overdueCount()+' договоров')+
+    kpi('Собрано всего','<span class="num">'+short(collected())+'</span>','по принятым платежам')+
     '</div>'+card('Реестр платежей',body,rows.length+' ожидают',false);
 }
 
@@ -2372,19 +2437,9 @@ function pgShariah(){
       '</td><td><span class="chip warn">'+d.days+' дн</span></td></tr>';
     }).join('')+'</tbody></table></div>':'<div class="empty">Очередь пуста — все заявки проверены</div>';
 
-  var fatwas=[
-    ['ФТ-014','04.08.2026','Такафул вместо классического КАСКО','Допустимо при взаимном страховании','ok'],
-    ['ФТ-013','21.07.2026','Наценка при досрочном погашении','Скидка — право продавца, не обязательство','ok'],
-    ['ФТ-012','30.06.2026','Финансирование торгового оборудования кафе','Требуется подтверждение меню без харама','warn'],
-    ['ФТ-011','12.06.2026','Штраф за просрочку','Только на садаку, не доход компании','ok'],
-    ['ФТ-010','28.05.2026','Перепродажа долга третьему лицу','Запрещено во всех формах','crit']
-  ];
-  var fr='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
-    '<th>№</th><th>Дата</th><th>Вопрос</th><th>Заключение</th></tr></thead><tbody>'+
-    fatwas.map(function(f){
-      return '<tr><td class="id">'+f[0]+'</td><td class="n who-s">'+f[1]+'</td><td>'+esc(f[2])+
-      '</td><td><span class="chip '+f[4]+'">'+esc(f[3])+'</span></td></tr>';
-    }).join('')+'</tbody></table></div>';
+  var fr=emptyBlock('Реестр заключений пуст',
+    'Здесь будут решения шариатского совета по спорным сделкам. Пока ведите их отдельно — '+
+    'ведение реестра прямо в панели можно добавить, если понадобится.');
 
   var bans=['Алкоголь и табак','Свинина и продукты из неё','Азартные игры, лотереи, букмекеры',
     'Ночные клубы и развлечения с харамом','Процентные финансовые услуги','Торговля долгами и деривативы',
@@ -2394,11 +2449,10 @@ function pgShariah(){
     '<span class="chk-note">не финансируем</span></div>';
   }).join('')+'</div>';
 
-  return '<div class="kpis" style="grid-template-columns:repeat(4,1fr)">'+
+  return '<div class="kpis" style="grid-template-columns:repeat(3,1fr)">'+
     kpi('На проверке','<span class="num">'+q.length+'</span>','заявок в очереди')+
-    kpi('Проверено за месяц','<span class="num">64</span>','из них отказано 3')+
-    kpi('Аудит сделок','<span class="num">18<small>%</small></span>','выборка закрытых договоров')+
-    kpi('Заключений совета','<span class="num">14</span>','реестр фетв с 2021 года')+
+    kpi('Всего заявок','<span class="num">'+state.deals.length+'</span>','в работе '+inWork())+
+    kpi('Отказов','<span class="num">'+REJECTED.length+'</span>','за всё время')+
     '</div>'+
     '<div class="grid-2">'+card('Очередь на шариат-контроль',queue,'приоритет по сроку',false)+
     card('Запрещённые категории',bl,'редакция 4')+'</div>'+
@@ -2407,52 +2461,56 @@ function pgShariah(){
 
 /* ============ PAGE: ANALYTICS ============ */
 function pgAnalytics(){
+  if(!CONTRACTS.length){
+    return card('Аналитика',emptyBlock('Считать пока нечего',
+      'Отчёты строятся из договоров: как только появится первый, здесь будут портфель, '+
+      'структура по продуктам и городам и качество портфеля.'),'',false);
+  }
   var byProd={},byCity={},tot=0;
   CONTRACTS.forEach(function(c){
     var r=restOf(c);tot+=r;
-    byProd[c.prod]=(byProd[c.prod]||0)+r;
-    byCity[c.city]=(byCity[c.city]||0)+r;
+    byProd[c.prod||'—']=(byProd[c.prod||'—']||0)+r;
+    byCity[c.city||'—']=(byCity[c.city||'—']||0)+r;
   });
   function split(o){
     var ks=Object.keys(o).sort(function(a,b){return o[b]-o[a]});
     var mx=o[ks[0]]||1;
     return '<div class="split">'+ks.map(function(k){
       return '<div class="sp"><span>'+esc(k)+'</span>'+
-        '<span class="sp-v">'+(o[k]/tot*100).toFixed(1).replace('.',',')+'%</span>'+
+        '<span class="sp-v">'+(tot?(o[k]/tot*100).toFixed(1).replace('.',','):'0')+'%</span>'+
         '<span class="sp-bar"><i style="width:'+(o[k]/mx*100)+'%"></i></span></div>';
     }).join('')+'</div>';
   }
-  var port=[
-    {m:'окт',v:612},{m:'ноя',v:658},{m:'дек',v:731},{m:'янв',v:704},{m:'фев',v:742},{m:'мар',v:798},
-    {m:'апр',v:846},{m:'май',v:871},{m:'июн',v:928},{m:'июл',v:994},{m:'авг',v:1043},{m:'сен',v:1061}
-  ];
-  var buckets=[
-    ['Без просрочки',9,'ok'],['1–30 дней',2,'warn'],['31–60 дней',1,'crit'],['60+ дней',0,'neut']
-  ];
+  var buckets=[['Без просрочки',0,'ok'],['1–30 дней',0,'warn'],['31–60 дней',0,'crit'],['60+ дней',0,'neut']];
+  CONTRACTS.forEach(function(c){
+    var i=c.late<=0?0:(c.late<=30?1:(c.late<=60?2:3));
+    buckets[i][1]++;
+  });
   var bk='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
-    '<th>Бакет</th><th class="r">Договоров</th><th class="r">Доля портфеля</th><th>Качество</th>'+
+    '<th>Бакет</th><th class="r">Договоров</th><th class="r">Доля</th><th>Качество</th>'+
     '</tr></thead><tbody>'+buckets.map(function(b){
-      return '<tr><td>'+esc(b[0])+'</td><td class="r n">'+b[1]+'</td>'+
+      return '<tr style="cursor:default"><td>'+esc(b[0])+'</td><td class="r n">'+b[1]+'</td>'+
       '<td class="r n">'+(b[1]/CONTRACTS.length*100).toFixed(1).replace('.',',')+'%</td>'+
-      '<td><span class="chip '+b[2]+'">'+(b[2]==='ok'?'норма':b[2]==='warn'?'внимание':b[2]==='crit'?'работа с долгом':'нет')+
+      '<td><span class="chip '+b[2]+'">'+
+      (b[2]==='ok'?'норма':b[2]==='warn'?'внимание':b[2]==='crit'?'работа с долгом':'взыскание')+
       '</span></td></tr>';
     }).join('')+'</tbody></table></div>';
   return '<div class="kpis">'+
-    kpi('Портфель','<span class="num">'+short(tot)+'</span>','остаток к получению','+12,4%','up')+
-    kpi('Одобрение','<span class="num">78<small>%</small></span>','заявок за 30 дней','+3 п.п.','up')+
-    kpi('Срок решения','<span class="num">31<small> мин</small></span>','медиана','−6 мин','up')+
-    kpi('Доход от наценки','<span class="num">'+short(9840000)+'</span>','накопленным итогом','+9,2%','up')+
-    kpi('Повторные клиенты','<span class="num">34<small>%</small></span>','второй договор и далее','+5 п.п.','up')+
+    kpi('Портфель','<span class="num">'+short(tot)+'</span>','остаток к получению')+
+    kpi('Договоров','<span class="num">'+CONTRACTS.length+'</span>','активных '+activeCount())+
+    kpi('Доход от наценки','<span class="num">'+short(markupTotal())+'</span>','по всем договорам')+
+    kpi('Собрано','<span class="num">'+short(collected())+'</span>','принятых платежей')+
+    kpi('Повторные клиенты','<span class="num">'+repeatShare()+'<small>%</small></span>','второй договор и далее')+
     '</div>'+
     '<div class="grid-2">'+
-      card('Динамика портфеля',chart('area',port,'₽ млн'),'12 месяцев')+
-      card('Выдачи по месяцам',chart('bar',ISSUE,'₽ млн'),'сен — неполный')+
+      card('Портфель нарастающим итогом',chart('area',portfolioSeries(),'₽ млн'),'12 месяцев')+
+      card('Выдачи по месяцам',chart('bar',issueSeries(),'₽ млн'),'по датам договоров')+
     '</div>'+
     '<div class="grid-2b">'+
       card('Портфель по продуктам',split(byProd),'доля остатка')+
       card('Портфель по городам',split(byCity),'доля остатка')+
     '</div>'+
-    card('Качество портфеля',bk,'на 04.09.2026',false);
+    card('Качество портфеля',bk,'на '+dfull(TODAY),false);
 }
 
 /* ============ PAGE: SETTINGS ============ */
@@ -2544,10 +2602,17 @@ function openDeal(id){
       ['Менеджер',esc(d.mgr)],['Стадия',esc((STAGES[stIdx]||{}).t||'—')],
       ['В стадии',d.days+' дн'],['Источник',d.src==='lead'?'Сайт':'Офис']
     ])+'</div>';
-  var foot=(nxt?'<button class="btn" data-adv="'+esc(d.id)+'">В «'+esc(nxt.t)+'»</button>':
-    '<button class="btn" disabled style="opacity:.4">Сделка выдана</button>')+
+  var foot='<button class="btn" id="dealToContract">Оформить договор</button>'+
+    (nxt?'<button class="btn btn-ghost" data-adv="'+esc(d.id)+'">В «'+esc(nxt.t)+'»</button>':'')+
     '<button class="btn btn-out" data-rej="'+esc(d.id)+'">Отказать</button>';
   drawerOpen(d.name,d.id+' · заявка',body,foot);
+  var toC=$('#dealToContract');
+  if(toC)toC.addEventListener('click',function(){
+    var phone=(/(\+?\d[\d\s()-]{8,})/.exec(d.note||'')||[''])[0].trim();
+    contractForm({name:d.name,city:d.city,prod:d.prod,phone:phone,
+      price:d.sum,down:d.down||30,term:d.term,markup:CFG.markup[d.term]||15,
+      paid:0,start:dateToIso(TODAY),note:d.note,leadId:d.id},d.id);
+  });
   var a=$('[data-adv]'),r=$('[data-rej]');
   if(a)a.addEventListener('click',function(){
     d.stage=nxt.id;d.days=0;
@@ -2565,11 +2630,10 @@ function openDeal(id){
 function openContract(id){
   var c=CONTRACTS.filter(function(o){return o.id===id})[0];if(!c)return;
   var p=paidOf(c),rows=schedule(c);
-  var extra=state.paidExtra[c.id]||0;
   var tb='<div class="tbl-scroll"><table class="sched"><thead><tr>'+
     '<th>№</th><th>Дата</th><th class="n">Платёж</th><th>Статус</th></tr></thead><tbody>'+
     rows.map(function(r,i){
-      var st=i<p?'paid':(i===p?(c.late&&!extra?'late':'next'):'plan');
+      var st=i<p?'paid':(i===p?(c.late?'late':'next'):'plan');
       var chip={paid:'<span class="chip ok">оплачен</span>',
         next:'<span class="chip info">следующий</span>',
         late:'<span class="chip crit">просрочен</span>',
@@ -2586,13 +2650,20 @@ function openContract(id){
       ['Оплачено',p+' из '+c.term],['Остаток',money(restOf(c))]
     ])+'</div>'+
     '<div><div class="dr-sec-t">График платежей</div>'+tb+'</div>';
-  var foot=p<c.term?'<button class="btn" data-pay="'+esc(c.id)+'">Принять платёж '+money(c.mo)+'</button>':
-    '<button class="btn" disabled style="opacity:.4">Договор закрыт</button>';
+  var foot=(p<c.term?'<button class="btn" data-pay="'+esc(c.id)+'">Принять платёж '+money(c.mo)+'</button>':
+    '<button class="btn" disabled style="opacity:.4">Договор закрыт</button>')+
+    '<button class="btn btn-ghost" id="ctEdit">Изменить</button>';
   drawerOpen(c.name,c.id+' · договор',body,foot);
+  var ed=$('#ctEdit');
+  if(ed)ed.addEventListener('click',function(){contractForm(c)});
   var b=$('.dr-f [data-pay]');
   if(b)b.addEventListener('click',function(){
-    state.paidExtra[c.id]=(state.paidExtra[c.id]||0)+1;persist();
-    drawerClose();render();toast('Платёж по '+c.id+' принят');
+    b.disabled=true;
+    acceptPayment(c,function(err){
+      b.disabled=false;
+      if(err){toast(err);return}
+      drawerClose();render();toast('Платёж по '+c.id+' принят');
+    });
   });
 }
 function openClient(name){
@@ -2624,6 +2695,108 @@ function openClient(name){
   });
 }
 
+
+/* ============ ДОГОВОРЫ: СОЗДАНИЕ И ПЛАТЕЖИ ============ */
+function acceptPayment(c,cb){
+  if(paidOf(c)>=c.term)return cb('Договор уже закрыт');
+  var copy=rawContract(c);copy.paid=paidOf(c)+1;
+  Store.saveContract(copy,function(err){
+    if(!err&&!SRV.on){
+      c.paid=copy.paid;
+      var idx=CONTRACTS.indexOf(c);if(idx>=0)CONTRACTS[idx]=enrich(rawContract(c));
+    }
+    cb(err);
+  });
+}
+function contractForm(c,fromLead){
+  c=c||{};
+  var isNew=!c.id;
+  var f=function(id,label,val,type,hint,attr){
+    return '<div class="fw'+(hint&&hint.full?' full':'')+'"><label>'+esc(label)+'</label>'+
+      '<input class="ai" id="'+id+'" type="'+(type||'text')+'" value="'+esc(val==null?'':val)+'"'+(attr||'')+'>'+
+      (hint&&hint.text?'<div class="hint">'+esc(hint.text)+'</div>':'')+'</div>';
+  };
+  var sel=function(id,label,val,opts){
+    return '<div class="fw"><label>'+esc(label)+'</label><select class="ai" id="'+id+'">'+
+      opts.map(function(o){return '<option'+(String(o)===String(val)?' selected':'')+'>'+esc(o)+'</option>'}).join('')+
+      '</select></div>';
+  };
+  var term=c.term||12;
+  var body='<div class="fset">'+
+      f('kName','Клиент',c.name,'text',{full:true})+
+      f('kPhone','Телефон',c.phone)+
+      sel('kCity','Город',c.city||CONTENT.form.cities[0],CONTENT.form.cities)+
+      sel('kProd','Продукт',c.prod||CONTENT.products.items[0].h,CONTENT.products.items.map(function(x){return x.h}))+
+      f('kPrice','Стоимость товара, ₽',c.price||'','number',null,' min="0" step="1000"')+
+      f('kDown','Первый взнос, %',c.down==null?30:c.down,'number',null,' min="0" max="90" step="1"')+
+      sel('kTerm','Срок, месяцев',term,[6,12,18,24,36,60,120])+
+      f('kMarkup','Наценка за весь срок, %',c.markup==null?(CFG.markup[term]||15):c.markup,'number',
+        {text:'По умолчанию берётся из «Параметров продукта» для выбранного срока'},' min="0" max="300" step="1"')+
+      f('kStart','Дата первого платежа отсчитывается от',c.startISO||dateToIso(TODAY),'date')+
+      f('kPaid','Уже оплачено платежей',c.paid||0,'number',null,' min="0" step="1"')+
+      f('kNote','Комментарий',c.note,'text',{full:true})+
+    '</div>'+
+    '<div class="kv" id="kPreview" style="margin-top:20px"></div>';
+  var foot='<button class="btn" id="kSave"><span>'+(isNew?'Создать договор':'Сохранить')+'</span></button>'+
+    (isNew?'':'<button class="btn btn-out" id="kDel"><span>Удалить</span></button>');
+  drawerOpen(isNew?'Новый договор':('Договор '+c.id),
+    isNew?(fromLead?'из заявки '+fromLead:'заполните данные сделки'):esc(c.name),body,foot);
+
+  var collect=function(){
+    return {id:c.id||'',leadId:c.leadId||fromLead||'',
+      name:($('#kName').value||'').trim(),phone:($('#kPhone').value||'').trim(),
+      city:$('#kCity').value,prod:$('#kProd').value,
+      price:+$('#kPrice').value||0,down:+$('#kDown').value||0,
+      term:+$('#kTerm').value||12,markup:+$('#kMarkup').value||0,
+      paid:+$('#kPaid').value||0,start:$('#kStart').value||dateToIso(TODAY),
+      note:($('#kNote').value||'').trim()};
+  };
+  var preview=function(){
+    var e=enrich(collect());
+    $('#kPreview').innerHTML=
+      '<div><span class="kv-k">Финансируем</span><span class="kv-v">'+money(e.fin)+'</span></div>'+
+      '<div><span class="kv-k">Наценка</span><span class="kv-v">'+money(e.mk)+'</span></div>'+
+      '<div><span class="kv-k">Сумма договора</span><span class="kv-v">'+money(e.total)+'</span></div>'+
+      '<div><span class="kv-k">Платёж в месяц</span><span class="kv-v">'+money(e.mo)+'</span></div>';
+  };
+  ['kPrice','kDown','kTerm','kMarkup','kPaid'].forEach(function(id){
+    $('#'+id).addEventListener('input',preview);
+    $('#'+id).addEventListener('change',preview);
+  });
+  $('#kTerm').addEventListener('change',function(){
+    if(CFG.markup[this.value])$('#kMarkup').value=CFG.markup[this.value];
+    preview();
+  });
+  preview();
+
+  $('#kSave').addEventListener('click',function(){
+    var d=collect();
+    if(!d.name){toast('Укажите клиента');$('#kName').focus();return}
+    if(d.price<=0){toast('Укажите стоимость товара');$('#kPrice').focus();return}
+    if(d.paid>d.term){toast('Оплачено платежей больше, чем срок договора');return}
+    this.disabled=true;
+    var btn=this;
+    Store.saveContract(d,function(err){
+      btn.disabled=false;
+      if(err){toast(err);return}
+      if(!SRV.on){
+        var e=enrich(d);
+        if(!e.id)e.id='ДГ-'+dateToIso(TODAY).slice(2,7).replace('-','')+'-'+('00'+(CONTRACTS.length+1)).slice(-3);
+        var k=CONTRACTS.map(function(x){return x.id}).indexOf(e.id);
+        if(k>=0)CONTRACTS[k]=e;else CONTRACTS.push(e);
+      }
+      drawerClose();render();toast(d.id?'Договор сохранён':'Договор создан');
+    });
+  });
+  var del=$('#kDel');
+  if(del)del.addEventListener('click',function(){
+    if(!confirm('Удалить договор '+c.id+'? Отменить будет нельзя.'))return;
+    Store.delContract(c.id,function(err){
+      if(err){toast(err);return}
+      drawerClose();render();toast('Договор удалён');
+    });
+  });
+}
 
 /* ============ СТРАНИЦА: ПОЛЬЗОВАТЕЛИ ============ */
 var USERLIST=null;
@@ -2767,10 +2940,18 @@ function render(){
   $$('.pay-btn').forEach(function(b){
     b.addEventListener('click',function(e){
       e.stopPropagation();
-      var id=b.dataset.pay;
-      state.paidExtra[id]=(state.paidExtra[id]||0)+1;persist();
-      render();toast('Платёж по '+id+' принят');
+      var c=CONTRACTS.filter(function(o){return o.id===b.dataset.pay})[0];
+      if(!c)return;
+      b.disabled=true;
+      acceptPayment(c,function(err){
+        b.disabled=false;
+        if(err){toast(err);return}
+        render();toast('Платёж по '+c.id+' принят');
+      });
     });
+  });
+  $$('.new-contract').forEach(function(b){
+    b.addEventListener('click',function(){contractForm(null)});
   });
   $$('[data-cl]').forEach(function(tr){
     tr.addEventListener('click',function(){openClient(tr.dataset.cl)});
@@ -2839,8 +3020,13 @@ function init(){
   });
   Store.probe(function(){
     Store.loadContent(function(){
-      route();
-      if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawCharts);
+      var go=function(){
+        route();
+        if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawCharts);
+      };
+      // сессия могла остаться от прошлого визита — тогда данные грузим сразу
+      if(SRV.authed)Store.loadContracts(function(){Store.loadLeads(go)});
+      else go();
     });
   });
 }
