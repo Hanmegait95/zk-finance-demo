@@ -603,6 +603,17 @@ select.inp{
 .gate p{color:var(--muted);font-size:14.5px;line-height:1.6}
 .gate-users{display:flex;flex-direction:column;gap:8px;margin:26px 0 22px}
 .gate-hint{font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.45}
+.pw-wrap{position:relative}
+.pw-wrap .inp{padding-right:52px}
+.pw-eye{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:38px;height:38px;border:0;background:none;cursor:pointer;color:var(--muted);
+  border-radius:var(--r-pill);display:grid;place-items:center;transition:color .2s,background .2s;
+}
+.pw-eye:hover{color:var(--ink);background:var(--ivory-lo)}
+.pw-eye.on{color:var(--ink)}
+.pw-eye.on svg{opacity:1}
+.pw-eye svg{opacity:.7}
 .gu{
   background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg);
   padding:14px 16px;display:flex;align-items:center;gap:13px;cursor:pointer;text-align:left;
@@ -1758,15 +1769,24 @@ function gateServer(){
     : 'Введите логин и пароль.';
   var box=$('#gateUsers');
   var f=function(id,label,type,ac,ph,hint,extra){
+    var pw=type==='password';
     return '<div style="padding:0 0 12px"><label class="lbl">'+label+'</label>'+
+      '<div class="'+(pw?'pw-wrap':'')+'">'+
       '<input class="inp" type="'+type+'" id="'+id+'" autocomplete="'+ac+'"'+(extra||'')+
       (ph?' placeholder="'+ph+'"':'')+'>'+
+      (pw?'<button type="button" class="pw-eye" data-eye="'+id+'" aria-label="Показать пароль" tabindex="-1">'+
+        '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">'+
+        '<path d="M1.5 10S4.5 4.5 10 4.5 18.5 10 18.5 10 15.5 15.5 10 15.5 1.5 10 1.5 10z"/>'+
+        '<circle cx="10" cy="10" r="2.6"/></svg></button>':'')+
+      '</div>'+
       (hint?'<div class="gate-hint">'+hint+'</div>':'')+'</div>';
   };
   var lat=' autocapitalize="off" autocorrect="off" spellcheck="false"';
   box.innerHTML=(first?f('gateName','Имя и фамилия','text','name','Иван Иванов'):'')+
     f('gateLogin','Логин','text','username','',first?'Только латиница и цифры. Например: zkachaev':'',lat)+
-    f('gatePw','Пароль','password',first?'new-password':'current-password','',first?'Минимум 8 символов. Любые символы, включая @ и цифры.':'')+
+    f('gatePw','Пароль','password',first?'new-password':'current-password','',
+      first?'Минимум 8 символов. Нажмите на глаз справа и проверьте, что видите именно те символы — частая ошибка это включённая русская раскладка.'
+           :'Не подходит пароль? Нажмите на глаз и проверьте раскладку клавиатуры.')+
     (first?f('gatePw2','Повторите пароль','password','new-password',''):'');
   box.style.background='transparent';box.style.border='0';box.style.padding='0';box.style.gap='0';
   var go=$('#gateGo');
@@ -1810,6 +1830,16 @@ function gateServer(){
     else Store.login(login,pw,after);
   };
   go.onclick=submit;
+  $$('.pw-eye',box).forEach(function(b){
+    b.addEventListener('click',function(){
+      var inp=$('#'+b.dataset.eye);if(!inp)return;
+      var show=inp.type==='password';
+      inp.type=show?'text':'password';
+      b.classList.toggle('on',show);
+      b.setAttribute('aria-label',show?'Скрыть пароль':'Показать пароль');
+      inp.focus();
+    });
+  });
   ['gateName','gateLogin','gatePw','gatePw2'].forEach(function(id){
     var e=$('#'+id);if(e)e.addEventListener('keydown',function(ev){if(ev.key==='Enter')submit()});
   });
