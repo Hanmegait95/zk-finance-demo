@@ -996,6 +996,59 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
   .mq-in{animation:none}
 }
 
+/* ============ ЮРИДИЧЕСКИЙ ДОКУМЕНТ ============ */
+.pp-wrap{max-width:760px;margin:0 auto;padding:40px 24px 80px}
+.pp-back{
+  display:inline-block;font-size:14px;color:var(--muted);margin-bottom:28px;
+  padding:8px 16px;border:1px solid var(--rule-strong);border-radius:var(--r-pill);
+  transition:background .2s,color .2s;
+}
+.pp-back:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pp-wrap h1{font-size:clamp(28px,4.4vw,40px);line-height:1.1;letter-spacing:-.035em;margin-bottom:28px}
+.pp{font-size:16px;line-height:1.7;color:var(--ink-soft)}
+.pp h2{
+  font-size:19px;font-weight:600;letter-spacing:-.02em;margin:36px 0 14px;
+  color:var(--ink);display:flex;gap:12px;align-items:baseline;
+}
+.pp-n{
+  flex:0 0 auto;font-size:12px;font-weight:600;color:var(--muted);
+  background:var(--ivory-lo);border-radius:var(--r-pill);padding:3px 10px;
+}
+.pp p{margin:0 0 14px}
+.pp b{font-weight:600;color:var(--ink)}
+.pp ul{margin:0 0 16px;padding-left:22px}
+.pp li{margin-bottom:8px}
+.pp-req{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);
+  border:1px solid var(--rule);border-radius:var(--r-lg);overflow:hidden;margin:18px 0 22px;
+}
+.pp-req>div{background:var(--ivory-hi);padding:14px 18px}
+.pp-req span{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.pp-req b{display:block;font-size:15px;margin-top:5px;font-weight:600;color:var(--ink)}
+.pp-gap{
+  color:var(--crit);background:var(--crit-bg);border-radius:6px;padding:1px 8px;
+  font-weight:600;font-size:13px;
+}
+.pp-warn{
+  background:var(--warn-bg);border:1px solid var(--warn);border-radius:var(--r-md);
+  padding:16px 18px;font-size:14px;color:var(--warn);line-height:1.55;margin-bottom:26px;
+}
+.pp-upd{margin-top:32px;padding-top:18px;border-top:1px solid var(--rule);font-size:13.5px;color:var(--muted)}
+.pp-foot{
+  margin-top:44px;padding-top:22px;border-top:1px solid var(--rule);
+  display:flex;justify-content:space-between;gap:18px;font-size:14px;color:var(--muted);flex-wrap:wrap;
+}
+.pp-foot a{font-weight:600;color:var(--ink)}
+@media (max-width:640px){
+  .pp-wrap{padding:24px 18px 60px}
+  .pp-req{grid-template-columns:1fr}
+  .pp h2{flex-direction:column;gap:6px}
+}
+@media print{
+  .pp-back,.pp-warn{display:none}
+  .pp-wrap{max-width:none;padding:0}
+}
+
 /* ============ ПЕРЕКЛЮЧАТЕЛЬ ============ */
 .swi{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:14.5px;user-select:none}
 .swi input{position:absolute;opacity:0;pointer-events:none}
@@ -1414,7 +1467,7 @@ var DEFAULT_CONTENT={
     title:'Два шага до решения',
     desc:'Заполнение занимает минуту. Менеджер перезвонит и уточнит параметры товара.',
     cities:['Грозный','Гудермес','Аргун','Назрань','Хасавюрт','Махачкала','Москва'],
-    consent:'Нажимая кнопку, вы соглашаетесь на обработку персональных данных.',
+    consent:'Нажимая кнопку, вы соглашаетесь на обработку персональных данных на условиях <a href="/politika/" target="_blank" rel="noopener">политики обработки</a>.',
     doneTitle:'Заявка принята',
     doneText:'Менеджер перезвонит в течение 30 минут в рабочее время. Если товар уже выбран — держите под рукой счёт или ссылку на объявление.'
   },
@@ -1435,6 +1488,17 @@ var DEFAULT_CONTENT={
   cta:{
     title:'Посчитаем вашу покупку<br>и ответим на вопросы по договору',
     btn:'Оставить заявку'
+  },
+  legal:{
+    company:'',
+    inn:'',
+    ogrn:'',
+    address:'',
+    email:'',
+    phone:'',
+    updated:'5 сентября 2026 года',
+    retention:'3 года',
+    policyTitle:'Политика в отношении обработки персональных данных'
   },
   footer:{
     note:'Финансирование по нормам шариата: мурабаха, мушарака мутанакиса, мудараба. Конечная цена фиксируется в договоре и не меняется.',
@@ -1623,6 +1687,8 @@ function persist(){
 }
 /* ============ ХРАНИЛИЩЕ: СЕРВЕР ИЛИ БРАУЗЕР ============ */
 var API='/api/';
+/* Панель работает с сессией, публичному сайту cookie не нужна. */
+var NEEDS_SESSION=/\/admin(\/|$)/.test(location.pathname);
 var SRV={on:false,installed:false,authed:false,locked:false,hasRecovery:null,csrf:'',user:null};
 function api(action,opts,cb){
   opts=opts||{};
@@ -1649,7 +1715,7 @@ function api(action,opts,cb){
 }
 var Store={
   probe:function(cb){
-    api('me',null,function(d){
+    api(NEEDS_SESSION?'me&s=1':'me',null,function(d){
       if(d&&d.server){
         SRV.on=true;SRV.installed=!!d.installed;SRV.authed=!!d.authed;
         SRV.locked=!!d.locked;SRV.user=d.user||null;SRV.hasRecovery=d.hasRecovery;
@@ -2109,6 +2175,17 @@ var SCHEMA=[
   lists:[{p:'faq.items',l:'Вопросы и ответы',title:'q',blank:{q:'Новый вопрос?',a:'Ответ'},
           fields:[{k:'q',l:'Вопрос',full:true},{k:'a',l:'Ответ',type:'area',full:true}]}]},
 
+ {id:'legal',t:'Реквизиты и политика',
+  desc:'Данные компании для политики обработки персональных данных. Без ИНН и ОГРН документ не имеет юридической силы — на странице политики будет предупреждение.',
+  fields:[F('legal.company','Наименование организации','text','Как в ЕГРЮЛ: ООО «ЗК Финанс» или ИП Качаев З.'),
+          F('legal.inn','ИНН'),F('legal.ogrn','ОГРН или ОГРНИП'),
+          F('legal.address','Юридический адрес','area'),
+          F('legal.email','Почта для обращений','text','На неё будут писать про удаление данных'),
+          F('legal.phone','Телефон для обращений','text','Пусто — возьмётся телефон из раздела «Компания»'),
+          F('legal.retention','Срок хранения данных','text','Например: 3 года'),
+          F('legal.updated','Дата редакции','text','Меняйте при правках текста'),
+          F('legal.policyTitle','Заголовок страницы','text')]},
+
  {id:'bottom',t:'Призыв и подвал',desc:'Последний экран и нижняя часть сайта.',
   fields:[F('cta.title','Заголовок призыва','area','Перенос строки — тегом &lt;br&gt;'),
           F('cta.btn','Кнопка призыва'),
@@ -2229,6 +2306,7 @@ function pgContent(){
   return box+'<div class="adm">'+nav+pane+'</div>';
 }
 function anchorOf(id){
+  if(id==='legal')return 'politika/';
   var m={hero:'/',partners:'/',problem:'pochemu',principles:'principy',how:'kak',calc:'kalkulyator',
          compare:'otlichiya',products:'produkty',cases:'klienty',docs:'dokumenty',
          form:'zayavka',faq:'voprosy',bottom:'zayavka'};
