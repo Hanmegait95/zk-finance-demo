@@ -2372,17 +2372,41 @@ function findStrList(p){
 function exportJson(){
   var data=JSON.stringify({v:4,content:CONTENT,cfg:CFG},null,2);
   var name='zk-finance-content-'+dfull(new Date()).replace(/\./g,'-')+'.json';
+  drawerOpen('Контент сайта в JSON','сохраните файл или скопируйте текст',
+    '<p style="font-size:13.5px;color:var(--muted);line-height:1.55">Этот файл — весь текст сайта и условия продукта. '+
+    'Им переносят контент на другое устройство, отдают разработчику или держат как резервную копию. '+
+    'Загрузить обратно — кнопкой «Загрузить JSON».</p>'+
+    '<textarea class="ai" id="jsonOut" style="min-height:340px;font-size:12px;line-height:1.5" readonly>'+esc(data)+'</textarea>',
+    '<button class="btn" id="jsonDl"><span>Скачать файлом</span></button>'+
+    '<button class="btn btn-out" id="jsonCopy"><span>Скопировать текст</span></button>');
+  $('#jsonDl').addEventListener('click',function(){
+    try{
+      var blob=new Blob([data],{type:'application/json'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');
+      a.href=url;a.download=name;a.rel='noopener';
+      document.body.appendChild(a);a.click();
+      setTimeout(function(){URL.revokeObjectURL(url);a.remove()},600);
+      toast('Если файл не сохранился — скопируйте текст кнопкой рядом');
+    }catch(e){
+      toast('Скачивание недоступно здесь — скопируйте текст');
+    }
+  });
+  $('#jsonCopy').addEventListener('click',function(){
+    var ta=$('#jsonOut');
+    var done=function(){toast('JSON скопирован в буфер обмена')};
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(data).then(done,function(){legacyCopy(ta,done)});
+    }else legacyCopy(ta,done);
+  });
+}
+function legacyCopy(ta,done){
   try{
-    var blob=new Blob([data],{type:'application/json'});
-    var a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);a.download=name;
-    document.body.appendChild(a);a.click();
-    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},400);
-    toast('Файл '+name+' скачан');
-  }catch(e){
-    drawerOpen('Контент в формате JSON','скопируйте и сохраните в файл',
-      '<textarea class="ai" style="min-height:420px;font-size:12px" readonly>'+esc(data)+'</textarea>','');
-  }
+    ta.removeAttribute('readonly');ta.select();ta.setSelectionRange(0,999999);
+    var ok=document.execCommand('copy');
+    ta.setAttribute('readonly','readonly');
+    if(ok)done();else toast('Не вышло скопировать — выделите текст вручную');
+  }catch(e){toast('Не вышло скопировать — выделите текст вручную')}
 }
 function importInit(){
   $('#importFile').addEventListener('change',function(){
