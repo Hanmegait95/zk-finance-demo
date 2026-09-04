@@ -120,9 +120,42 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hdr-tel svg{flex:0 0 auto;opacity:.75}
 .hdr-tel:hover svg{opacity:1}
 
+/* ============ ПРИМЕР РАСЧЁТА В ГЕРОЕ ============ */
+.hex{
+  display:block;margin-top:26px;padding:20px 22px;background:var(--ivory-hi);
+  border:1px solid var(--rule);border-radius:var(--r-lg);
+  transition:border-color .3s var(--ease),transform .3s var(--ease);
+}
+.hex:hover{border-color:var(--rule-strong);transform:translateY(-2px)}
+.hex-l{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.hex-row{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-top:12px}
+.hex-i{display:flex;flex-direction:column;line-height:1.15}
+.hex-i b{font-size:19px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.hex-i span{font-size:12px;color:var(--muted);margin-top:3px}
+.hex-i.main b{font-size:26px}
+.hex-s{font-size:12.5px;color:var(--muted-2);padding-bottom:4px}
+.hex-go{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13.5px;font-weight:600}
+.hex-go svg{transition:transform .3s var(--ease)}
+.hex:hover .hex-go svg{transform:translateX(4px)}
+
+/* ============ WHATSAPP ============ */
+.hdr-wa{
+  display:grid;place-items:center;width:40px;height:40px;border-radius:var(--r-pill);
+  border:1px solid var(--rule-strong);color:var(--muted);
+  transition:background .25s,color .25s,border-color .25s;
+}
+.hdr-wa:hover{background:#25D366;border-color:#25D366;color:#fff}
+.cta-wa{
+  display:inline-flex;align-items:center;gap:9px;color:var(--on-ink);opacity:.8;
+  font-size:14px;font-weight:600;transition:opacity .2s;
+}
+.cta-wa:hover{opacity:1}
+
 /* ============ НИЖНЯЯ ПАНЕЛЬ НА ТЕЛЕФОНЕ ============ */
 .mbar{display:none}
 @media (max-width:780px){
+  .mbar.mbar-3{grid-template-columns:auto auto 1fr}
+  .mbar-b.wa{padding:0 16px;background:#25D366;border-color:#25D366;color:#fff}
   .mbar{
     display:grid;grid-template-columns:auto 1fr;gap:10px;position:fixed;left:0;right:0;bottom:0;
     z-index:70;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
@@ -612,6 +645,12 @@ select.inp{
 .gate p{color:var(--muted);font-size:14.5px;line-height:1.6}
 .gate-users{display:flex;flex-direction:column;gap:8px;margin:26px 0 22px}
 .gate-hint{font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.45}
+.reccode{
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:22px;font-weight:700;
+  letter-spacing:.06em;text-align:center;padding:22px 14px;background:var(--ink);color:#fff;
+  border-radius:var(--r-lg);user-select:all;word-break:break-all;
+}
+.rec-act{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
 .pw-wrap{position:relative}
 .pw-wrap .inp{padding-right:52px}
 .pw-eye{
@@ -911,7 +950,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
   .wrap{padding:0 18px}
   .nav{display:none}
   .burger{display:inline-flex;margin-left:auto}
-  .hdr-act .btn,.hdr-tel{display:none}
+  .hdr-act .btn,.hdr-tel,.hdr-wa{display:none}
   .hdr-in{gap:12px;height:70px}
   .nav.open{
     display:flex;position:absolute;top:70px;left:12px;right:12px;background:var(--ivory-hi);
@@ -972,6 +1011,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
 .swi input:checked+.swi-b::after{transform:translateX(18px);background:#fff}
 .swi input:disabled+.swi-b{opacity:.45}
 .swi input:focus-visible+.swi-b{outline:2px solid var(--ink);outline-offset:3px}
+.fw.hide{display:none}
 
 /* ============ СПИСОК ДЕЛ НА ДАШБОРДЕ ============ */
 .todo-g{border-bottom:1px solid var(--rule)}
@@ -1215,6 +1255,8 @@ function short(n){
   if(n>=1e3)return '₽'+Math.round(n/1e3)+' тыс';
   return '₽'+nf(n);
 }
+function digits(v){return String(v||'').replace(/\D/g,'')}
+function digitsPlus(v){var d=String(v||'').replace(/\D/g,'');return d?'+'+d:''}
 function ini(name){var p=String(name||'').trim().split(/\s+/);return ((p[0]||'')[0]||'')+((p[1]||'')[0]||'')}
 function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
 function clone(o){return JSON.parse(JSON.stringify(o))}
@@ -1231,6 +1273,7 @@ var DEFAULT_CONTENT={
     name:'ZK Finance',
     tagline:'Исламская рассрочка',
     phone:'+7 938 000-11-22',
+    whatsapp:'+7 938 000-11-22',
     hours:'Пн–Сб, 9:00–19:00 · WhatsApp и Telegram',
     demoBadge:''
   },
@@ -1245,6 +1288,8 @@ var DEFAULT_CONTENT={
     title:'Рассрочка без процентов.',
     accent:'Договор мурабаха.',
     lead:'Мы покупаем товар, который вы выбрали, и продаём его вам в рассрочку с наценкой, известной заранее. Наценка фиксируется в договоре и не меняется никогда — ни при просрочке, ни при досрочном погашении.',
+    examplePrice:2400000,
+    exampleTerm:12,
     cta1:'Рассчитать платёж',
     cta2:'Как это работает',
     trust:'Конечная сумма названа <b>до подписания</b> и не меняется до последнего платежа',
@@ -1406,6 +1451,23 @@ var CFG={markup:{6:8,12:15,18:22,24:30},minDown:20,maxSum:6000000,penalty:3000};
 var PRODUCTS=['Автомобиль','Недвижимость','Техника и ремонт','Бизнес-оборудование'];
 var CITIES=['Грозный','Гудермес','Аргун','Назрань','Хасавюрт','Махачкала','Москва'];
 
+var CALLS=[
+  {id:'',t:'Не звонили',cls:'neut'},
+  {id:'reached',t:'Дозвонился',cls:'ok'},
+  {id:'noanswer',t:'Не отвечает',cls:'warn'},
+  {id:'callback',t:'Перезвонить',cls:'info'},
+  {id:'refused',t:'Отказался',cls:'crit'}
+];
+function callInfo(id){
+  return CALLS.filter(function(c){return c.id===(id||'')})[0]||CALLS[0];
+}
+/* Заявки, которым назначен звонок на сегодня или раньше. */
+function callbacksDue(){
+  return state.deals.filter(function(d){
+    if(d.callStatus!=='callback'||!d.callbackAt)return false;
+    return isoToDate(d.callbackAt)<=TODAY;
+  }).sort(function(a,b){return isoToDate(a.callbackAt)-isoToDate(b.callbackAt)});
+}
 var STAGES=[
   {id:'new',t:'Новая'},{id:'scoring',t:'Скоринг'},{id:'shariah',t:'Проверка товара'},
   {id:'approve',t:'Решение'},{id:'contract',t:'Договор'},{id:'issued',t:'Выдана'}
@@ -1561,7 +1623,7 @@ function persist(){
 }
 /* ============ ХРАНИЛИЩЕ: СЕРВЕР ИЛИ БРАУЗЕР ============ */
 var API='/api/';
-var SRV={on:false,installed:false,authed:false,locked:false,csrf:'',user:null};
+var SRV={on:false,installed:false,authed:false,locked:false,hasRecovery:null,csrf:'',user:null};
 function api(action,opts,cb){
   opts=opts||{};
   var o={method:opts.method||'GET',credentials:'same-origin',headers:{}};
@@ -1590,7 +1652,7 @@ var Store={
     api('me',null,function(d){
       if(d&&d.server){
         SRV.on=true;SRV.installed=!!d.installed;SRV.authed=!!d.authed;
-        SRV.locked=!!d.locked;SRV.user=d.user||null;
+        SRV.locked=!!d.locked;SRV.user=d.user||null;SRV.hasRecovery=d.hasRecovery;
         if(SRV.user)state.user={name:SRV.user.name,role:SRV.user.role==='owner'?'Владелец':'Сотрудник',login:SRV.user.login};
       }
       cb();
@@ -1633,8 +1695,22 @@ var Store={
   })},
   install:function(login,name,pw,cb){
     api('install',{method:'POST',body:{login:login,name:name,password:pw}},function(d,e){
-      if(d){SRV.authed=true;SRV.installed=true;SRV.user=d.user||null}cb(e);
+      if(d){SRV.authed=true;SRV.installed=true;SRV.user=d.user||null}
+      cb(e,d&&d.recovery);
     });
+  },
+  recover:function(login,code,pw,cb){
+    api('recover',{method:'POST',body:{login:login,code:code,password:pw}},function(d,e){
+      if(d){SRV.authed=true;SRV.user=d.user||null}
+      cb(e,d&&d.recovery);
+    });
+  },
+  newRecovery:function(cb){
+    api('recovery-new',{method:'POST'},function(d,e){cb(d&&d.recovery,e)});
+  },
+  loadBackups:function(cb){
+    if(!SRV.on)return cb([]);
+    api('backups',null,function(d,e){cb(d&&d.backups||[],e)});
   },
   logout:function(cb){api('logout',{method:'POST'},function(){SRV.authed=false;SRV.user=null;cb&&cb()})},
   updateLead:function(id,patch,cb){
@@ -1762,6 +1838,70 @@ function enterHub(){
   });
   });
 }
+/* Код восстановления показывается один раз — дальше хранится только хеш. */
+function showRecovery(code,then){
+  var box=$('#gateUsers');
+  $('#gateTitle').textContent='Запишите код восстановления';
+  $('#gateHint').textContent='Это единственный способ вернуть доступ, если забудете пароль. '+
+    'Код показывается один раз — сохраните его прямо сейчас.';
+  box.innerHTML='<div class="reccode" id="recCode">'+esc(code)+'</div>'+
+    '<div class="rec-act">'+
+      '<button class="btn btn-ghost btn-sm" type="button" id="recCopy"><span>Скопировать</span></button>'+
+      '<label class="swi" style="margin-left:auto"><input type="checkbox" id="recOk">'+
+      '<span class="swi-b"></span><span>Записал</span></label>'+
+    '</div>';
+  var go=$('#gateGo');
+  go.style.display='';go.disabled=true;
+  go.querySelector('span').textContent='Продолжить';
+  $('#recOk').addEventListener('change',function(){go.disabled=!this.checked});
+  $('#recCopy').addEventListener('click',function(){
+    if(navigator.clipboard&&navigator.clipboard.writeText)
+      navigator.clipboard.writeText(code).then(function(){toast('Код скопирован')},
+        function(){toast('Выделите код и скопируйте вручную')});
+    else toast('Выделите код и скопируйте вручную');
+  });
+  go.onclick=function(){then()};
+}
+function gateRecover(){
+  $('#gateTitle').textContent='Восстановление доступа';
+  $('#gateHint').textContent='Введите логин и код восстановления, выданный при создании учётной записи. '+
+    'Кода нет — обратитесь к владельцу или к тому, кто настраивал сервер.';
+  var box=$('#gateUsers');
+  box.innerHTML=
+    '<div style="padding:0 0 12px"><label class="lbl">Логин</label>'+
+      '<input class="inp" id="rcLogin" autocomplete="username" autocapitalize="off" spellcheck="false"></div>'+
+    '<div style="padding:0 0 12px"><label class="lbl">Код восстановления</label>'+
+      '<input class="inp" id="rcCode" placeholder="ZKF-XXXX-XXXX-XXXX" autocapitalize="characters" spellcheck="false">'+
+      '<div class="gate-hint">Регистр и дефисы не важны.</div></div>'+
+    '<div style="padding:0 0 12px"><label class="lbl">Новый пароль</label>'+
+      '<div class="pw-wrap"><input class="inp" id="rcPw" type="password" autocomplete="new-password" placeholder="минимум 8 символов">'+
+      '<button type="button" class="pw-eye" data-eye="rcPw" tabindex="-1" aria-label="Показать пароль">'+
+      '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">'+
+      '<path d="M1.5 10S4.5 4.5 10 4.5 18.5 10 18.5 10 15.5 15.5 10 15.5 1.5 10 1.5 10z"/>'+
+      '<circle cx="10" cy="10" r="2.6"/></svg></button></div></div>'+
+    '<p style="margin-top:4px"><a href="#" id="rcBack" style="color:var(--muted);text-decoration:underline;font-size:13.5px">Вернуться ко входу</a></p>';
+  var go=$('#gateGo');go.style.display='';go.disabled=false;
+  go.querySelector('span').textContent='Сменить пароль и войти';
+  $('.pw-eye',box).addEventListener('click',function(){
+    var i=$('#rcPw');i.type=i.type==='password'?'text':'password';this.classList.toggle('on');i.focus();
+  });
+  $('#rcBack').addEventListener('click',function(e){e.preventDefault();gateServer()});
+  go.onclick=function(){
+    var login=($('#rcLogin').value||'').trim().toLowerCase();
+    var code=($('#rcCode').value||'').trim();
+    var pw=$('#rcPw').value;
+    if(!login){toast('Впишите логин');$('#rcLogin').focus();return}
+    if(code.replace(/[^A-Za-z0-9]/g,'').length<12){toast('Код неполный — в нём 15 символов');$('#rcCode').focus();return}
+    if(pw.length<8){toast('Новый пароль короче 8 символов');$('#rcPw').focus();return}
+    go.disabled=true;
+    Store.recover(login,code,pw,function(err,newCode){
+      go.disabled=false;
+      if(err){toast(err);return}
+      showRecovery(newCode,function(){state.user=SRV.user;enterHub()});
+    });
+  };
+  setTimeout(function(){$('#rcLogin').focus()},80);
+}
 function gateServer(){
   var first=!SRV.installed&&!SRV.locked;
   if(!first&&!SRV.installed){
@@ -1796,7 +1936,8 @@ function gateServer(){
     f('gatePw','Пароль','password',first?'new-password':'current-password','',
       first?'Минимум 8 символов. Нажмите на глаз справа и проверьте, что видите именно те символы — частая ошибка это включённая русская раскладка.'
            :'Не подходит пароль? Нажмите на глаз и проверьте раскладку клавиатуры.')+
-    (first?f('gatePw2','Повторите пароль','password','new-password',''):'');
+    (first?f('gatePw2','Повторите пароль','password','new-password',''):
+      '<p style="margin-top:2px"><a href="#" id="gateForgot" style="color:var(--muted);text-decoration:underline;font-size:13.5px">Забыли пароль?</a></p>');
   box.style.background='transparent';box.style.border='0';box.style.padding='0';box.style.gap='0';
   var go=$('#gateGo');
   go.querySelector('span').textContent=first?'Создать и войти':'Войти';
@@ -1835,10 +1976,16 @@ function gateServer(){
       state.user=SRV.user||{name:login,role:'Владелец'};
       enterHub();
     };
-    if(first)Store.install(login,($('#gateName').value||'').trim(),pw,after);
+    if(first)Store.install(login,($('#gateName').value||'').trim(),pw,function(err,code){
+      busy=false;go.disabled=false;
+      if(err){toast(err);return}
+      showRecovery(code,function(){state.user=SRV.user;enterHub()});
+    });
     else Store.login(login,pw,after);
   };
   go.onclick=submit;
+  var fg=$('#gateForgot');
+  if(fg)fg.addEventListener('click',function(e){e.preventDefault();gateRecover()});
   $$('.pw-eye',box).forEach(function(b){
     b.addEventListener('click',function(){
       var inp=$('#'+b.dataset.eye);if(!inp)return;
@@ -1860,7 +2007,9 @@ function F(p,l,type,hint){return {p:p,l:l,type:type||'text',hint:hint}}
 var SCHEMA=[
  {id:'brand',t:'Компания',desc:'Название, контакты, меню и офисы — используются в шапке, подвале и блоке призыва.',
   fields:[F('brand.name','Название'),F('brand.tagline','Подпись под названием'),
-          F('brand.phone','Телефон'),F('brand.hours','Часы работы'),
+          F('brand.phone','Телефон'),
+          F('brand.whatsapp','WhatsApp','text','Номер для ссылки wa.me. Пусто — кнопка не показывается'),
+          F('brand.hours','Часы работы'),
           F('brand.demoBadge','Плашка у логотипа','text','Оставьте пустым, чтобы убрать')],
   lists:[{p:'nav',l:'Пункты меню',title:'label',blank:{label:'Новый пункт',anchor:'kak'},
           fields:[{k:'label',l:'Название'},{k:'anchor',l:'Якорь секции',hint:'kak, produkty, kalkulyator, klienty, voprosy, zayavka, dokumenty, otlichiya'}]},
@@ -1871,6 +2020,8 @@ var SCHEMA=[
   fields:[F('hero.badge','Плашка над заголовком'),F('hero.title','Заголовок'),
           F('hero.accent','Вторая строка заголовка','text','Показывается серым под основной'),
           F('hero.lead','Вводный текст','area'),
+          F('hero.examplePrice','Пример: стоимость товара, ₽','num','0 — блок примера не показывается'),
+          F('hero.exampleTerm','Пример: срок, месяцев','num'),
           F('hero.cta1','Кнопка 1'),F('hero.cta2','Кнопка 2'),
           F('hero.trust','Строка доверия','area','Можно выделить фрагмент тегом &lt;b&gt;')],
   lists:[{p:'hero.specs',l:'Характеристики справа',title:'k',blank:{k:'Параметр',v:'Значение'},
@@ -2419,7 +2570,11 @@ function pgDash(){
     return days>=0&&days<=7;
   }).sort(function(a,b){return a.d-b.d});
 
-  var h='<div class="kpis">'+
+  var h='';
+  if(SRV.on&&SRV.hasRecovery===false)
+    h+='<div class="warnbox" style="margin-bottom:4px"><b>Нет кода восстановления доступа.</b> '+
+      'Если забудете пароль, войти будет нельзя. Откройте «Пользователи» и выпустите код — это одна кнопка.</div>';
+  h+='<div class="kpis">'+
     kpi('Портфель','<span class="num">'+short(por)+'</span>','остаток к получению')+
     kpi('Договоров','<span class="num">'+CONTRACTS.length+'</span>','активных '+activeCount())+
     kpi('Новых заявок','<span class="num">'+fresh.length+'</span>','всего в работе '+inWork())+
@@ -2438,6 +2593,21 @@ function pgDash(){
           '<span class="todo-t"><b>'+esc(c.name)+'</b>'+
           '<span class="who-s">'+esc(c.id)+' · '+money(c.mo)+' · '+c.late+' дн</span></span>'+
           '<span class="todo-a" onclick="event.stopPropagation()">'+telLink(c.phone,'Позвонить')+'</span>'+
+          '</div>';
+      }).join('')+'</div>';
+  }
+  var due=callbacksDue();
+  if(due.length){
+    todo+='<div class="todo-g"><div class="todo-h"><span class="chip warn">Перезвонить</span>'+
+      '<span class="todo-n">'+due.length+'</span></div>'+
+      due.slice(0,6).map(function(d){
+        var late=isoToDate(d.callbackAt)<TODAY;
+        return '<div class="todo-i" data-lead="'+esc(d.id)+'">'+
+          '<span class="av">'+esc(ini(d.name))+'</span>'+
+          '<span class="todo-t"><b>'+esc(d.name)+'</b>'+
+          '<span class="who-s">'+(late?'просрочен звонок с ':'на ')+dfull(isoToDate(d.callbackAt))+
+          ' · '+esc(d.prod||'—')+'</span></span>'+
+          '<span class="todo-a" onclick="event.stopPropagation()">'+telLink(leadPhone(d),'Позвонить')+'</span>'+
           '</div>';
       }).join('')+'</div>';
   }
@@ -2503,7 +2673,8 @@ function pgDeals(){
     if(!q)return true;
     return (d.name+' '+d.id+' '+d.city+' '+d.prod).toLowerCase().indexOf(q)>=0;
   });
-  var h='<div class="toolbar"><span class="eyebrow" style="margin-right:6px">Продукт</span>'+
+  var h='<div class="toolbar"><button class="filt" id="expLeads">Выгрузить в Excel</button>'+
+    '<span class="eyebrow" style="margin:0 6px 0 10px">Продукт</span>'+
     ['all'].concat(PRODUCTS).map(function(p){
       return '<button class="filt'+(state.filt===p?' on':'')+'" data-f="'+esc(p)+'">'+
         (p==='all'?'Все':esc(p))+'</button>';
@@ -2519,9 +2690,10 @@ function pgDeals(){
       '<div class="col-sum">'+short(sum)+'</div>'+
       '<div class="col-b">'+arr.map(function(d){
         var sc=d.score>=75?'ok':(d.score>=60?'warn':(d.score?'crit':'neut'));
+        var ci=callInfo(d.callStatus);
         return '<div class="kc" draggable="true" data-id="'+esc(d.id)+'">'+
           '<div class="kc-top"><span class="kc-id">'+esc(d.id)+'</span>'+
-          '<span class="chip '+sc+'">'+(d.score?'скоринг '+d.score:'новый')+'</span></div>'+
+          '<span class="chip '+ci.cls+'">'+esc(ci.t)+'</span></div>'+
           '<div><div class="kc-n">'+esc(d.name)+'</div>'+
           '<div class="kc-p">'+esc(d.prod)+' · '+esc(d.city)+'</div></div>'+
           '<div class="kc-sum">'+money(d.sum)+'</div>'+
@@ -2606,9 +2778,14 @@ function pgContracts(){
   var list=CONTRACTS.filter(function(c){
     return !q||(c.name+' '+c.id+' '+c.prod+' '+c.city).toLowerCase().indexOf(q)>=0;
   });
+  list=applySort(list,{id:function(c){return c.id},name:function(c){return c.name},
+    prod:function(c){return c.prod||''},total:function(c){return c.total},
+    mo:function(c){return c.mo},rest:function(c){return restOf(c)},
+    late:function(c){return c.late||0}});
   var body='<div class="tbl-scroll"><table class="tbl"><thead><tr>'+
-    '<th>Договор</th><th>Клиент</th><th>Продукт</th><th class="r">Сумма договора</th>'+
-    '<th class="r">Платёж</th><th>Прогресс</th><th class="r">Остаток</th><th>Статус</th>'+
+    sortHead('id','Договор')+sortHead('name','Клиент')+sortHead('prod','Продукт')+
+    sortHead('total','Сумма договора','r')+sortHead('mo','Платёж','r')+
+    '<th>Прогресс</th>'+sortHead('rest','Остаток','r')+sortHead('late','Статус')+
     '</tr></thead><tbody>'+list.map(function(c){
       var p=paidOf(c),s=payStatus(c);
       return '<tr data-ct="'+esc(c.id)+'">'+
@@ -2630,7 +2807,9 @@ function pgContracts(){
         '<div style="margin-top:18px">'+NEWBTN+'</div>'),'',false);
   }
   var mk=0,fin=0;CONTRACTS.forEach(function(c){mk+=c.mk;fin+=c.fin});
-  return '<div class="toolbar">'+NEWBTN+'<span style="margin-left:auto" class="eyebrow">'+
+  return '<div class="toolbar">'+NEWBTN+
+      '<button class="filt" id="expContracts">Выгрузить в Excel</button>'+
+      '<span style="margin-left:auto" class="eyebrow">'+
       CONTRACTS.length+' договоров · портфель '+short(portfolio())+'</span></div>'+
     '<div class="kpis" style="grid-template-columns:repeat(4,1fr)">'+
     kpi('Портфель','<span class="num">'+short(portfolio())+'</span>','остаток к получению')+
@@ -2883,6 +3062,13 @@ function openDeal(id){
       ['Итого по договору',money(total)],
       ['Стадия',esc((STAGES[stIdx]||{}).t||'—')]
     ])+'</div>'+
+    '<div><div class="dr-sec-t">Результат звонка</div><div class="toolbar">'+
+      CALLS.map(function(c){
+        return '<button class="filt'+((d.callStatus||'')===c.id?' on':'')+'" data-call="'+c.id+'">'+esc(c.t)+'</button>';
+      }).join('')+'</div>'+
+      '<div class="fset" style="margin-top:14px"><div class="fw'+((d.callStatus==='callback')?'':' hide')+'" id="cbWrap">'+
+      '<label>Перезвонить</label><input class="ai" type="date" id="ldCb" value="'+esc(d.callbackAt||dateToIso(TODAY))+'">'+
+      '<div class="hint">Появится в списке «Перезвонить сегодня» на дашборде.</div></div></div></div>'+
     '<div><div class="dr-sec-t">Стадия</div><div class="toolbar">'+
       STAGES.map(function(st){
         return '<button class="filt'+(st.id===d.stage?' on':'')+'" data-stg="'+st.id+'">'+esc(st.t)+'</button>';
@@ -2906,6 +3092,27 @@ function openDeal(id){
       b.disabled=false;
       if(err){toast(err);return}
       render();openDeal(id);toast('Заявка сохранена');
+    });
+  });
+  $$('[data-call]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var v=b.dataset.call;
+      d.callStatus=v;
+      if(v==='callback'&&!d.callbackAt)d.callbackAt=dateToIso(TODAY);
+      if(v!=='callback')d.callbackAt='';
+      Store.updateLead(d.id,{callStatus:d.callStatus,callbackAt:d.callbackAt||''},function(err){
+        if(err){toast(err);return}
+        render();openDeal(id);
+        toast('Отмечено: '+callInfo(v).t);
+      });
+    });
+  });
+  var cb=$('#ldCb');
+  if(cb)cb.addEventListener('change',function(){
+    d.callbackAt=cb.value;
+    Store.updateLead(d.id,{callStatus:'callback',callbackAt:cb.value},function(err){
+      if(err){toast(err);return}
+      render();toast('Звонок назначен на '+dfull(isoToDate(cb.value)));
     });
   });
   $$('[data-stg]').forEach(function(b){
@@ -3018,9 +3225,81 @@ function openClient(name){
 }
 
 
+/* ============ ВЫГРУЗКА В EXCEL ============ */
+/* CSV с точкой с запятой и BOM — Excel открывает такой файл сразу, без мастера импорта. */
+function toCsv(rows){
+  var esc2=function(v){
+    v=String(v==null?'':v);
+    return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;
+  };
+  return '﻿'+rows.map(function(r){return r.map(esc2).join(';')}).join('\r\n');
+}
+function downloadCsv(name,rows){
+  var data=toCsv(rows);
+  try{
+    var blob=new Blob([data],{type:'text/csv;charset=utf-8'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download=name;a.rel='noopener';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(url);a.remove()},600);
+    toast('Файл '+name+' скачан');
+  }catch(e){
+    drawerOpen('Выгрузка','скопируйте и сохраните как .csv',
+      '<textarea class="ai" style="min-height:380px;font-size:12px" readonly>'+esc(data)+'</textarea>','');
+  }
+}
+function exportLeads(){
+  var rows=[['Номер','Дата','Имя','Телефон','Продукт','Город','Сумма','Срок, мес',
+             'Стадия','Связь','Перезвонить','Комментарий']];
+  state.deals.forEach(function(d){
+    rows.push([d.id,d.at?String(d.at).slice(0,10):'',d.name,leadPhone(d),d.prod,d.city,
+      d.sum||0,d.term||'',
+      (STAGES.filter(function(x){return x.id===d.stage})[0]||{}).t||d.stage,
+      callInfo(d.callStatus).t,d.callbackAt||'',d.note||'']);
+  });
+  downloadCsv('zkfinance-zayavki-'+dateToIso(TODAY)+'.csv',rows);
+}
+function exportContracts(){
+  var rows=[['Договор','Дата','Клиент','Телефон','Город','Продукт','Стоимость','Взнос %',
+             'Финансируем','Наценка %','Наценка','Сумма договора','Платёж','Срок',
+             'Оплачено','Остаток','Просрочка, дн']];
+  CONTRACTS.forEach(function(c){
+    rows.push([c.id,c.startISO||'',c.name,c.phone||'',c.city||'',c.prod||'',
+      c.price,c.down,c.fin,c.markup,c.mk,c.total,c.mo,c.term,
+      paidOf(c),restOf(c),c.late||0]);
+  });
+  downloadCsv('zkfinance-dogovory-'+dateToIso(TODAY)+'.csv',rows);
+}
+
+/* ============ СОРТИРОВКА ТАБЛИЦ ============ */
+var SORT={key:null,dir:1};
+function sortHead(key,label,cls){
+  var on=SORT.key===key;
+  return '<th class="sortable'+(on?' on':'')+(cls?' '+cls:'')+'" data-sort="'+esc(key)+'">'+
+    esc(label)+'<span class="arw">'+(on?(SORT.dir>0?'↑':'↓'):'↕')+'</span></th>';
+}
+function applySort(list,getters){
+  if(!SORT.key||!getters[SORT.key])return list;
+  var g=getters[SORT.key];
+  return list.slice().sort(function(a,b){
+    var x=g(a),y=g(b);
+    if(typeof x==='number'&&typeof y==='number')return (x-y)*SORT.dir;
+    return String(x).localeCompare(String(y),'ru')*SORT.dir;
+  });
+}
+function bindSort(){
+  $$('th.sortable').forEach(function(th){
+    th.addEventListener('click',function(){
+      var k=th.dataset.sort;
+      if(SORT.key===k)SORT.dir=-SORT.dir;else{SORT.key=k;SORT.dir=1}
+      render();
+    });
+  });
+}
+
 /* ============ ПОИСК ПО ВСЕЙ БАЗЕ ============ */
 var findSel=0,findHits=[];
-function digits(v){return String(v||'').replace(/\D/g,'')}
 function findRun(){
   var q=($('#findInp').value||'').trim().toLowerCase();
   var dq=digits(q);
@@ -3194,7 +3473,7 @@ function contractForm(c,fromLead){
 }
 
 /* ============ СТРАНИЦА: ПОЛЬЗОВАТЕЛИ ============ */
-var USERLIST=null;
+var USERLIST=null,BACKUPS=null,RECNEW=null;
 function pgUsers(){
   var me=SRV.user||{};
   var owner=me.role==='owner';
@@ -3235,13 +3514,54 @@ function pgUsers(){
       '<div class="fw full"><button class="btn btn-ghost" id="pwGo"><span>Сменить пароль</span></button></div>'+
     '</div>',esc(me.name||''));
 
+  var recCard=card('Код восстановления',
+    (RECNEW?'<div class="reccode" style="font-size:19px;padding:18px 12px">'+esc(RECNEW)+'</div>'+
+      '<div class="hint" style="margin-top:10px">Запишите: показывается один раз. Прежний код больше не действует.</div>'
+     :'<p style="font-size:14px;color:var(--muted);line-height:1.55">Этим кодом можно сменить пароль, '+
+      'не обращаясь к администратору сервера. Он был выдан при создании учётной записи. '+
+      'Если код потерян — выпустите новый, старый перестанет работать.</p>')+
+    '<button class="btn btn-ghost btn-sm" id="recGen" style="margin-top:14px"><span>'+
+    (RECNEW?'Выпустить ещё один':'Выпустить новый код')+'</span></button>','только для вас');
+
+  var bkCard=card('Резервные копии',
+    BACKUPS===null?'<div class="empty">Загружаю…</div>':
+    (!BACKUPS.length?'<p style="font-size:14px;color:var(--muted);line-height:1.55">'+
+      'Копия каждого файла делается автоматически один раз в сутки перед первым изменением '+
+      'и хранится две недели. Пока копий нет — появятся после первых правок.</p>'
+     :'<div class="tbl-scroll"><table class="tbl"><thead><tr><th>Файл</th><th>Дата</th><th class="r">Размер</th>'+
+      '</tr></thead><tbody>'+BACKUPS.slice(0,14).map(function(b){
+        return '<tr style="cursor:default"><td class="id">'+esc(b.file)+'</td>'+
+          '<td class="n who-s">'+esc(String(b.at).slice(0,10))+'</td>'+
+          '<td class="r n">'+Math.round((b.size||0)/1024*10)/10+' КБ</td></tr>';
+      }).join('')+'</tbody></table></div>'),
+    BACKUPS&&BACKUPS.length?BACKUPS.length+' шт.':'',false);
+
   var note=SRV.on?'':'<div class="warnbox" style="margin-bottom:4px">Сервер недоступен: '+
     'учётные записи не работают в автономном режиме.</div>';
+  if(SRV.on&&SRV.hasRecovery===false)
+    note='<div class="warnbox" style="margin-bottom:4px"><b>У вас нет кода восстановления.</b> '+
+      'Учётная запись создана раньше, чем появилась эта возможность. Без кода вернуть доступ '+
+      'при забытом пароле можно будет только через сервер. Выпустите код в блоке ниже и запишите его.</div>'+note;
 
   return note+card('Кто имеет доступ',rows,USERLIST?USERLIST.length+' чел.':'',false)+
-    '<div class="grid-2b">'+addForm+pwForm+'</div>';
+    '<div class="grid-2b">'+addForm+pwForm+'</div>'+
+    '<div class="grid-2b">'+recCard+bkCard+'</div>';
 }
 function bindUsers(){
+  if(BACKUPS===null&&SRV.on){
+    Store.loadBackups(function(list){BACKUPS=list||[];if(state.page==='users')render()});
+  }
+  var rg=$('#recGen');
+  if(rg)rg.addEventListener('click',function(){
+    if(!SRV.on){toast('Работает только на сервере');return}
+    if(!confirm('Выпустить новый код восстановления? Прежний перестанет действовать.'))return;
+    rg.disabled=true;
+    Store.newRecovery(function(code,err){
+      rg.disabled=false;
+      if(err){toast(err);return}
+      RECNEW=code;SRV.hasRecovery=true;render();toast('Новый код выпущен — запишите его');
+    });
+  });
   if(USERLIST===null){
     Store.loadUsers(function(list,err){
       USERLIST=err?[]:list;
@@ -3429,6 +3749,9 @@ function render(){
   $$('.new-contract').forEach(function(b){
     b.addEventListener('click',function(){contractForm(null)});
   });
+  var el1=$('#expLeads');if(el1)el1.addEventListener('click',exportLeads);
+  var el2=$('#expContracts');if(el2)el2.addEventListener('click',exportContracts);
+  bindSort();
   $$('[data-cl]').forEach(function(tr){
     tr.addEventListener('click',function(){openClient(tr.dataset.cl)});
   });

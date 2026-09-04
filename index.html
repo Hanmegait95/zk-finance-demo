@@ -123,9 +123,42 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hdr-tel svg{flex:0 0 auto;opacity:.75}
 .hdr-tel:hover svg{opacity:1}
 
+/* ============ ПРИМЕР РАСЧЁТА В ГЕРОЕ ============ */
+.hex{
+  display:block;margin-top:26px;padding:20px 22px;background:var(--ivory-hi);
+  border:1px solid var(--rule);border-radius:var(--r-lg);
+  transition:border-color .3s var(--ease),transform .3s var(--ease);
+}
+.hex:hover{border-color:var(--rule-strong);transform:translateY(-2px)}
+.hex-l{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.hex-row{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-top:12px}
+.hex-i{display:flex;flex-direction:column;line-height:1.15}
+.hex-i b{font-size:19px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.hex-i span{font-size:12px;color:var(--muted);margin-top:3px}
+.hex-i.main b{font-size:26px}
+.hex-s{font-size:12.5px;color:var(--muted-2);padding-bottom:4px}
+.hex-go{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13.5px;font-weight:600}
+.hex-go svg{transition:transform .3s var(--ease)}
+.hex:hover .hex-go svg{transform:translateX(4px)}
+
+/* ============ WHATSAPP ============ */
+.hdr-wa{
+  display:grid;place-items:center;width:40px;height:40px;border-radius:var(--r-pill);
+  border:1px solid var(--rule-strong);color:var(--muted);
+  transition:background .25s,color .25s,border-color .25s;
+}
+.hdr-wa:hover{background:#25D366;border-color:#25D366;color:#fff}
+.cta-wa{
+  display:inline-flex;align-items:center;gap:9px;color:var(--on-ink);opacity:.8;
+  font-size:14px;font-weight:600;transition:opacity .2s;
+}
+.cta-wa:hover{opacity:1}
+
 /* ============ НИЖНЯЯ ПАНЕЛЬ НА ТЕЛЕФОНЕ ============ */
 .mbar{display:none}
 @media (max-width:780px){
+  .mbar.mbar-3{grid-template-columns:auto auto 1fr}
+  .mbar-b.wa{padding:0 16px;background:#25D366;border-color:#25D366;color:#fff}
   .mbar{
     display:grid;grid-template-columns:auto 1fr;gap:10px;position:fixed;left:0;right:0;bottom:0;
     z-index:70;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
@@ -615,6 +648,12 @@ select.inp{
 .gate p{color:var(--muted);font-size:14.5px;line-height:1.6}
 .gate-users{display:flex;flex-direction:column;gap:8px;margin:26px 0 22px}
 .gate-hint{font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.45}
+.reccode{
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:22px;font-weight:700;
+  letter-spacing:.06em;text-align:center;padding:22px 14px;background:var(--ink);color:#fff;
+  border-radius:var(--r-lg);user-select:all;word-break:break-all;
+}
+.rec-act{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
 .pw-wrap{position:relative}
 .pw-wrap .inp{padding-right:52px}
 .pw-eye{
@@ -914,7 +953,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
   .wrap{padding:0 18px}
   .nav{display:none}
   .burger{display:inline-flex;margin-left:auto}
-  .hdr-act .btn,.hdr-tel{display:none}
+  .hdr-act .btn,.hdr-tel,.hdr-wa{display:none}
   .hdr-in{gap:12px;height:70px}
   .nav.open{
     display:flex;position:absolute;top:70px;left:12px;right:12px;background:var(--ivory-hi);
@@ -975,6 +1014,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
 .swi input:checked+.swi-b::after{transform:translateX(18px);background:#fff}
 .swi input:disabled+.swi-b{opacity:.45}
 .swi input:focus-visible+.swi-b{outline:2px solid var(--ink);outline-offset:3px}
+.fw.hide{display:none}
 
 /* ============ СПИСОК ДЕЛ НА ДАШБОРДЕ ============ */
 .todo-g{border-bottom:1px solid var(--rule)}
@@ -1158,6 +1198,8 @@ function short(n){
   if(n>=1e3)return '₽'+Math.round(n/1e3)+' тыс';
   return '₽'+nf(n);
 }
+function digits(v){return String(v||'').replace(/\D/g,'')}
+function digitsPlus(v){var d=String(v||'').replace(/\D/g,'');return d?'+'+d:''}
 function ini(name){var p=String(name||'').trim().split(/\s+/);return ((p[0]||'')[0]||'')+((p[1]||'')[0]||'')}
 function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
 function clone(o){return JSON.parse(JSON.stringify(o))}
@@ -1174,6 +1216,7 @@ var DEFAULT_CONTENT={
     name:'ZK Finance',
     tagline:'Исламская рассрочка',
     phone:'+7 938 000-11-22',
+    whatsapp:'+7 938 000-11-22',
     hours:'Пн–Сб, 9:00–19:00 · WhatsApp и Telegram',
     demoBadge:''
   },
@@ -1188,6 +1231,8 @@ var DEFAULT_CONTENT={
     title:'Рассрочка без процентов.',
     accent:'Договор мурабаха.',
     lead:'Мы покупаем товар, который вы выбрали, и продаём его вам в рассрочку с наценкой, известной заранее. Наценка фиксируется в договоре и не меняется никогда — ни при просрочке, ни при досрочном погашении.',
+    examplePrice:2400000,
+    exampleTerm:12,
     cta1:'Рассчитать платёж',
     cta2:'Как это работает',
     trust:'Конечная сумма названа <b>до подписания</b> и не меняется до последнего платежа',
@@ -1349,6 +1394,23 @@ var CFG={markup:{6:8,12:15,18:22,24:30},minDown:20,maxSum:6000000,penalty:3000};
 var PRODUCTS=['Автомобиль','Недвижимость','Техника и ремонт','Бизнес-оборудование'];
 var CITIES=['Грозный','Гудермес','Аргун','Назрань','Хасавюрт','Махачкала','Москва'];
 
+var CALLS=[
+  {id:'',t:'Не звонили',cls:'neut'},
+  {id:'reached',t:'Дозвонился',cls:'ok'},
+  {id:'noanswer',t:'Не отвечает',cls:'warn'},
+  {id:'callback',t:'Перезвонить',cls:'info'},
+  {id:'refused',t:'Отказался',cls:'crit'}
+];
+function callInfo(id){
+  return CALLS.filter(function(c){return c.id===(id||'')})[0]||CALLS[0];
+}
+/* Заявки, которым назначен звонок на сегодня или раньше. */
+function callbacksDue(){
+  return state.deals.filter(function(d){
+    if(d.callStatus!=='callback'||!d.callbackAt)return false;
+    return isoToDate(d.callbackAt)<=TODAY;
+  }).sort(function(a,b){return isoToDate(a.callbackAt)-isoToDate(b.callbackAt)});
+}
 var STAGES=[
   {id:'new',t:'Новая'},{id:'scoring',t:'Скоринг'},{id:'shariah',t:'Проверка товара'},
   {id:'approve',t:'Решение'},{id:'contract',t:'Договор'},{id:'issued',t:'Выдана'}
@@ -1457,7 +1519,7 @@ function persist(){
 }
 /* ============ ХРАНИЛИЩЕ: СЕРВЕР ИЛИ БРАУЗЕР ============ */
 var API='/api/';
-var SRV={on:false,installed:false,authed:false,locked:false,csrf:'',user:null};
+var SRV={on:false,installed:false,authed:false,locked:false,hasRecovery:null,csrf:'',user:null};
 function api(action,opts,cb){
   opts=opts||{};
   var o={method:opts.method||'GET',credentials:'same-origin',headers:{}};
@@ -1486,7 +1548,7 @@ var Store={
     api('me',null,function(d){
       if(d&&d.server){
         SRV.on=true;SRV.installed=!!d.installed;SRV.authed=!!d.authed;
-        SRV.locked=!!d.locked;SRV.user=d.user||null;
+        SRV.locked=!!d.locked;SRV.user=d.user||null;SRV.hasRecovery=d.hasRecovery;
         if(SRV.user)state.user={name:SRV.user.name,role:SRV.user.role==='owner'?'Владелец':'Сотрудник',login:SRV.user.login};
       }
       cb();
@@ -1529,8 +1591,22 @@ var Store={
   })},
   install:function(login,name,pw,cb){
     api('install',{method:'POST',body:{login:login,name:name,password:pw}},function(d,e){
-      if(d){SRV.authed=true;SRV.installed=true;SRV.user=d.user||null}cb(e);
+      if(d){SRV.authed=true;SRV.installed=true;SRV.user=d.user||null}
+      cb(e,d&&d.recovery);
     });
+  },
+  recover:function(login,code,pw,cb){
+    api('recover',{method:'POST',body:{login:login,code:code,password:pw}},function(d,e){
+      if(d){SRV.authed=true;SRV.user=d.user||null}
+      cb(e,d&&d.recovery);
+    });
+  },
+  newRecovery:function(cb){
+    api('recovery-new',{method:'POST'},function(d,e){cb(d&&d.recovery,e)});
+  },
+  loadBackups:function(cb){
+    if(!SRV.on)return cb([]);
+    api('backups',null,function(d,e){cb(d&&d.backups||[],e)});
   },
   logout:function(cb){api('logout',{method:'POST'},function(){SRV.authed=false;SRV.user=null;cb&&cb()})},
   updateLead:function(id,patch,cb){
@@ -1635,7 +1711,8 @@ var ILL={
 function ill(k){
   return '<svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">'+(ILL[k]||ILL.gear)+'</svg>';
 }
-function digitsPlus(v){var d=String(v||'').replace(/\D/g,'');return d?'+'+d:''}
+var WA_ICON='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'+
+ '<path d="M12 2a10 10 0 00-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1012 2zm0 2a8 8 0 110 16 8 8 0 01-4.2-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 0112 4zm-3.4 4c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.8 2.9 4.5 3.9 2.2.9 2.6.7 3.1.7.5 0 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.6-.3l-1.6-.8c-.2-.1-.4-.1-.6.1l-.7.9c-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.3-1.6-1.5-1.8-.1-.3 0-.4.1-.5l.5-.6c.1-.2.2-.3.2-.5 0-.2 0-.3-.1-.5l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5z"/></svg>';
 var ARR='<svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg>';
 function head(eyebrow,title,desc){
   return '<div class="sec-head"><span class="eyebrow reveal">'+esc(eyebrow)+'</span>'+
@@ -1657,6 +1734,8 @@ function renderSite(){
     }).join('')+'</nav>'+
     '<div class="hdr-act">'+
       (C.brand.demoBadge?'<span class="demo-tag">'+esc(C.brand.demoBadge)+'</span>':'')+
+      (C.brand.whatsapp?'<a class="hdr-wa" href="https://wa.me/'+esc(digits(C.brand.whatsapp))+
+        '" target="_blank" rel="noopener" aria-label="Написать в WhatsApp">'+WA_ICON+'</a>':'')+
       '<a class="hdr-tel" href="tel:'+esc(digitsPlus(C.brand.phone))+'">'+
         '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">'+
         '<path d="M3 2h3l1.5 3.5-2 1.2a10 10 0 004.8 4.8l1.2-2L15 11v3a1 1 0 01-1.1 1A12.5 12.5 0 012 3.1 1 1 0 013 2z"/></svg>'+
@@ -1676,7 +1755,8 @@ function renderSite(){
       '<div class="hero-cta reveal" style="--d:.24s">'+
         '<a class="btn btn-lg" href="#kalkulyator"><span>'+esc(H.cta1)+'</span><span class="btn-arr">→</span></a>'+
         '<a class="btn btn-ghost btn-lg" href="#kak"><span>'+esc(H.cta2)+'</span></a></div>'+
-      (H.trust?'<div class="hero-trust reveal" style="--d:.32s"><span>✓</span><span>'+H.trust+'</span></div>':'')+
+      exampleBlock(H)+
+      (H.trust?'<div class="hero-trust reveal" style="--d:.4s"><span>✓</span><span>'+H.trust+'</span></div>':'')+
     '</div>'+
     '<div class="hero-side reveal" style="--d:.4s">'+H.specs.map(function(s){
       return '<div class="spec"><span class="spec-k">'+esc(s.k)+'</span><span class="spec-v">'+esc(s.v)+'</span></div>';
@@ -1836,7 +1916,9 @@ function renderSite(){
     }).join('')+'</div></div></section>';
 
   h+=renderForm()+renderFaq()+renderCta()+renderFooter();
-  h+='<div class="mbar">'+
+  h+='<div class="mbar'+(C.brand.whatsapp?' mbar-3':'')+'">'+
+      (C.brand.whatsapp?'<a class="mbar-b wa" href="https://wa.me/'+esc(digits(C.brand.whatsapp))+
+        '" target="_blank" rel="noopener" aria-label="WhatsApp">'+WA_ICON+'</a>':'')+
       '<a class="mbar-b" href="tel:'+esc(digitsPlus(C.brand.phone))+'">'+
         '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">'+
         '<path d="M3 2h3l1.5 3.5-2 1.2a10 10 0 004.8 4.8l1.2-2L15 11v3a1 1 0 01-1.1 1A12.5 12.5 0 012 3.1 1 1 0 013 2z"/></svg>'+
@@ -1846,6 +1928,24 @@ function renderSite(){
   return h;
 }
 
+/* Наглядный ответ на главный вопрос — сколько платить в месяц. */
+function exampleBlock(H){
+  var price=+H.examplePrice||0,term=+H.exampleTerm||12;
+  if(!price)return '';
+  var down=Math.round(price*0.3),fin=price-down;
+  var rate=CFG.markup[term]||15;
+  var mk=Math.round(fin*rate/100),total=fin+mk,mo=Math.round(total/term);
+  return '<a class="hex reveal" href="#kalkulyator" style="--d:.32s">'+
+    '<span class="hex-l">Например</span>'+
+    '<span class="hex-row">'+
+      '<span class="hex-i"><b>'+money(price)+'</b><span>товар</span></span>'+
+      '<span class="hex-s">взнос 30%</span>'+
+      '<span class="hex-i"><b>'+money(down)+'</b><span>сразу</span></span>'+
+      '<span class="hex-s">на '+term+' мес</span>'+
+      '<span class="hex-i main"><b>'+money(mo)+'</b><span>в месяц</span></span>'+
+    '</span>'+
+    '<span class="hex-go">Посчитать под свою сумму '+ARR+'</span></a>';
+}
 function renderForm(){
   var F=CONTENT.form,P=CONTENT.products.items;
   return '<section class="sec" id="zayavka"><div class="wrap">'+head(F.eyebrow,F.title,F.desc)+
@@ -1909,6 +2009,8 @@ function renderCta(){
     '<div class="cta-side reveal" style="--d:.1s">'+
       '<span class="cta-phone">'+esc(B.phone)+'</span>'+
       '<span class="cta-hours">'+esc(B.hours)+'</span>'+
+      (B.whatsapp?'<a class="cta-wa" href="https://wa.me/'+esc(digits(B.whatsapp))+
+        '" target="_blank" rel="noopener">'+WA_ICON+'<span>Написать в WhatsApp</span></a>':'')+
       '<a class="btn btn-white btn-lg" href="#zayavka"><span>'+esc(T.btn)+'</span><span class="btn-arr">→</span></a>'+
     '</div></div></section>';
 }
