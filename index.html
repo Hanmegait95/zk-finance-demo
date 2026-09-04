@@ -3,8 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="ZK Finance — исламская рассрочка без процентов по договору мурабаха. Сайт и хаб с админкой.">
+<meta name="description" content="ZK Finance — исламская рассрочка без процентов по договору мурабаха. Фиксированная наценка, график платежей известен до подписания.">
 <meta name="color-scheme" content="light">
+<meta property="og:title" content="ZK Finance — рассрочка без процентов">
+<meta property="og:description" content="Договор мурабаха: наценка фиксируется в договоре и не растёт. Решение по заявке за 30 минут.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%23000%22/%3E%3Ctext x=%2216%22 y=%2221%22 font-family=%22Helvetica,Arial%22 font-size=%2213%22 font-weight=%22bold%22 fill=%22%23fff%22 text-anchor=%22middle%22%3EZK%3C/text%3E%3C/svg%3E">
 </head>
 <body>
 <title>ZK Finance</title>
@@ -962,6 +967,11 @@ input.ai[type=number]{font-variant-numeric:tabular-nums}
   padding:14px 16px;font-size:13.5px;color:var(--warn);line-height:1.55;
 }
 .warnbox b{font-weight:700}
+.okbox{
+  background:var(--ok-bg);border:1px solid var(--ok);border-radius:var(--r-md);
+  padding:14px 16px;font-size:13.5px;color:var(--ok);line-height:1.55;
+}
+.okbox b{font-weight:700}
 
 @media (max-width:1140px){
   .adm{grid-template-columns:1fr}
@@ -995,8 +1005,8 @@ input.ai[type=number]{font-variant-numeric:tabular-nums}
   <div class="gate">
     <div class="gate-card">
       <span class="mark">ZK</span>
-      <h2>Вход в хаб</h2>
-      <p>Демо-режим: пароль не требуется. Выберите роль — набор разделов и права изменятся.</p>
+      <h2 id="gateTitle">Вход в хаб</h2>
+      <p id="gateHint">Демо-режим: пароль не требуется.</p>
       <div class="gate-users" id="gateUsers"></div>
       <button class="btn" id="gateGo" style="width:100%"><span>Войти</span></button>
       <p style="margin-top:16px"><a href="#/" style="color:var(--muted);text-decoration:underline">Вернуться на сайт</a></p>
@@ -1022,7 +1032,7 @@ input.ai[type=number]{font-variant-numeric:tabular-nums}
           <span class="gu-n" id="meName">—</span>
           <span class="gu-r" id="meRole">—</span>
         </span>
-        <a class="rail-exit" href="#/" title="Выйти на сайт">↩</a>
+        <button class="rail-exit" id="railExit" title="Выйти">↩</button>
       </div>
     </aside>
     <div class="hub-main">
@@ -1379,7 +1389,7 @@ function deepMerge(base,patch){
   for(k in patch)if(!(k in out))out[k]=patch[k];
   return out;
 }
-function load(){
+function loadLocal(){
   try{
     var raw=localStorage.getItem(LS);if(!raw)return;
     var d=JSON.parse(raw);
@@ -1389,7 +1399,7 @@ function load(){
     if(d.paidExtra)state.paidExtra=d.paidExtra;
   }catch(e){}
 }
-function persist(){
+function persistLocal(){
   try{
     localStorage.setItem(LS,JSON.stringify({
       v:4,content:CONTENT,cfg:CFG,
@@ -1397,9 +1407,95 @@ function persist(){
       paidExtra:state.paidExtra
     }));
     return true;
-  }catch(e){toast('Не удалось сохранить: хранилище браузера недоступно');return false}
+  }catch(e){return false}
 }
-load();
+function persist(){
+  if(SRV.on)return true;
+  return persistLocal();
+}
+/* ============ ХРАНИЛИЩЕ: СЕРВЕР ИЛИ БРАУЗЕР ============ */
+var API='api/';
+var SRV={on:false,installed:false,authed:false,csrf:''};
+function api(action,opts,cb){
+  opts=opts||{};
+  var o={method:opts.method||'GET',credentials:'same-origin',headers:{}};
+  if(opts.body){o.headers['Content-Type']='application/json';o.body=JSON.stringify(opts.body)}
+  if(SRV.csrf)o.headers['X-CSRF']=SRV.csrf;
+  var done=false;
+  var t=setTimeout(function(){if(!done){done=true;cb(null,'timeout')}},12000);
+  fetch(API+'?a='+action,o).then(function(r){
+    return r.text().then(function(txt){
+      var d=null;try{d=JSON.parse(txt)}catch(e){}
+      return {ok:r.ok,status:r.status,data:d};
+    });
+  }).then(function(r){
+    if(done)return;done=true;clearTimeout(t);
+    if(!r.data)return cb(null,'Сервер ответил не JSON (код '+r.status+')');
+    if(r.data.csrf)SRV.csrf=r.data.csrf;
+    if(!r.ok||r.data.ok===false)return cb(null,r.data.error||('Ошибка '+r.status));
+    cb(r.data,null);
+  }).catch(function(e){
+    if(done)return;done=true;clearTimeout(t);
+    cb(null,String(e&&e.message||e));
+  });
+}
+var Store={
+  probe:function(cb){
+    api('me',null,function(d){
+      if(d&&d.server){SRV.on=true;SRV.installed=!!d.installed;SRV.authed=!!d.authed}
+      cb();
+    });
+  },
+  loadContent:function(cb){
+    if(!SRV.on){loadLocal();return cb()}
+    api('content',null,function(d){
+      if(d&&d.content)CONTENT=deepMerge(clone(DEFAULT_CONTENT),d.content);
+      if(d&&d.cfg)CFG=deepMerge(CFG,d.cfg);
+      cb();
+    });
+  },
+  saveContent:function(cb){
+    if(!SRV.on){cb(persistLocal()?null:'Хранилище браузера недоступно');return}
+    api('content',{method:'POST',body:{content:CONTENT,cfg:CFG}},function(d,err){cb(err)});
+  },
+  sendLead:function(lead,cb){
+    if(!SRV.on){
+      state.deals.unshift(lead);persistLocal();return cb(lead.id,null);
+    }
+    api('lead',{method:'POST',body:lead},function(d,err){
+      if(err)return cb(null,err);
+      lead.id=d.id;state.deals.unshift(lead);cb(d.id,null);
+    });
+  },
+  loadLeads:function(cb){
+    if(!SRV.on||!SRV.authed)return cb();
+    api('leads',null,function(d){
+      if(d&&d.leads&&d.leads.length){
+        var have={};state.deals.forEach(function(x){have[x.id]=1});
+        d.leads.filter(function(l){return !l.deleted&&!have[l.id]}).forEach(function(l){
+          state.deals.unshift({
+            id:l.id,name:l.name,prod:l.prod||'—',city:l.city||'—',
+            sum:+l.sum||0,term:+l.term||12,down:30,mgr:'Не назначен',
+            stage:l.stage||'new',days:0,score:0,
+            note:(l.note||'Заявка с сайта')+' · '+(l.phone||''),src:'lead'
+          });
+        });
+      }
+      cb();
+    });
+  },
+  setStage:function(id,stage){
+    if(!SRV.on)return persistLocal();
+    api('lead-stage',{method:'POST',body:{id:id,stage:stage}},function(){});
+  },
+  login:function(pw,cb){api('login',{method:'POST',body:{password:pw}},function(d,e){
+    if(d)SRV.authed=true;cb(e);
+  })},
+  install:function(pw,cb){api('install',{method:'POST',body:{password:pw}},function(d,e){
+    if(d){SRV.authed=true;SRV.installed=true}cb(e);
+  })},
+  logout:function(cb){api('logout',{method:'POST'},function(){SRV.authed=false;cb&&cb()})}
+};
 
 /* ============ TOAST ============ */
 var toastT;
@@ -1987,17 +2083,25 @@ function wzInit(){
     });
     if(bad){(!name.value.trim()?name:phone).focus();toast('Заполните имя и телефон — без них заявку не принять');return}
     var n=state.deals.filter(function(d){return d.src==='lead'}).length+1;
+    var noteTxt=$('#fNote').value.trim()||'Заявка с сайта';
     var lead={
       id:'ZK-2609-1'+('0'+n).slice(-2),
-      name:name.value.trim(),prod:wz.prod,city:$('#fCity').value,
+      name:name.value.trim(),
+      phone:phone.value.trim(),
+      when:$('#fWhen').value,
+      prod:wz.prod,city:$('#fCity').value,
       sum:wz.sum,term:wz.term,down:30,mgr:'Не назначен',
       stage:'new',days:0,score:0,
-      note:($('#fNote').value.trim()||'Заявка с сайта')+' · '+phone.value.trim()+' · звонить: '+$('#fWhen').value,
+      note:noteTxt+' · '+phone.value.trim()+' · звонить: '+$('#fWhen').value,
       src:'lead'
     };
-    state.deals.unshift(lead);persist();
-    $('#wId').textContent=lead.id;
-    wzPane(3);
+    var btn=$('#wSend');btn.disabled=true;
+    Store.sendLead(lead,function(id,err){
+      btn.disabled=false;
+      if(err){toast('Не удалось отправить: '+err);return}
+      $('#wId').textContent=id;
+      wzPane(3);
+    });
   });
   $('#wAgain').addEventListener('click',function(){
     $('#fName').value='';$('#fPhone').value='';$('#fNote').value='';
@@ -2035,7 +2139,10 @@ function navInit(){
 var pickUser=USERS[0];
 var pendingHub='#/hub/dash';
 function gateInit(){
+  if(SRV.on)return gateServer();
   var box=$('#gateUsers');box.innerHTML='';
+  $('#gateTitle').textContent='Вход в хаб';
+  $('#gateHint').textContent='Демо-режим: пароль не требуется. Выберите роль — набор разделов и права изменятся.';
   USERS.forEach(function(u){
     var b=el('button','gu');
     b.type='button';
@@ -2050,10 +2157,49 @@ function gateInit(){
     box.appendChild(b);
   });
   $('#gateGo').addEventListener('click',function(){
-    state.user=pickUser;
+    state.user=pickUser;enterHub();
+  });
+}
+function enterHub(){
+  Store.loadLeads(function(){
     if(location.hash===pendingHub)route();
     else location.hash=pendingHub;
   });
+}
+function gateServer(){
+  var first=!SRV.installed;
+  $('#gateTitle').textContent=first?'Первый вход':'Вход в хаб';
+  $('#gateHint').textContent=first
+    ? 'Придумайте пароль администратора — им вы будете входить в хаб и редактировать сайт. Пароль сохраняется на сервере в зашифрованном виде, восстановить его нельзя, поэтому запишите.'
+    : 'Введите пароль администратора.';
+  var box=$('#gateUsers');
+  box.innerHTML='<div style="padding:2px 0"><label class="lbl">Пароль</label>'+
+    '<input class="inp" type="password" id="gatePw" autocomplete="'+(first?'new-password':'current-password')+'" placeholder="'+(first?'минимум 8 символов':'')+'"></div>'+
+    (first?'<div style="padding:12px 0 2px"><label class="lbl">Повторите пароль</label>'+
+      '<input class="inp" type="password" id="gatePw2" autocomplete="new-password"></div>':'');
+  box.style.background='transparent';box.style.border='0';box.style.padding='0';
+  var go=$('#gateGo');
+  go.querySelector('span').textContent=first?'Задать пароль и войти':'Войти';
+  var busy=false;
+  var submit=function(){
+    if(busy)return;
+    var pw=$('#gatePw').value;
+    if(first){
+      if(pw.length<8){toast('Пароль должен быть не короче 8 символов');return}
+      if(pw!==$('#gatePw2').value){toast('Пароли не совпадают');return}
+    }else if(!pw){toast('Введите пароль');return}
+    busy=true;go.disabled=true;
+    var after=function(err){
+      busy=false;go.disabled=false;
+      if(err){toast(err);return}
+      state.user=USERS[0];enterHub();
+    };
+    first?Store.install(pw,after):Store.login(pw,after);
+  };
+  go.onclick=submit;
+  $('#gatePw').addEventListener('keydown',function(e){if(e.key==='Enter')submit()});
+  if($('#gatePw2'))$('#gatePw2').addEventListener('keydown',function(e){if(e.key==='Enter')submit()});
+  setTimeout(function(){$('#gatePw').focus()},80);
 }
 
 /* ============ СХЕМА АДМИНКИ ============ */
@@ -2275,10 +2421,13 @@ function pgContent(){
       '</span>'+
     '</div></div>';
 
-  return '<div class="warnbox" style="margin-bottom:4px"><b>Правки сохраняются в этом браузере.</b> ' +
-    'Чтобы перенести контент на другое устройство или отдать разработчику — «Скачать JSON». ' +
-    'Общий для всех посетителей контент появится, когда подключим бэкенд на вашем хостинге.</div>'+
-    '<div class="adm">'+nav+pane+'</div>';
+  var box=SRV.on
+    ? '<div class="okbox" style="margin-bottom:4px"><b>Правки сохраняются на сервере.</b> '+
+      'После кнопки «Сохранить» новый текст видят все посетители сайта. '+
+      'JSON-выгрузка пригодится как резервная копия перед крупными правками.</div>'
+    : '<div class="warnbox" style="margin-bottom:4px"><b>Правки сохраняются только в этом браузере.</b> '+
+      'Это демо-режим без сервера. На боевом хостинге правки увидят все посетители.</div>';
+  return box+'<div class="adm">'+nav+pane+'</div>';
 }
 function anchorOf(id){
   var m={hero:'/',partners:'/',problem:'pochemu',principles:'principy',how:'kak',calc:'kalkulyator',
@@ -2292,10 +2441,13 @@ function bindContent(){
     b.addEventListener('click',function(){state.admSec=b.dataset.sec;render()});
   });
   $('#admSave').addEventListener('click',function(){
-    if(persist()){
+    var b=$('#admSave');b.disabled=true;
+    Store.saveContent(function(err){
+      b.disabled=false;
+      if(err){toast('Не сохранилось: '+err);return}
       state.dirty=false;siteStale=true;$('#admBar').classList.remove('on');
-      toast('Контент сохранён — сайт обновлён');
-    }
+      toast(SRV.on?'Сохранено на сервере — сайт обновлён для всех':'Контент сохранён — сайт обновлён');
+    });
   });
   $('#admExport').addEventListener('click',exportJson);
   $('#admImport').addEventListener('click',function(){$('#importFile').click()});
@@ -2715,6 +2867,7 @@ function bindDeals(){
       var to=col.dataset.stage;
       if(d.stage===to)return;
       d.stage=to;d.days=0;
+      if(d.src==='lead')Store.setStage(d.id,to);else persist();
       var st=STAGES.filter(function(s){return s.id===to})[0];
       render();toast(d.id+' → «'+st.t+'»');
     });
@@ -3002,13 +3155,16 @@ function openDeal(id){
   drawerOpen(d.name,d.id+' · заявка',body,foot);
   var a=$('[data-adv]'),r=$('[data-rej]');
   if(a)a.addEventListener('click',function(){
-    d.stage=nxt.id;d.days=0;drawerClose();render();toast(d.id+' → «'+nxt.t+'»');
+    d.stage=nxt.id;d.days=0;
+    if(d.src==='lead')Store.setStage(d.id,nxt.id);else persist();
+    drawerClose();render();toast(d.id+' → «'+nxt.t+'»');
   });
   if(r)r.addEventListener('click',function(){
     state.deals=state.deals.filter(function(o){return o.id!==d.id});
     REJECTED.unshift({id:d.id,name:d.name,prod:d.prod,sum:d.sum,
       reason:'Отказ менеджера',by:state.user?state.user.name:'—'});
-    persist();drawerClose();render();toast('Отказ по '+d.id+' оформлен');
+    if(d.src==='lead')Store.setStage(d.id,'deleted');else persist();
+    drawerClose();render();toast('Отказ по '+d.id+' оформлен');
   });
 }
 function openContract(id){
@@ -3229,6 +3385,12 @@ function init(){
   var s=$('#hubSearch');
   s.addEventListener('input',function(){state.q=s.value;render()});
   $('#hubMenu').addEventListener('click',function(){$('#rail').classList.toggle('open')});
+  $('#railExit').addEventListener('click',function(){
+    if(state.dirty&&!confirm('Есть несохранённые правки контента. Выйти и потерять их?'))return;
+    if(SRV.on){
+      Store.logout(function(){state.user=null;state.dirty=false;location.hash='#/'});
+    }else{state.user=null;location.hash='#/'}
+  });
   window.addEventListener('hashchange',route);
   window.addEventListener('beforeunload',function(e){
     if(state.dirty){e.preventDefault();e.returnValue=''}
@@ -3237,8 +3399,12 @@ function init(){
   window.addEventListener('resize',function(){
     clearTimeout(rt);rt=setTimeout(function(){girih();drawCharts()},150);
   });
-  route();
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){drawCharts();girih()});
+  Store.probe(function(){
+    Store.loadContent(function(){
+      route();
+      if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){drawCharts();girih()});
+    });
+  });
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
 else init();
