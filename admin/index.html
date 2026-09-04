@@ -569,6 +569,7 @@ select.inp{
 .gate h2{font-size:29px;margin:24px 0 10px;font-weight:600;letter-spacing:-.035em}
 .gate p{color:var(--muted);font-size:14.5px;line-height:1.6}
 .gate-users{display:flex;flex-direction:column;gap:8px;margin:26px 0 22px}
+.gate-hint{font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.45}
 .gu{
   background:var(--ivory-hi);border:1px solid var(--rule);border-radius:var(--r-lg);
   padding:14px 16px;display:flex;align-items:center;gap:13px;cursor:pointer;text-align:left;
@@ -1535,35 +1536,52 @@ function gateServer(){
     ? 'Первый вход. Создайте учётную запись владельца — она даёт полный доступ, включая управление другими сотрудниками. Пароль хранится в зашифрованном виде и восстановлению не подлежит: запишите его.'
     : 'Введите логин и пароль.';
   var box=$('#gateUsers');
-  var f=function(id,label,type,ac,ph){
+  var f=function(id,label,type,ac,ph,hint,extra){
     return '<div style="padding:0 0 12px"><label class="lbl">'+label+'</label>'+
-      '<input class="inp" type="'+type+'" id="'+id+'" autocomplete="'+ac+'"'+
-      (ph?' placeholder="'+ph+'"':'')+'></div>';
+      '<input class="inp" type="'+type+'" id="'+id+'" autocomplete="'+ac+'"'+(extra||'')+
+      (ph?' placeholder="'+ph+'"':'')+'>'+
+      (hint?'<div class="gate-hint">'+hint+'</div>':'')+'</div>';
   };
-  box.innerHTML=(first?f('gateName','Имя и фамилия','text','name','Заур Качаев'):'')+
-    f('gateLogin','Логин','text','username','zkachaev')+
-    f('gatePw','Пароль','password',first?'new-password':'current-password',first?'минимум 8 символов':'')+
+  var lat=' autocapitalize="off" autocorrect="off" spellcheck="false"';
+  box.innerHTML=(first?f('gateName','Имя и фамилия','text','name','Иван Иванов'):'')+
+    f('gateLogin','Логин','text','username','',first?'Только латиница и цифры. Например: zkachaev':'',lat)+
+    f('gatePw','Пароль','password',first?'new-password':'current-password','',first?'Минимум 8 символов. Любые символы, включая @ и цифры.':'')+
     (first?f('gatePw2','Повторите пароль','password','new-password',''):'');
   box.style.background='transparent';box.style.border='0';box.style.padding='0';box.style.gap='0';
   var go=$('#gateGo');
   go.querySelector('span').textContent=first?'Создать и войти':'Войти';
   var busy=false;
+  var bad=function(id,msg){
+    $$('.inp',box).forEach(function(i){i.classList.remove('err')});
+    var e=$('#'+id);if(e){e.classList.add('err');e.focus()}
+    toast(msg);
+  };
   var submit=function(){
     if(busy)return;
-    var login=($('#gateLogin').value||'').trim().toLowerCase();
+    var raw=($('#gateLogin').value||'').trim();
+    var login=raw.toLowerCase();
     var pw=$('#gatePw').value;
-    if(!/^[a-z0-9_.-]{3,32}$/.test(login)){
-      toast('Логин: 3–32 символа, латиница, цифры, дефис, точка, подчёркивание');return;
+    if(!raw){return bad('gateLogin','Впишите логин — поле пустое. Серый текст это подсказка')}
+    if(raw.length<3){return bad('gateLogin','Логин слишком короткий: минимум 3 символа')}
+    if(raw.length>32){return bad('gateLogin','Логин слишком длинный: максимум 32 символа')}
+    if(!/^[a-z0-9_.-]+$/.test(login)){
+      return bad('gateLogin','В логине только латинские буквы, цифры, дефис, точка и подчёркивание. Кириллица, пробелы и @ не подходят');
     }
     if(first){
-      if(!($('#gateName').value||'').trim()){toast('Укажите имя и фамилию');return}
-      if(pw.length<8){toast('Пароль должен быть не короче 8 символов');return}
-      if(pw!==$('#gatePw2').value){toast('Пароли не совпадают');return}
-    }else if(!pw){toast('Введите пароль');return}
+      if(!($('#gateName').value||'').trim()){return bad('gateName','Впишите имя и фамилию')}
+      if(pw.length<8){return bad('gatePw','Пароль короче 8 символов — сейчас '+pw.length)}
+      if(pw!==$('#gatePw2').value){return bad('gatePw2','Пароли не совпадают')}
+    }else if(!pw){return bad('gatePw','Введите пароль')}
+    $$('.inp',box).forEach(function(i){i.classList.remove('err')});
     busy=true;go.disabled=true;
     var after=function(err){
       busy=false;go.disabled=false;
-      if(err){toast(err);return}
+      if(err){
+        if(/логин/i.test(err))bad('gateLogin',err);
+        else if(/парол/i.test(err))bad('gatePw',err);
+        else toast(err);
+        return;
+      }
       state.user=SRV.user||{name:login,role:'Владелец'};
       enterHub();
     };
