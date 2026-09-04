@@ -113,6 +113,39 @@ button,input,select,textarea{font:inherit;color:inherit}
 .demo-tag{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;border:1px solid var(--rule-strong);color:var(--muted);padding:5px 11px;border-radius:var(--r-pill)}
 .burger{display:none;width:44px;height:44px;background:none;border:1px solid var(--rule-strong);border-radius:var(--r-pill);cursor:pointer;align-items:center;justify-content:center}
 
+/* ============ ТЕЛЕФОН В ШАПКЕ ============ */
+.hdr-tel{
+  display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:var(--r-pill);
+  border:1px solid var(--rule-strong);font-size:14px;font-weight:600;white-space:nowrap;
+  transition:background .25s,color .25s,border-color .25s;
+}
+.hdr-tel:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.hdr-tel svg{flex:0 0 auto;opacity:.75}
+.hdr-tel:hover svg{opacity:1}
+
+/* ============ НИЖНЯЯ ПАНЕЛЬ НА ТЕЛЕФОНЕ ============ */
+.mbar{display:none}
+@media (max-width:780px){
+  .mbar{
+    display:grid;grid-template-columns:auto 1fr;gap:10px;position:fixed;left:0;right:0;bottom:0;
+    z-index:70;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+    background:rgba(246,240,228,.94);backdrop-filter:blur(10px);
+    border-top:1px solid var(--rule);
+  }
+  .mbar-b{
+    display:flex;align-items:center;justify-content:center;gap:9px;height:52px;padding:0 20px;
+    border-radius:var(--r-pill);font-size:15px;font-weight:600;
+    border:1px solid var(--rule-strong);background:var(--ivory-hi);color:var(--ink);
+  }
+  .mbar-b.main{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .mbar-b:active{transform:scale(.98)}
+  body{padding-bottom:84px}
+  .ftr{padding-bottom:20px}
+}
+
+/* ============ АКТИВНЫЙ ПУНКТ МЕНЮ ============ */
+.nav a.now{color:var(--ink);background:rgba(0,0,0,.06)}
+
 /* ============ PILL ============ */
 .pill{
   display:inline-flex;align-items:center;gap:9px;padding:8px 16px 8px 12px;
@@ -823,6 +856,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
 /* ============ RESPONSIVE ============ */
 @media (max-width:1340px){
   .demo-tag{display:none}
+  .hdr-tel span{display:none}
+  .hdr-tel{padding:9px 12px}
   .nav{gap:2px}
   .nav a{font-size:13.5px;padding:8px 11px}
 }
@@ -859,7 +894,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
   .wrap{padding:0 18px}
   .nav{display:none}
   .burger{display:inline-flex;margin-left:auto}
-  .hdr-act .btn{display:none}
+  .hdr-act .btn,.hdr-tel{display:none}
   .hdr-in{gap:12px;height:70px}
   .nav.open{
     display:flex;position:absolute;top:70px;left:12px;right:12px;background:var(--ivory-hi);
@@ -1126,7 +1161,6 @@ var DEFAULT_CONTENT={
     {label:'Как это работает',anchor:'kak'},
     {label:'Продукты',anchor:'produkty'},
     {label:'Калькулятор',anchor:'kalkulyator'},
-    {label:'Шариатский совет',anchor:'sovet'},
     {label:'Вопросы',anchor:'voprosy'}
   ],
   hero:{
@@ -1136,7 +1170,7 @@ var DEFAULT_CONTENT={
     lead:'Мы покупаем товар, который вы выбрали, и продаём его вам в рассрочку с наценкой, известной заранее. Наценка фиксируется в договоре и не меняется никогда — ни при просрочке, ни при досрочном погашении.',
     cta1:'Рассчитать платёж',
     cta2:'Как это работает',
-    trust:'Каждая сделка проходит <b>шариатский аудит</b> — заключения публикуются в открытом реестре',
+    trust:'Конечная сумма названа <b>до подписания</b> и не меняется до последнего платежа',
     specs:[
       {k:'Наценка',v:'от 8%'},
       {k:'Срок рассрочки',v:'до 24 мес'},
@@ -1174,11 +1208,11 @@ var DEFAULT_CONTENT={
   principles:{
     eyebrow:'Основания',
     title:'Три запрета, на которых держится договор',
-    desc:'Исламское финансирование отличается от кредита не вывеской, а структурой сделки. Каждая заявка проверяется по трём основаниям — и любая из них может быть отклонена шариатским советом, даже если клиент платёжеспособен.',
+    desc:'Исламское финансирование отличается от кредита не вывеской, а структурой сделки. Каждая заявка проверяется по трём основаниям — и любая из них может стать причиной отказа, даже если клиент платёжеспособен.',
     items:[
       {ar:'ربا',eyebrow:'Запрет 01',h:'Риба — процент',p:'Деньги не могут порождать деньги. Наш доход — торговая наценка при перепродаже реального товара, а не плата за время пользования суммой.',note:'Следствие: наличными мы не выдаём. В сделке всегда есть товар и продавец.'},
-      {ar:'غرر',eyebrow:'Запрет 02',h:'Гарар — неизвестность',p:'Товар, цена, наценка, срок и график определены в момент подписания. Ни одна цифра не может измениться позже — плавающих ставок не существует.',note:'Следствие: досрочная скидка — наше право, а не пункт договора. Иначе цена стала бы неопределённой.'},
-      {ar:'حرام',eyebrow:'Запрет 03',h:'Харам — запретный товар',p:'Мы не финансируем алкоголь, табак, азартные игры, свинину и ростовщические услуги. Категория товара проверяется до одобрения заявки.',note:'Следствие: спорные категории уходят на совет. Ответ — в течение двух рабочих дней.'}
+      {ar:'غرر',eyebrow:'Запрет 02',h:'Гарар — неизвестность',p:'Товар, цена, наценка, срок и график определены в момент подписания. Ни одна цифра не может измениться позже — плавающих ставок не существует.',note:'Следствие: цена не меняется ни в одну сторону — ни при просрочке, ни при досрочном закрытии.'},
+      {ar:'حرام',eyebrow:'Запрет 03',h:'Харам — запретный товар',p:'Мы не финансируем алкоголь, табак, азартные игры, свинину и ростовщические услуги. Категория товара проверяется до одобрения заявки.',note:'Следствие: спорные категории рассматриваем отдельно. Ответ — в течение двух рабочих дней.'}
     ]
   },
   how:{
@@ -1195,7 +1229,7 @@ var DEFAULT_CONTENT={
       {h:'Вы выбираете товар',p:'Автомобиль у дилера, квартиру у застройщика, оборудование у поставщика. Присылаете счёт или ссылку на объявление — продавца выбираете сами, мы не навязываем партнёров.',tag:'30 минут на решение'},
       {h:'ZK Finance покупает его',p:'Мы оплачиваем товар продавцу напрямую и оформляем его в свою собственность. Деньги вам на руки не выдаются — их в этой сделке попросту нет.',tag:'Оплата в день одобрения'},
       {h:'Продаём вам с наценкой',p:'Подписываем договор купли-продажи в рассрочку. Итоговая цена — стоимость товара плюс наценка — зафиксирована одной суммой и разбита на равные платежи.',tag:'Один документ, без приложений'},
-      {h:'Вы платите равными долями',p:'График составлен при подписании и не пересматривается. Долг не растёт. Погасите досрочно — заплатите остаток, а часть наценки за неиспользованный срок вернём скидкой.',tag:'Досрочно — без штрафов'}
+      {h:'Вы платите равными долями',p:'График составлен при подписании и не пересматривается. Долг не растёт при просрочке. Закрыть договор можно досрочно в любой момент — без штрафов и комиссий, оплатив остаток по договору.',tag:'Без штрафов и комиссий'}
     ]
   },
   calc:{
@@ -1203,7 +1237,7 @@ var DEFAULT_CONTENT={
     title:'Посчитайте платёж по этапам',
     desc:'Расчёт показан так же, как он выглядит в договоре: от цены товара до последнего платежа, без «эффективных ставок». Наценка зависит только от срока и известна до подписания.',
     bankRate:28,
-    note:'Расчёт предварительный и не является публичной офертой. Итоговые условия фиксируются в договоре купли-продажи после проверки товара и одобрения шариатским советом.',
+    note:'Расчёт предварительный и не является публичной офертой. Итоговые условия фиксируются в договоре купли-продажи после проверки товара и одобрения заявки.',
     help:[
       'Присылаете счёт от продавца или ссылку на объявление',
       'Проверяем товар и категорию — решение за 30 минут',
@@ -1219,16 +1253,16 @@ var DEFAULT_CONTENT={
       {k:'Предмет договора',bad:'Заём денежных средств',good:'Купля-продажа товара'},
       {k:'Плата',bad:'Процент, начисляется на остаток',good:'Наценка, зафиксирована суммой'},
       {k:'Рост долга при просрочке',bad:'Проценты продолжают начисляться',good:'Долг не растёт ни на рубль'},
-      {k:'Досрочное погашение',bad:'Пересчёт по условиям банка',good:'Платите остаток, часть наценки вернём'},
+      {k:'Досрочное погашение',bad:'Пересчёт процентов по условиям банка',good:'Без штрафов и комиссий, сумма договора не меняется'},
       {k:'Штраф за просрочку',bad:'Пени в доход банка',good:'Фиксированный, идёт на садаку'},
       {k:'Страховка',bad:'Навязывается, входит в платёж',good:'Такафул по желанию, отдельно'},
-      {k:'Контроль сделки',bad:'Внутренний регламент',good:'Шариатский совет, аудит выборки'}
+      {k:'Что видно до подписания',bad:'Эффективная ставка и приложения к договору',good:'Конечная сумма одной цифрой и полный график'}
     ]
   },
   products:{
     eyebrow:'Продукты',
     title:'Что можно взять в рассрочку',
-    desc:'Условия по каждому направлению утверждены шариатским советом и не меняются в течение срока договора. Для недвижимости и партнёрских проектов применяются другие исламские контракты — мушарака и мудараба.',
+    desc:'Условия по каждому направлению фиксируются в договоре и не меняются в течение срока. Для недвижимости и партнёрских проектов применяются другие исламские контракты — мушарака и мудараба.',
     items:[
       {ill:'car',h:'Автомобиль',sub:'Мурабаха · новые и с пробегом',tag:'Хит',p:'Покупаем машину у дилера или частного продавца после проверки юридической чистоты. ПТС оформляется на вас при выдаче, залог — на срок рассрочки.',sum:'до ₽6 млн',term:'до 24 мес',down:'от 20%',cta:'Рассчитать платёж',href:'#kalkulyator'},
       {ill:'house',h:'Недвижимость',sub:'Мушарака мутанакиса',tag:'Убывающее партнёрство',p:'Мы покупаем долю в квартире вместе с вами и постепенно продаём её вам. Плата за пользование нашей долей уменьшается с каждым выкупленным процентом.',sum:'до ₽15 млн',term:'до 120 мес',down:'от 30%',cta:'Обсудить объект',href:'#zayavka'},
@@ -1250,17 +1284,7 @@ var DEFAULT_CONTENT={
       {h:'Договор купли-продажи в рассрочку',p:'Товар, конечная цена, наценка одной суммой, срок. Основной и единственный обязывающий документ сделки.'},
       {h:'График платежей',p:'Даты и равные суммы на весь срок. Составляется при подписании и не пересматривается в одностороннем порядке.'},
       {h:'Акт приёма-передачи товара',p:'Подтверждает, что ZK Finance владела товаром и передала его вам. Без него сделка не соответствует мурабахе.'},
-      {h:'Заключение шариатского совета',p:'Подтверждение допустимости категории товара и структуры сделки. Хранится в открытом реестре под номером.'}
-    ]
-  },
-  council:{
-    eyebrow:'Надзор',
-    title:'Шариатский совет',
-    desc:'Совет утверждает шаблоны договоров, ведёт список допустимых категорий товара и рассматривает спорные сделки. Заключения публикуются в реестре фетв.',
-    items:[
-      {h:'Председатель совета',role:'Фикх аль-муамалят',p:'Утверждает шаблоны мурабахи и мушараки, подписывает итоговые заключения по продуктовой линейке и выносит решения по спорным категориям.'},
-      {h:'Член совета',role:'Шариатский аудит',p:'Выборочно проверяет закрытые сделки: последовательность перехода собственности, корректность наценки, отсутствие скрытых платежей. Охват выборки — 18%.'},
-      {h:'Член совета',role:'Комплаенс и категории',p:'Ведёт реестр запрещённых категорий товара и рассматривает пограничные заявки — от торгового оборудования до долей в действующем бизнесе.'}
+      {h:'Полная стоимость одной строкой',p:'Итоговая сумма, наценка и дата последнего платежа вынесены на первую страницу договора — искать в приложениях ничего не нужно.'}
     ]
   },
   form:{
@@ -1279,10 +1303,10 @@ var DEFAULT_CONTENT={
     items:[
       {q:'Наценка — это ведь тот же процент?',a:'Нет. Процент начисляется на сумму долга и зависит от времени: чем дольше вы пользуетесь деньгами, тем больше платите. Наценка — это разница между закупочной и продажной ценой конкретного товара. Она названа один раз при подписании и после этого не может измениться: ни через год, ни при просрочке. Именно поэтому в сделке обязательно должен быть реальный товар, которым мы владели.'},
       {q:'Что будет, если я просрочу платёж?',a:'Долг не увеличится — начислять на него нечего. Договором предусмотрен фиксированный штраф за недобросовестную просрочку, и он не является нашим доходом: сумма направляется на благотворительность, отчёт публикуется. Если просрочка вызвана реальными трудностями, мы пересматриваем график без штрафа — обратитесь к менеджеру до даты платежа, а не после.'},
-      {q:'Можно ли погасить досрочно?',a:'Да, в любой момент и без ограничений. Вы платите остаток по договору, а часть наценки за неиспользованный срок мы возвращаем в виде скидки. Скидка не прописана как обязанность в договоре — это право продавца, иначе конечная цена стала бы неопределённой, а это уже гарар.'},
+      {q:'Можно ли погасить досрочно и что тогда с суммой?',a:'Погасить можно в любой момент — без штрафов, комиссий и предварительных уведомлений. Но сумма договора при этом не уменьшается: вы оплачиваете остаток по графику целиком. Это обратная сторона фиксированной цены: она названа один раз и не меняется ни в одну сторону — не растёт при просрочке и не пересчитывается при досрочном закрытии. Говорим об этом прямо, чтобы условие было понятно до подписания.'},
       {q:'Почему нельзя просто получить деньги наличными?',a:'Потому что тогда это был бы заём, а плата за заём — риба. Вся конструкция мурабахи держится на том, что предметом договора выступает товар: мы его покупаем, владеем им и продаём вам дороже. Если убрать товар, останется выдача денег под надбавку — ровно то, от чего мы уходим.'},
       {q:'Нужен ли залог и поручитель?',a:'По автомобилям и недвижимости — да, залог оформляется на срок рассрочки; это обеспечение, а не дополнительная плата. По технике и ремонту до 900 тысяч рублей залог не требуется. Поручитель нужен, если у клиента нет подтверждённого дохода или выбран максимальный срок.'},
-      {q:'Какие товары вы не финансируете?',a:'Алкоголь и табак, свинину, азартные игры и лотереи, ночные заведения, ростовщические финансовые услуги, торговлю долгами и производными инструментами. Спорные категории выносятся на шариатский совет, решение принимается в течение двух рабочих дней и попадает в открытый реестр.'},
+      {q:'Какие товары вы не финансируете?',a:'Алкоголь и табак, свинину, азартные игры и лотереи, ночные заведения, ростовщические финансовые услуги, торговлю долгами и производными инструментами. Спорные категории рассматриваем отдельно, решение принимаем в течение двух рабочих дней.'},
       {q:'Какие документы нужны?',a:'Паспорт и счёт от продавца — этого достаточно для рассрочки на технику. Для автомобиля добавляется подтверждение дохода за 6 месяцев, для недвижимости — документы по объекту и справка о составе семьи. Для ИП и ООО: выписка из реестра, оборот за год, договор с поставщиком оборудования.'}
     ]
   },
@@ -1291,7 +1315,7 @@ var DEFAULT_CONTENT={
     btn:'Оставить заявку'
   },
   footer:{
-    note:'Финансирование по нормам шариата: мурабаха, мушарака мутанакиса, мудараба. Каждая сделка проходит шариатский аудит.',
+    note:'Финансирование по нормам шариата: мурабаха, мушарака мутанакиса, мудараба. Конечная цена фиксируется в договоре и не меняется.',
     offices:[
       {city:'Грозный',addr:'пр. им. В. Путина, 1 — головной офис'},
       {city:'Хасавюрт',addr:'ул. Тотурбиева, 42'}
@@ -1306,7 +1330,7 @@ var PRODUCTS=['Автомобиль','Недвижимость','Техника 
 var CITIES=['Грозный','Гудермес','Аргун','Назрань','Хасавюрт','Махачкала','Москва'];
 
 var STAGES=[
-  {id:'new',t:'Новая'},{id:'scoring',t:'Скоринг'},{id:'shariah',t:'Шариат-контроль'},
+  {id:'new',t:'Новая'},{id:'scoring',t:'Скоринг'},{id:'shariah',t:'Проверка товара'},
   {id:'approve',t:'Решение'},{id:'contract',t:'Договор'},{id:'issued',t:'Выдана'}
 ];
 
@@ -1314,7 +1338,7 @@ var STAGES=[
 var USERS=[
   {id:'u1',name:'Владелец',role:'Полный доступ'},
   {id:'u2',name:'Менеджер',role:'Заявки и договоры'},
-  {id:'u3',name:'Комплаенс',role:'Шариатский контроль'}
+  {id:'u3',name:'Комплаенс',role:'Проверка товара'}
 ];
 
 /* ============ ДАННЫЕ CRM ============ */
@@ -1591,6 +1615,7 @@ var ILL={
 function ill(k){
   return '<svg class="prod-ill" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4">'+(ILL[k]||ILL.gear)+'</svg>';
 }
+function digitsPlus(v){var d=String(v||'').replace(/\D/g,'');return d?'+'+d:''}
 var ARR='<svg width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 4.5h14M10 1l4 3.5-4 3.5"/></svg>';
 function head(eyebrow,title,desc){
   return '<div class="sec-head"><span class="eyebrow reveal">'+esc(eyebrow)+'</span>'+
@@ -1612,6 +1637,10 @@ function renderSite(){
     }).join('')+'</nav>'+
     '<div class="hdr-act">'+
       (C.brand.demoBadge?'<span class="demo-tag">'+esc(C.brand.demoBadge)+'</span>':'')+
+      '<a class="hdr-tel" href="tel:'+esc(digitsPlus(C.brand.phone))+'">'+
+        '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">'+
+        '<path d="M3 2h3l1.5 3.5-2 1.2a10 10 0 004.8 4.8l1.2-2L15 11v3a1 1 0 01-1.1 1A12.5 12.5 0 012 3.1 1 1 0 013 2z"/></svg>'+
+        '<span>'+esc(C.brand.phone)+'</span></a>'+
       '<a class="btn btn-sm" href="#zayavka"><span>Оставить заявку</span></a>'+
       '<button class="burger" id="burger" aria-label="Меню" aria-expanded="false">'+
       '<svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 1h16M0 6h16M0 11h16"/></svg></button>'+
@@ -1735,7 +1764,7 @@ function renderSite(){
         '<span style="font-size:11px;color:var(--on-ink-muted)">снижается ровно</span></div>'+
         '<div class="msc" id="msc"></div></div>'+
       '<p class="res-note">'+esc(K.note)+'</p>'+
-      '<a class="btn btn-white btn-lg" href="#zayavka" style="margin-top:20px"><span>Отправить заявку на эти условия</span><span class="btn-arr">→</span></a>'+
+      '<button class="btn btn-white btn-lg" id="calcToForm" type="button" style="margin-top:20px"><span>Отправить заявку на эти условия</span><span class="btn-arr">→</span></button>'+
     '</div></div></div></section>';
 
   /* — сравнение — */
@@ -1786,15 +1815,14 @@ function renderSite(){
         '<div><h4>'+esc(x.h)+'</h4><p>'+esc(x.p)+'</p></div></div>';
     }).join('')+'</div></div></section>';
 
-  /* — совет — */
-  var CO=C.council;
-  h+='<section class="sec slab" id="sovet"><div class="wrap">'+head(CO.eyebrow,CO.title,CO.desc)+
-    '<div class="council">'+CO.items.map(function(x,i){
-      return '<div class="cm reveal"'+d(i)+'><div class="cm-av">'+('0'+(i+1)).slice(-2)+'</div>'+
-        '<h4>'+esc(x.h)+'</h4><div class="cm-role">'+esc(x.role)+'</div><p>'+esc(x.p)+'</p></div>';
-    }).join('')+'</div></div></section>';
-
   h+=renderForm()+renderFaq()+renderCta()+renderFooter();
+  h+='<div class="mbar">'+
+      '<a class="mbar-b" href="tel:'+esc(digitsPlus(C.brand.phone))+'">'+
+        '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">'+
+        '<path d="M3 2h3l1.5 3.5-2 1.2a10 10 0 004.8 4.8l1.2-2L15 11v3a1 1 0 01-1.1 1A12.5 12.5 0 012 3.1 1 1 0 013 2z"/></svg>'+
+        '<span>Позвонить</span></a>'+
+      '<a class="mbar-b main" href="#zayavka"><span>Оставить заявку</span></a>'+
+    '</div>';
   return h;
 }
 
@@ -2182,6 +2210,78 @@ function wzInit(){
   wzPreview();
 }
 
+/* ============ РАСЧЁТ ПЕРЕНОСИТСЯ В ЗАЯВКУ ============ */
+function calcToFormInit(){
+  var b=$('#calcToForm');if(!b)return;
+  b.addEventListener('click',function(){
+    var prod=(CONTENT.products.items[calc.p]||{}).h;
+    wz.prod=prod||wz.prod;wz.sum=calc.price;wz.term=calc.term;
+    $$('#wPick button').forEach(function(x){
+      x.setAttribute('aria-pressed',String(x.dataset.p===wz.prod));
+    });
+    var f=$('#fSum');if(f)f.value=nf(calc.price);
+    var t=$('#fTerm');
+    if(t){
+      var has=false;
+      $$('option',t).forEach(function(o){if(+o.value===calc.term){o.selected=true;has=true}});
+      if(!has)t.value='12';
+    }
+    wzPreview();wzPane(1);
+    var target=document.getElementById('zayavka');
+    if(target)target.scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});
+    setTimeout(function(){toast('Расчёт перенесён в заявку — проверьте и отправьте')},400);
+  });
+}
+
+/* ============ ПОДСВЕТКА ТЕКУЩЕГО РАЗДЕЛА ============ */
+function navSpyInit(){
+  var links=$$('#nav a');if(!links.length||!('IntersectionObserver' in window))return;
+  var map={};
+  links.forEach(function(a){
+    var id=(a.getAttribute('href')||'').replace('#','');
+    var sec=id&&document.getElementById(id);
+    if(sec)map[id]=a;
+  });
+  var ids=Object.keys(map);if(!ids.length)return;
+  var vis={};
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(en){vis[en.target.id]=en.isIntersecting?en.intersectionRatio:0});
+    var best=null,bv=0;
+    ids.forEach(function(id){if((vis[id]||0)>bv){bv=vis[id];best=id}});
+    links.forEach(function(a){a.classList.remove('now')});
+    if(best&&map[best])map[best].classList.add('now');
+  },{threshold:[0,.15,.4,.7],rootMargin:'-84px 0px -55% 0px'});
+  ids.forEach(function(id){io.observe(document.getElementById(id))});
+}
+
+/* ============ РАЗМЕТКА ДЛЯ ПОИСКОВИКОВ ============ */
+function seoInit(){
+  try{
+    var C=CONTENT,host=location.origin;
+    var data=[{
+      '@context':'https://schema.org','@type':'FinancialService',
+      name:C.brand.name,description:C.hero.lead,
+      url:host,telephone:C.brand.phone,
+      areaServed:(C.form.cities||[]).map(function(c){return {'@type':'City',name:c}}),
+      address:(C.footer.offices||[]).map(function(o){
+        return {'@type':'PostalAddress',addressLocality:o.city,streetAddress:o.addr};
+      })
+    }];
+    if((C.faq.items||[]).length)data.push({
+      '@context':'https://schema.org','@type':'FAQPage',
+      mainEntity:C.faq.items.map(function(q){
+        return {'@type':'Question',name:q.q,
+                acceptedAnswer:{'@type':'Answer',text:q.a}};
+      })
+    });
+    var old=document.getElementById('ldjson');if(old)old.remove();
+    var sc=document.createElement('script');
+    sc.type='application/ld+json';sc.id='ldjson';
+    sc.textContent=JSON.stringify(data);
+    document.head.appendChild(sc);
+  }catch(e){}
+}
+
 /* ============ FLOW NODES ============ */
 function flowInit(){
   var f=$('.flow');if(!f||RM||!('IntersectionObserver' in window))return;
@@ -2228,6 +2328,7 @@ function mountSite(){
   $('#site').innerHTML=renderSite();
   navInit();calcInit();faqInit();wzInit();
   revealInit();countersInit();flowInit();stagesInit();
+  calcToFormInit();navSpyInit();seoInit();
   requestAnimationFrame(girih);
   siteMounted=true;siteStale=false;
 }
