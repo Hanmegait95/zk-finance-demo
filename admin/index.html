@@ -593,10 +593,19 @@ select.inp{
 .ftr-office b{color:var(--ink);font-weight:600;display:block;margin-top:12px}
 
 /* ============ GATE ============ */
-.gate{min-height:100vh;display:grid;place-items:center;background:var(--ink);padding:24px}
+.gate{min-height:100vh;display:flex;background:var(--ink);padding:24px 20px}
 .gate-card{
-  width:100%;max-width:440px;background:var(--ivory);padding:40px 36px;
+  width:100%;max-width:440px;margin:auto;background:var(--ivory);padding:40px 36px;
   border-radius:var(--r-xl);border:1px solid var(--rule);
+}
+@media (max-width:520px){
+  .gate{padding:16px 14px}
+  .gate-card{padding:28px 22px;border-radius:var(--r-lg)}
+  .gate h2{font-size:25px}
+}
+@media (max-height:700px){
+  .gate-card{padding:26px 28px}
+  .gate-card>p{font-size:13.5px}
 }
 .gate .mark{width:46px;height:46px;font-size:15px}
 .gate h2{font-size:29px;margin:24px 0 10px;font-weight:600;letter-spacing:-.035em}
@@ -3450,7 +3459,6 @@ function render(){
 function showView(v){
   $('#gate').hidden=v!=='gate';
   $('#hub').hidden=v!=='hub';
-  document.body.style.overflowY=v==='gate'?'hidden':'';
 }
 function route(){
   if(!state.user){
