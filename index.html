@@ -905,6 +905,22 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
   .mq-in{animation:none}
 }
 
+/* ============ ПЕРЕКЛЮЧАТЕЛЬ ============ */
+.swi{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:14.5px;user-select:none}
+.swi input{position:absolute;opacity:0;pointer-events:none}
+.swi-b{
+  width:42px;height:24px;border-radius:var(--r-pill);background:var(--ivory-lo);
+  border:1px solid var(--rule-strong);position:relative;flex:0 0 auto;transition:background .25s,border-color .25s;
+}
+.swi-b::after{
+  content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+  background:var(--ink);transition:transform .25s var(--ease);
+}
+.swi input:checked+.swi-b{background:var(--ink);border-color:var(--ink)}
+.swi input:checked+.swi-b::after{transform:translateX(18px);background:#fff}
+.swi input:disabled+.swi-b{opacity:.45}
+.swi input:focus-visible+.swi-b{outline:2px solid var(--ink);outline-offset:3px}
+
 /* ============ СПИСОК ДЕЛ НА ДАШБОРДЕ ============ */
 .todo-g{border-bottom:1px solid var(--rule)}
 .todo-g:last-child{border-bottom:0}
@@ -1530,6 +1546,18 @@ var Store={
       if(d&&Array.isArray(d.contracts))CONTRACTS=d.contracts.map(enrich);
       cb(err);
     });
+  },
+  loadNotify:function(cb){
+    if(!SRV.on)return cb(null);
+    api('notify',null,function(d,err){cb(d&&d.notify,err)});
+  },
+  saveNotify:function(cfg,cb){
+    if(!SRV.on)return cb('Настройки работают только на сервере');
+    api('notify-save',{method:'POST',body:cfg},function(d,err){cb(err)});
+  },
+  testNotify:function(cb){
+    if(!SRV.on)return cb(null,'Проверка работает только на сервере');
+    api('notify-test',{method:'POST'},function(d,err){cb(d&&d.result,err)});
   },
   loadUsers:function(cb){
     if(!SRV.on)return cb([{login:'—',name:'Автономный режим',role:'owner'}]);
