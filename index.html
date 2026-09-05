@@ -1027,6 +1027,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
 }
 .pp p{margin:0 0 14px}
 .pp b{font-weight:600;color:var(--ink)}
+.pp a{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.pp a:hover{opacity:.7}
 .pp ul{margin:0 0 16px;padding-left:22px}
 .pp li{margin-bottom:8px}
 .pp-req{
@@ -1764,6 +1766,15 @@ var Store={
   }
 };
 
+/* ============ ЦЕЛИ МЕТРИКИ ============ */
+var YM_ID=112301944, ymDone={};
+function ymGoal(name,once){
+  try{
+    if(once){if(ymDone[name])return;ymDone[name]=1}
+    if(typeof window.ym==='function')window.ym(YM_ID,'reachGoal',name);
+  }catch(e){}
+}
+
 /* ============ TOAST ============ */
 var toastT;
 function toast(msg){
@@ -2047,8 +2058,8 @@ function renderForm(){
       '</div>'+
       '<div class="wz-pane" data-pane="2"><div class="wz-sum" id="wSum"></div>'+
         '<div class="form-grid">'+
-          '<div><label class="lbl" for="fName">Имя и фамилия</label><input class="inp" id="fName" placeholder="Ислам Хамзатов" autocomplete="name"></div>'+
-          '<div><label class="lbl" for="fPhone">Телефон</label><input class="inp" id="fPhone" placeholder="+7 (___) ___-__-__" inputmode="tel" autocomplete="tel"></div>'+
+          '<div><label class="lbl" for="fName">Имя и фамилия</label><input class="inp ym-disable-keys ym-hide-content" id="fName" placeholder="Ислам Хамзатов" autocomplete="name"></div>'+
+          '<div><label class="lbl" for="fPhone">Телефон</label><input class="inp ym-disable-keys ym-hide-content" id="fPhone" placeholder="+7 (___) ___-__-__" inputmode="tel" autocomplete="tel"></div>'+
           '<div><label class="lbl" for="fCity">Город</label><select class="inp" id="fCity">'+
           F.cities.map(function(c){return '<option>'+esc(c)+'</option>'}).join('')+'</select></div>'+
           '<div><label class="lbl" for="fWhen">Когда удобно звонить</label><select class="inp" id="fWhen">'+
@@ -2056,7 +2067,7 @@ function renderForm(){
             return '<option>'+c+'</option>';
           }).join('')+'</select></div>'+
           '<div class="f-full"><label class="lbl" for="fNote">Комментарий</label>'+
-          '<input class="inp" id="fNote" placeholder="Марка и модель, ссылка на объявление, пожелания по графику"></div></div>'+
+          '<input class="inp ym-disable-keys ym-hide-content" id="fNote" placeholder="Марка и модель, ссылка на объявление, пожелания по графику"></div></div>'+
         '<div class="wz-foot"><button class="btn btn-lg" type="button" id="wSend"><span>Отправить заявку</span><span class="btn-arr">→</span></button>'+
         '<button class="btn btn-ghost" type="button" id="wBack"><span>Назад</span></button>'+
         '<p>'+F.consent+'</p></div></div>'+
@@ -2298,7 +2309,7 @@ function setProd(i){
 function calcInit(){
   if(!$('#cPrice'))return;
   setProd(0);
-  $('#cPrice').addEventListener('input',function(){calc.price=+this.value;calcRun()});
+  $('#cPrice').addEventListener('input',function(){calc.price=+this.value;calcRun();ymGoal('calc_used',true)});
   $('#cDown').addEventListener('input',function(){
     var P=CPROD[calc.p];
     if(+this.value<P.down){this.value=P.down}
@@ -2307,7 +2318,7 @@ function calcInit(){
   $$('#cTerm button').forEach(function(b){
     b.addEventListener('click',function(){
       $$('#cTerm button').forEach(function(o){o.setAttribute('aria-pressed','false')});
-      b.setAttribute('aria-pressed','true');calc.term=+b.dataset.t;calcRun();
+      b.setAttribute('aria-pressed','true');calc.term=+b.dataset.t;calcRun();ymGoal('calc_used',true);
     });
   });
   $$('#cProd button').forEach(function(b){
@@ -2396,6 +2407,7 @@ function wzInit(){
     Store.sendLead(lead,function(id,err){
       btn.disabled=false;
       if(err){toast('Не удалось отправить: '+err);return}
+      ymGoal('lead_sent');
       $('#wId').textContent=id;
       wzPane(3);
     });
@@ -2521,11 +2533,21 @@ function stagesInit(){
 
 /* ============ СБОРКА САЙТА ============ */
 var siteMounted=false;
+function ymClicksInit(){
+  if(ymClicksInit.done)return;ymClicksInit.done=true;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href]');
+    if(!a)return;
+    var h=a.getAttribute('href')||'';
+    if(/^tel:/i.test(h))ymGoal('phone_click');
+    else if(/wa\.me|whatsapp/i.test(h))ymGoal('whatsapp_click');
+  },true);
+}
 function mountSite(){
   $('#site').innerHTML=renderSite();
   navInit();calcInit();faqInit();wzInit();
   revealInit();countersInit();flowInit();stagesInit();
-  calcToFormInit();navSpyInit();seoInit();
+  calcToFormInit();navSpyInit();seoInit();ymClicksInit();
   requestAnimationFrame(girih);
   siteMounted=true;siteStale=false;
 }
@@ -2572,5 +2594,18 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else init();
 })();
 </script>
+<!-- Яндекс.Метрика -->
+<script type="text/javascript">
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();
+for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=112301944', 'ym');
+ym(112301944, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer",
+  referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/112301944" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Яндекс.Метрика -->
+
 </body>
 </html>

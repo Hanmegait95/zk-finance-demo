@@ -1016,6 +1016,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
 }
 .pp p{margin:0 0 14px}
 .pp b{font-weight:600;color:var(--ink)}
+.pp a{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.pp a:hover{opacity:.7}
 .pp ul{margin:0 0 16px;padding-left:22px}
 .pp li{margin-bottom:8px}
 .pp-req{
@@ -1859,6 +1861,15 @@ var Store={
     api('password',{method:'POST',body:{current:cur,next:next}},function(d,e){cb(e)});
   }
 };
+
+/* ============ ЦЕЛИ МЕТРИКИ ============ */
+var YM_ID=112301944, ymDone={};
+function ymGoal(name,once){
+  try{
+    if(once){if(ymDone[name])return;ymDone[name]=1}
+    if(typeof window.ym==='function')window.ym(YM_ID,'reachGoal',name);
+  }catch(e){}
+}
 
 /* ============ TOAST ============ */
 var toastT;

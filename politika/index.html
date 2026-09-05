@@ -1016,6 +1016,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:660px}
 }
 .pp p{margin:0 0 14px}
 .pp b{font-weight:600;color:var(--ink)}
+.pp a{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.pp a:hover{opacity:.7}
 .pp ul{margin:0 0 16px;padding-left:22px}
 .pp li{margin-bottom:8px}
 .pp-req{
@@ -1741,6 +1743,15 @@ var Store={
   }
 };
 
+/* ============ ЦЕЛИ МЕТРИКИ ============ */
+var YM_ID=112301944, ymDone={};
+function ymGoal(name,once){
+  try{
+    if(once){if(ymDone[name])return;ymDone[name]=1}
+    if(typeof window.ym==='function')window.ym(YM_ID,'reachGoal',name);
+  }catch(e){}
+}
+
 /* ============ TOAST ============ */
 var toastT;
 function toast(msg){
@@ -1829,14 +1840,31 @@ function renderPolicy(){
     'в рекламных или иных посторонних целях.')+
   p('Передача возможна только в следующих случаях:')+
   li(['хостинг-провайдеру — в силу технического размещения сайта и почтового сервиса',
+      'сервису Яндекс.Метрика — обезличенные технические данные о посещении, '+
+      'как описано в разделе 8',
       'в системы, которые Оператор использует для обработки заявок, если такая интеграция подключена',
       'уполномоченным государственным органам — по основаниям и в порядке, установленным законом'])+
 
-  h2('8','Файлы cookie')+
-  p('Публичные страницы сайта <b>не устанавливают файлы cookie</b> и не используют их для '+
-    'отслеживания посетителей.')+
-  p('Служебный файл cookie создаётся только в закрытом разделе для сотрудников: он необходим '+
-    'для поддержания сеанса после входа по паролю и не связан с посетителями сайта.')+
+  h2('8','Файлы cookie и статистика посещений')+
+  p('Для сбора обезличенной статистики посещений сайт использует сервис '+
+    '<b>Яндекс.Метрика</b>, принадлежащий ООО «Яндекс» (Российская Федерация, 119021, Москва, '+
+    'ул. Льва Толстого, 16). Сервис устанавливает собственные файлы cookie и собирает технические '+
+    'данные: IP-адрес, тип устройства и браузера, разрешение экрана, источник перехода, '+
+    'просмотренные страницы, время и глубину просмотра.')+
+  p('Эти сведения нужны Оператору, чтобы понимать, какие разделы сайта полезны посетителям, '+
+    'и улучшать их. Они обрабатываются в обезличенном виде и не используются для установления '+
+    'личности конкретного посетителя.')+
+  p('В Метрике включена запись действий на странице (Вебвизор). <b>Поля формы заявки — имя, '+
+    'телефон и комментарий — исключены из записи</b> техническими средствами: их содержимое '+
+    'в записи не сохраняется и в Яндекс не передаётся.')+
+  p('Условия обработки данных сервисом изложены в документе '+
+    '<a href="https://yandex.ru/legal/confidential/" target="_blank" rel="noopener nofollow">'+
+    'Политика конфиденциальности Яндекса</a>. Отказаться от сбора статистики можно, '+
+    'отключив cookie в настройках браузера или воспользовавшись '+
+    '<a href="https://yandex.ru/support/metrica/general/opt-out.html" target="_blank" rel="noopener nofollow">'+
+    'блокировщиком Яндекс.Метрики</a>. На возможность отправить заявку это не влияет.')+
+  p('Служебный файл cookie создаётся также в закрытом разделе для сотрудников: он необходим '+
+    'для поддержания сеанса после входа по паролю и посетителям сайта не выдаётся.')+
 
   h2('9','Права субъекта персональных данных')+
   p('В соответствии со статьями 14–21 Закона № 152-ФЗ вы вправе:')+
@@ -1887,5 +1915,18 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else init();
 })();
 </script>
+<!-- Яндекс.Метрика -->
+<script type="text/javascript">
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();
+for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=112301944', 'ym');
+ym(112301944, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer",
+  referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/112301944" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Яндекс.Метрика -->
+
 </body>
 </html>
